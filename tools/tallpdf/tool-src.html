@@ -551,6 +551,23 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     }
     S.clear = clear;
     S.inkRows = inkRows;
+    S.bg = [Math.round(br), Math.round(bg), Math.round(bb)];
+  }
+
+
+  /* Colour of the page background just above a cut. Used to fill the unused part of an output page so a
+     short slice keeps the same paper, tint or dark theme as the rest of the document. */
+  function bgAbove(yPt) {
+    var fallback = S.bg || [255, 255, 255];
+    var w = canvas.width, h = canvas.height, c = S.clear;
+    var py = Math.min(h - 1, Math.round(yPt * S.pxPerPt)), from = Math.max(0, py - 6), to = Math.max(from, py - 1), r, x, i;
+    if (!c || to <= from) return fallback;
+    for (r = from; r <= to; r++) if (!c[r]) return fallback;   // the cut runs through content: use the overall background
+    var ctx = canvas.getContext('2d', { willReadFrequently: true });
+    var d = ctx.getImageData(0, from, w, to - from + 1).data, R = [], G = [], B = [];
+    for (i = 0; i < d.length; i += 16) { R.push(d[i]); G.push(d[i + 1]); B.push(d[i + 2]); }
+    function med(a) { a.sort(function (p, q) { return p - q; }); return a[a.length >> 1]; }
+    return R.length ? [med(R), med(G), med(B)] : fallback;
   }
 
   function isClean(yPt) {
@@ -912,6 +929,8 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
         var s = Math.min(pg.w / W, pg.h / segH);
         var page = out.addPage([pg.w, pg.h]);
         var px = (pg.w - W * s) / 2;
+        var bgc = bgAbove(bounds[i + 1]);
+        page.drawRectangle({ x: 0, y: 0, width: pg.w, height: pg.h, color: L.rgb(bgc[0] / 255, bgc[1] / 255, bgc[2] / 255) });
         page.pushOperators(L.pushGraphicsState(), L.rectangle(px, pg.h - segH * s, W * s, segH * s), L.clip(), L.endPath());
         page.drawPage(emb, { x: px, y: pg.h + top * s - H * s, width: W * s, height: H * s });
         page.pushOperators(L.popGraphicsState());
