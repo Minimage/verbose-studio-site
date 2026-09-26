@@ -1091,6 +1091,41 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
   }
   $('#dl').addEventListener('click', exportPdf);
   $('#dl2').addEventListener('click', exportPdf);
+
+  /* Sticky bottom edge for wheel and trackpad scrolling. When a scroll would carry the page past the
+     bottom of the preview, it stops there instead. A new scroll (after a short pause) continues on. */
+  (function () {
+    var caught = false, lastWheel = 0;
+    function target() {
+      var r = stage.getBoundingClientRect();
+      return r.bottom + window.pageYOffset - window.innerHeight + 24;
+    }
+    function jump(y) { window.scrollTo({ top: y, left: window.pageXOffset, behavior: 'instant' }); }
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      var dlg = document.getElementById('contactDlg');
+      if (dlg && dlg.open) return;
+      var now = e.timeStamp || Date.now();
+      if (now - lastWheel > 250) caught = false;            // a fresh scroll gesture
+      lastWheel = now;
+      if (e.deltaY <= 0) { caught = false; return; }
+      var d = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      var y = window.pageYOffset, t = target();
+      var stageTop = stage.getBoundingClientRect().top + y;
+      if (t - stageTop < window.innerHeight * 0.5) return;  // preview too short to need a stop
+      if (caught) {                                          // same gesture, still inside the stop
+        e.preventDefault();
+        if (Math.abs(window.pageYOffset - t) > 1) jump(t);
+        return;
+      }
+      if (y < t - 1 && y + d > t) {                          // this scroll would cross the bottom edge
+        e.preventDefault();
+        jump(t);
+        caught = true;
+      }
+    }, { passive: false });
+  })();
+
   window.__slicer = { S: S, exportPdf: exportPdf, loadBytes: loadBytes };
 
   /* ---------- Start ---------- */
