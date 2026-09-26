@@ -1095,7 +1095,7 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
   /* Sticky bottom edge for wheel and trackpad scrolling. When a scroll would carry the page past the
      bottom of the preview, it stops there instead. A new scroll (after a short pause) continues on. */
   (function () {
-    var caught = false, lastWheel = 0;
+    var caught = false, lastWheel = 0, caughtAt = 0, lastD = 0;
     function target() {
       var r = stage.getBoundingClientRect();
       return r.bottom + window.pageYOffset - window.innerHeight + 24;
@@ -1106,14 +1106,19 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
       var dlg = document.getElementById('contactDlg');
       if (dlg && dlg.open) return;
       var now = e.timeStamp || Date.now();
-      if (now - lastWheel > 250) caught = false;            // a fresh scroll gesture
+      var gap = now - lastWheel;
+      if (gap > 250) caught = false;                          // a fresh scroll gesture
       lastWheel = now;
       if (e.deltaY <= 0) { caught = false; return; }
       var d = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
       var y = window.pageYOffset, t = target();
       var stageTop = stage.getBoundingClientRect().top + y;
       if (t - stageTop < window.innerHeight * 0.5) return;  // preview too short to need a stop
-      if (caught) {                                          // same gesture, still inside the stop
+      if (caught) {
+        // Let go when the scroll speeds up again (a deliberate new push), or after a short hold
+        // (shorter for a mouse wheel, longer for trackpad momentum).
+        if ((d > lastD * 1.3 + 4 && now - caughtAt > 120) || now - caughtAt > (gap > 60 ? 350 : d > 40 ? 1000 : 1600)) { caught = false; return; }
+        lastD = d;
         e.preventDefault();
         if (Math.abs(window.pageYOffset - t) > 1) jump(t);
         return;
@@ -1121,7 +1126,7 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
       if (y < t - 1 && y + d > t) {                          // this scroll would cross the bottom edge
         e.preventDefault();
         jump(t);
-        caught = true;
+        caught = true; caughtAt = now; lastD = d;
       }
     }, { passive: false });
   })();
