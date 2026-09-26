@@ -148,7 +148,7 @@ def doc(title, desc, css, body, scripts='', artifact=False, head_extra=''):
 
 
 FORM_ENDPOINT = 'https://api.web3forms.com/submit'
-FORM_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY'   # <- paste the key from the form service here
+FORM_KEY = '00640895-65d1-4e34-b1c1-8dc6575510a4'   # public Web3Forms key for the Tall PDF form
 TOOL_TAG = 'Tall PDF Slicer'
 
 CONTACT_CSS = """
