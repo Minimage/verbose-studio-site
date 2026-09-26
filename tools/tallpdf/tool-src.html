@@ -944,10 +944,11 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
   $('#dl').addEventListener('click', exportPdf);
   $('#dl2').addEventListener('click', exportPdf);
 
-  /* Sticky bottom edge for wheel and trackpad scrolling. When a scroll would carry the page past the
-     bottom of the preview, it stops there instead. A new scroll (after a short pause) continues on. */
+  /* Sticky bottom edge for wheel and trackpad scrolling. When a hard flick would carry the page past the
+     bottom of the preview, it stops there instead. Normal, slower scrolling passes straight through. A new scroll (after a short pause) continues on. */
   (function () {
-    var caught = false, lastWheel = 0, caughtAt = 0, lastD = 0;
+    var caught = false, lastWheel = 0, caughtAt = 0, lastD = 0, recent = [];
+    var FAST = 400;                                         // px scrolled within 100 ms that counts as a hard flick
     function target() {
       var r = stage.getBoundingClientRect();
       return r.bottom + window.pageYOffset - window.innerHeight + 24;
@@ -963,6 +964,9 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
       lastWheel = now;
       if (e.deltaY <= 0) { caught = false; return; }
       var d = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      recent.push([now, d]);
+      while (recent.length && now - recent[0][0] > 100) recent.shift();
+      var speed = 0; for (var k = 0; k < recent.length; k++) speed += recent[k][1];
       var y = window.pageYOffset, t = target();
       var stageTop = stage.getBoundingClientRect().top + y;
       if (t - stageTop < window.innerHeight * 0.5) return;  // preview too short to need a stop
@@ -975,7 +979,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
         if (Math.abs(window.pageYOffset - t) > 1) jump(t);
         return;
       }
-      if (y < t - 1 && y + d > t) {                          // this scroll would cross the bottom edge
+      if (speed >= FAST && y < t - 1 && y + d > t) {          // a hard flick that would cross the bottom edge
         e.preventDefault();
         jump(t);
         caught = true; caughtAt = now; lastD = d;
