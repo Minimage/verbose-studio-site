@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to Split a Long, Tall PDF into Regular Pages</title>
+<meta name="description" content="Five short steps, with demos, for splitting a long single-page PDF into regular pages using Tall PDF Slicer."><meta property="og:title" content="How to Split a Long, Tall PDF into Regular Pages"><meta property="og:description" content="Five short steps, with demos, for splitting a long single-page PDF into regular pages using Tall PDF Slicer."><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 30'%3E%3Crect x='3' y='1' width='16' height='28' rx='3' fill='white' stroke='%230e7490' stroke-width='1.5'/%3E%3Crect x='7' y='5' width='8' height='2.4' rx='1' fill='%2339424f'/%3E%3Crect x='7' y='10' width='8' height='5' rx='1' fill='%232a8ea3'/%3E%3Cline x1='0' y1='18.5' x2='22' y2='18.5' stroke='%23d6246e' stroke-width='2' stroke-dasharray='3 2'/%3E%3C/svg%3E"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #eceff4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --ink: #182230;
+  --ink-2: #4b5567;
+  --line: #d3d9e3;
+  --accent: #0e7490;
+  --accent-hover: #0b5f77;
+  --accent-ink: #ffffff;
+  --cut: #d6246e;
+  --cut-soft: rgba(214, 36, 110, 0.12);
+  --ok: #1a7f52;
+  --warn: #a35200;
+  --warn-soft: rgba(163, 82, 0, 0.14);
+  --band-a: rgba(14, 116, 144, 0.08);
+  --out: rgba(24, 34, 48, 0.2);
+  --out-fill: rgba(255, 255, 255, 0.62);
+  --stage: #cdd4df;
+  --paper-shadow: 0 1px 2px rgba(20, 30, 50, 0.12), 0 10px 28px rgba(20, 30, 50, 0.14);
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1319;
+    --surface: #171d26;
+    --surface-2: #1e2632;
+    --ink: #e7ecf3;
+    --ink-2: #9aa6b8;
+    --line: #2b3444;
+    --accent: #4cc3dc;
+    --accent-hover: #74d3e8;
+    --accent-ink: #06222b;
+    --cut: #ff6fa8;
+    --cut-soft: rgba(255, 111, 168, 0.16);
+    --ok: #4fd08f;
+    --warn: #f2b04e;
+    --warn-soft: rgba(242, 176, 78, 0.16);
+    --band-a: rgba(76, 195, 220, 0.09);
+    --out: rgba(231, 236, 243, 0.2);
+    --out-fill: rgba(14, 19, 25, 0.6);
+    --stage: #0a0e13;
+    --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1319;
+  --surface: #171d26;
+  --surface-2: #1e2632;
+  --ink: #e7ecf3;
+  --ink-2: #9aa6b8;
+  --line: #2b3444;
+  --accent: #4cc3dc;
+  --accent-hover: #74d3e8;
+  --accent-ink: #06222b;
+  --cut: #ff6fa8;
+  --cut-soft: rgba(255, 111, 168, 0.16);
+  --ok: #4fd08f;
+  --warn: #f2b04e;
+  --warn-soft: rgba(242, 176, 78, 0.16);
+  --band-a: rgba(76, 195, 220, 0.09);
+  --out: rgba(231, 236, 243, 0.2);
+  --out-fill: rgba(14, 19, 25, 0.6);
+  --stage: #0a0e13;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+:root { --accent-soft: rgba(14, 116, 144, 0.1); --cut-ink: #ffffff; --shadow: 0 1px 2px rgba(20, 30, 50, 0.08), 0 12px 32px rgba(20, 30, 50, 0.1); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+}
+:root[data-theme="dark"] { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 48px;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: var(--accent); }
+.wrap { max-width: 1120px; margin: 0 auto; }
+.wrap.narrow { max-width: 46rem; }
+.wrap.mid { max-width: 1000px; }
+
+.site-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding-block: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.brand svg { flex: none; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.site-nav a {
+  padding: 7px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500;
+}
+.site-nav a:hover { background: var(--surface); color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); border-radius: 8px 8px 4px 4px; }
+
+.site-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; color: var(--ink-2); font-size: 14px; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.site-foot a { color: var(--ink-2); }
+.site-foot a:hover { color: var(--ink); }
+
+.page-hero { display: grid; gap: 12px; padding-block: 20px 20px; max-width: 46rem; }
+.page-hero h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
+.page-hero p { margin: 0; font-size: 19px; color: var(--ink-2); max-width: 38rem; }
+.page-hero .newhere { font-size: 15px; }
+.page-hero .newhere a { font-weight: 600; }
+
+.sec { padding-top: 56px; display: grid; gap: 18px; }
+.sec h2 { margin: 0; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+.sec > p { margin: 0; color: var(--ink-2); max-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { display: grid; align-content: start; gap: 8px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.card h3 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.card .ico { width: 44px; height: 30px; }
+.faq { display: grid; gap: 10px; max-width: 46rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { margin: 0; padding: 0 18px 16px; color: var(--ink-2); }
+.band-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 26px clamp(20px, 4vw, 34px); border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.band-cta h2 { margin: 0; font-size: 24px; letter-spacing: -0.015em; }
+.band-cta p { margin: 4px 0 0; color: var(--ink-2); font-size: 16px; }
+.pbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 20px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; text-decoration: none; }
+.pbtn:hover { background: var(--accent-hover); }
+
+.prose { display: grid; gap: 14px; padding-bottom: 8px; }
+.prose h2 { margin: 26px 0 0; font-size: 24px; letter-spacing: -0.015em; }
+.prose p, .prose li { color: var(--ink-2); margin: 0; }
+.prose ul { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.prose .meta { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); }
+.prose .todo { background: var(--accent-soft); border: 1px dashed var(--accent); color: var(--ink); padding: 2px 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.9em; }
+
+@media (max-width: 860px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+
+
+
+.hero { display: grid; gap: 12px; padding-block: 28px 20px; max-width: 46rem; }
+.hero h1 { margin: 0; font-size: clamp(30px, 5.4vw, 46px); line-height: 1.08; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
+.hero p { margin: 0; font-size: 19px; color: var(--ink-2); max-width: 36rem; }
+.hero .tip {
+  display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+  font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2);
+  padding: 6px 12px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line);
+}
+.hero .tip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cut); }
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(40px, 8vw, 88px); padding-block: 36px 24px; }
+.step { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px clamp(28px, 6vw, 72px); align-items: center; }
+.step:nth-child(even) .media { order: 2; }
+.step .text { display: grid; gap: 10px; max-width: 26rem; }
+.step:nth-child(even) .text { justify-self: end; }
+.step .num { font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.step h2 { margin: 0; font-size: clamp(24px, 3.6vw, 32px); line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+.step p { margin: 0; color: var(--ink-2); }
+.step kbd, .step .k {
+  font-family: var(--font-mono); font-size: 0.86em; padding: 1px 7px; border-radius: 6px;
+  background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+}
+
+.media {
+  position: relative; display: block; width: 100%; padding: 0; cursor: pointer; text-align: left;
+  aspect-ratio: 8 / 5; overflow: hidden; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--surface-2); box-shadow: var(--shadow); color: inherit; font: inherit;
+}
+.media:hover, .media.playing { border-color: var(--accent); }
+.media svg.scene, .media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.media .badge {
+  position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 11.5px; padding: 4px 10px; border-radius: 99px;
+  background: var(--surface); color: var(--ink-2); border: 1px solid var(--line);
+}
+.media .badge::before { content: ""; width: 0; height: 0; border-left: 7px solid var(--accent); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; }
+.media.playing .badge::before { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--cut); }
+.badge .b-tap, .badge .b-on { display: none; }
+@media (hover: none) { .badge .b-hover { display: none; } .badge .b-tap { display: inline; } }
+.media.playing .b-hover, .media.playing .b-tap { display: none; }
+.media.playing .b-on { display: inline; }
+
+.cta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px;
+  margin-top: 28px; padding: 28px clamp(20px, 4vw, 36px); border-radius: 16px; background: var(--surface); border: 1px solid var(--line);
+}
+.cta h2 { margin: 0; font-size: 24px; letter-spacing: -0.015em; }
+.cta p { margin: 4px 0 0; color: var(--ink-2); font-size: 16px; }
+.foot { padding-top: 28px; color: var(--ink-2); font-size: 14px; }
+
+@media (max-width: 760px) {
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .step:nth-child(even) .media { order: 0; }
+  .step:nth-child(even) .text { justify-self: start; }
+  .step .text { max-width: none; }
+  .hero p { font-size: 17px; }
+}
+
+/* ---- scene drawing ---- */
+.scene text { font-family: var(--font-ui); }
+.scene .tm { font-family: var(--font-mono); font-size: 8.5px; }
+.scene .tu { font-size: 10px; font-weight: 600; }
+.c-s2 { fill: var(--surface-2); } .c-surface { fill: var(--surface); } .c-paper { fill: #fff; }
+.c-ink { fill: var(--ink); } .c-mute { fill: var(--ink-2); } .c-acc { fill: var(--accent); } .c-accink { fill: var(--accent-ink); }
+.c-cut { fill: var(--cut); } .c-cutink { fill: var(--cut-ink); } .c-warn { fill: var(--warn); } .c-soft { fill: var(--accent-soft); }
+.k-line { stroke: var(--line); } .k-acc { stroke: var(--accent); } .k-cut { stroke: var(--cut); } .k-warn { stroke: var(--warn); }
+.pl { fill: #c8cfda; } .pt { fill: #39424f; } .pp { fill: #2a8ea3; } .pm { fill: #17475a; } .ps { fill: #f3d36b; } .pk { fill: #b8c1ce; }
+.cursor { fill: var(--ink); stroke: var(--surface); stroke-width: 1.2; }
+.ripple { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.cutline { stroke-width: 2; stroke-dasharray: 6 4; fill: none; stroke: var(--cut); }
+
+/* Resting frames show the finished state, so a still picture already explains the step. */
+.s1-prompt, .dz-idle, .s1-cur, .s3-pa, .s3-cur, .s4-in, .s4-p3, .s4-cur, .s2-cur, .s5-cur { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .playing .scene-fade { animation: sfade var(--dur) linear infinite; }
+  @keyframes sfade { 0% { opacity: 0; } 4% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes hideAt40 { 0%, 40% { opacity: 1; } 44%, 100% { opacity: 0; } }
+  @keyframes showAt40 { 0%, 40% { opacity: 0; } 44%, 100% { opacity: 1; } }
+  @keyframes hideAt50 { 0%, 48% { opacity: 1; } 52%, 100% { opacity: 0; } }
+  @keyframes showAt50 { 0%, 48% { opacity: 0; } 52%, 100% { opacity: 1; } }
+
+  /* 1 · open */
+  .s1 { --dur: 5.5s; }
+  .s1-doc { transform-origin: 200px 109px; }
+  .playing .s1-doc { animation: s1doc 5.5s ease-in-out infinite; }
+  @keyframes s1doc { 0%, 8% { transform: translate(150px, -100px) rotate(10deg); } 40%, 100% { transform: translate(0, 0) rotate(0); } }
+  .playing .s1-cur { animation: s1cur 5.5s linear infinite; }
+  @keyframes s1cur { 0%, 38% { opacity: 1; } 46%, 100% { opacity: 0; } }
+  .playing .dz-idle, .playing .s1-prompt { animation: hideAt40 5.5s linear infinite; }
+  .playing .dz-done, .playing .s1-loaded { animation: showAt40 5.5s linear infinite; }
+
+  /* 2 · size and mode */
+  .s2 { --dur: 6s; }
+  .playing .s2-hl { animation: s2hl 6s ease-in-out infinite; }
+  @keyframes s2hl { 0%, 10% { transform: translateX(63px); } 24%, 100% { transform: translateX(0); } }
+  .playing .s2-cur { animation: s2cur 6s ease-in-out infinite; }
+  @keyframes s2cur { 0% { opacity: 0; transform: translate(60px, 44px); } 6% { opacity: 1; transform: translate(60px, 44px); } 22%, 30% { opacity: 1; transform: translate(0, 0); } 36%, 100% { opacity: 0; transform: translate(0, 0); } }
+  .playing .s2-rip { animation: s2rip 6s ease-out infinite; }
+  @keyframes s2rip { 0%, 21% { opacity: 0; transform: scale(0.3); } 23% { opacity: 0.7; transform: scale(0.4); } 33%, 100% { opacity: 0; transform: scale(1.5); } }
+  .s2-l1 { transform-origin: 269px 88px; } .s2-l2 { transform-origin: 269px 170px; }
+  .playing .s2-l1 { animation: s2l1 6s ease-out infinite; }
+  .playing .s2-l2 { animation: s2l2 6s ease-out infinite; }
+  @keyframes s2l1 { 0%, 30% { opacity: 0; transform: scaleX(0); } 38%, 100% { opacity: 1; transform: scaleX(1); } }
+  @keyframes s2l2 { 0%, 40% { opacity: 0; transform: scaleX(0); } 48%, 100% { opacity: 1; transform: scaleX(1); } }
+  .playing .s2-c1 { animation: s2c1 6s linear infinite; } .playing .s2-c2 { animation: s2c2 6s linear infinite; } .playing .s2-c3 { animation: s2c3 6s linear infinite; }
+  @keyframes s2c1 { 0%, 32% { opacity: 0; } 38%, 100% { opacity: 1; } }
+  @keyframes s2c2 { 0%, 42% { opacity: 0; } 48%, 100% { opacity: 1; } }
+  @keyframes s2c3 { 0%, 52% { opacity: 0; } 58%, 100% { opacity: 1; } }
+
+  /* 3 · drag a cut */
+  .s3 { --dur: 6s; }
+  .playing .s3-cut { animation: s3move 6s ease-in-out infinite; }
+  @keyframes s3move { 0%, 14% { transform: translateY(0); } 52%, 100% { transform: translateY(62px); } }
+  .playing .s3-pa { animation: hideAt50 6s linear infinite; }
+  .playing .s3-pb { animation: showAt50 6s linear infinite; }
+  .playing .s3-cur { opacity: 1; }
+
+  /* 4 · leave a section out */
+  .s4 { --dur: 6.5s; }
+  .playing .s4-in, .playing .s4-p3 { animation: hideAt40 6.5s linear infinite; }
+  .playing .s4-out, .playing .s4-p2, .playing .s4-hatch { animation: showAt40 6.5s linear infinite; }
+  .playing .s4-cur { animation: s4cur 6.5s ease-in-out infinite; }
+  @keyframes s4cur { 0% { opacity: 0; transform: translate(46px, 96px); } 8% { opacity: 1; transform: translate(46px, 96px); } 32%, 46% { opacity: 1; transform: translate(0, 0); } 54%, 100% { opacity: 0; transform: translate(0, 0); } }
+  .playing .s4-rip { animation: s4rip 6.5s ease-out infinite; }
+  @keyframes s4rip { 0%, 34% { opacity: 0; transform: scale(0.3); } 37% { opacity: 0.7; transform: scale(0.4); } 47%, 100% { opacity: 0; transform: scale(1.5); } }
+
+  /* 5 · download */
+  .s5 { --dur: 5.5s; }
+  .playing .s5-cur { animation: s5cur 5.5s ease-in-out infinite; }
+  @keyframes s5cur { 0% { opacity: 0; transform: translate(70px, 80px); } 8% { opacity: 1; transform: translate(70px, 80px); } 28%, 40% { opacity: 1; transform: translate(0, 0); } 46%, 100% { opacity: 0; transform: translate(0, 0); } }
+  .s5-btn { transform-origin: 115px 120px; }
+  .playing .s5-btn { animation: s5btn 5.5s ease-in-out infinite; }
+  @keyframes s5btn { 0%, 29% { transform: scale(1); } 32% { transform: scale(0.95); } 38%, 100% { transform: scale(1); } }
+  .playing .s5-rip { animation: s5rip 5.5s ease-out infinite; }
+  @keyframes s5rip { 0%, 29% { opacity: 0; transform: scale(0.3); } 31% { opacity: 0.7; transform: scale(0.4); } 42%, 100% { opacity: 0; transform: scale(1.5); } }
+  .playing .s5-p1 { animation: s5p1 5.5s ease-out infinite; }
+  .playing .s5-p2 { animation: s5p2 5.5s ease-out infinite; }
+  .playing .s5-p3 { animation: s5p3 5.5s ease-out infinite; }
+  @keyframes s5p1 { 0%, 34% { opacity: 0; transform: translateX(-34px); } 46%, 100% { opacity: 1; transform: none; } }
+  @keyframes s5p2 { 0%, 38% { opacity: 0; transform: translateX(-34px); } 50%, 100% { opacity: 1; transform: none; } }
+  @keyframes s5p3 { 0%, 42% { opacity: 0; transform: translateX(-34px); } 54%, 100% { opacity: 1; transform: none; } }
+  .playing .s5-lab { animation: s5lab 5.5s linear infinite; }
+  @keyframes s5lab { 0%, 52% { opacity: 0; } 60%, 100% { opacity: 1; } }
+}
+
+.navbtn, .linkbtn { font: inherit; cursor: pointer; border: 0; background: none; }
+.navbtn { padding: 7px 12px; border-radius: 8px; color: var(--ink-2); font-size: 15px; font-weight: 500; }
+.navbtn:hover { background: var(--surface); color: var(--ink); }
+.linkbtn { padding: 0; color: var(--ink-2); font-size: 14px; text-decoration: underline; }
+.linkbtn:hover { color: var(--ink); }
+dialog.contact { width: min(30rem, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); overflow: auto; }
+dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
+.contact form, .contact .done { display: grid; gap: 14px; padding: 24px; }
+.contact h2 { margin: 0; font-size: 22px; letter-spacing: -0.015em; }
+.contact .lead { margin: -6px 0 0; color: var(--ink-2); font-size: 15px; }
+.contact label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+.contact label small { font-weight: 400; color: var(--ink-2); }
+.contact select, .contact textarea, .contact input[type=email] { font: inherit; font-weight: 400; font-size: 16px; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+.contact textarea { min-height: 130px; resize: vertical; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; align-items: center; }
+.contact .ghost { font: inherit; font-size: 15px; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.contact .pbtn { border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.contact .pbtn[disabled] { opacity: .6; cursor: default; }
+.contact .msg { margin: 0; font-size: 14px; color: var(--ink-2); }
+.contact .msg.err { color: var(--cut); }
+.contact .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="wrap mid">
+<header class="site-head"><a class="brand" href="index.html"><svg width="22" height="30" viewBox="0 0 22 30" aria-hidden="true"><rect x="3" y="1" width="16" height="28" rx="3" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="7" y="5" width="8" height="2.4" rx="1" fill="#39424f"/><rect x="7" y="10" width="8" height="5" rx="1" fill="#2a8ea3"/><line x1="0" y1="18.5" x2="22" y2="18.5" stroke="var(--cut)" stroke-width="1.8" stroke-dasharray="3 2"/><rect x="7" y="22" width="8" height="2" rx="1" fill="#c8cfda"/></svg><span>Tall PDF Slicer</span></a><nav class="site-nav" aria-label="Main"><a href="index.html">Tool</a><a href="how-to.html" aria-current="page">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="navbtn" data-contact>Contact</button></nav></header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="cur" viewBox="0 0 16 22"><path class="cursor" d="M1 1 L1 17 L5.2 13.2 L8.2 20.5 L11 19.3 L8 12.2 L13.5 12.2 Z"/></symbol>
+    <pattern id="hatch4" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="8" height="8" fill="rgba(255,255,255,0.74)"/><line x1="0" y1="0" x2="0" y2="8" stroke="#8b95a4" stroke-width="3"/>
+    </pattern>
+  </defs>
+</svg>
+<main id="top">
+    <section class="hero">
+      <h1>How to split a long, tall PDF into regular pages</h1>
+      <p>Five quick steps. It all happens in your browser, so your file never leaves your device.</p>
+      <span class="tip"><span class="dot"></span><span class="tip-hover">Hover a picture to watch the step</span><span class="tip-tap" hidden>Tap a picture to watch the step</span></span>
+    </section>
+
+    <ol class="steps">
+      <li class="step">
+        <button type="button" class="media" data-label="Open your PDF">
+          <svg class="scene s1" viewBox="0 0 400 250" role="img" aria-label="A tall PDF is dragged into the drop area and loads">
+            <rect class="c-s2" width="400" height="250"/>
+            <g class="scene-fade">
+              <rect class="dz-idle k-line" x="40" y="34" width="320" height="182" rx="12" fill="none" stroke-width="2" stroke-dasharray="7 6"/>
+              <rect class="dz-done c-soft k-acc" x="40" y="34" width="320" height="182" rx="12" stroke-width="2"/>
+              <text class="tu c-mute s1-prompt" x="200" y="198" text-anchor="middle">Drop your PDF here</text>
+              <text class="tu c-acc s1-loaded" x="200" y="198" text-anchor="middle">tall-page.pdf is loaded</text>
+              <g class="s1-doc">
+                <g transform="translate(182 62)">
+                  <path d="M0 0 H26 L36 10 V94 H0 Z" class="c-paper k-line" stroke-width="1.5"/>
+                  <path d="M26 0 V10 H36" fill="none" class="k-line" stroke-width="1.5"/>
+                  <rect class="pt" x="6" y="18" width="18" height="4" rx="1"/>
+                  <rect class="pl" x="6" y="28" width="24" height="3" rx="1"/><rect class="pl" x="6" y="35" width="20" height="3" rx="1"/>
+                  <rect class="pp" x="6" y="44" width="24" height="16" rx="2"/>
+                  <rect class="pl" x="6" y="66" width="24" height="3" rx="1"/><rect class="pl" x="6" y="73" width="16" height="3" rx="1"/>
+                </g>
+                <g class="s1-cur"><use href="#cur" x="206" y="118" width="16" height="22"/></g>
+              </g>
+            </g>
+          </svg>
+          <span class="badge"><span class="b-hover">Hover to play</span><span class="b-tap">Tap to play</span><span class="b-on">Playing</span></span>
+        </button>
+        <div class="text">
+          <span class="num">Step 1</span>
+          <h2>Open your PDF</h2>
+          <p>Drop the tall PDF onto the page, or press <span class="k">Open a PDF</span> and pick it.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <button type="button" class="media" data-label="Pick a size">
+          <svg class="scene s2" viewBox="0 0 400 250" role="img" aria-label="Choosing Letter size and Automatic cuts makes cut lines appear on the page">
+            <rect class="c-s2" width="400" height="250"/>
+            <g class="scene-fade">
+              <rect class="c-paper k-line" x="214" y="-10" width="110" height="270" stroke-width="1.5"/>
+              <rect class="pt" x="226" y="16" width="50" height="6" rx="1"/>
+              <rect class="pl" x="226" y="30" width="86" height="4" rx="1"/><rect class="pl" x="226" y="38" width="70" height="4" rx="1"/>
+              <rect class="pp" x="226" y="48" width="86" height="32" rx="2"/><path class="pm" d="M226 80 L246 62 L260 72 L280 54 L312 80Z"/>
+              <rect class="pl" x="226" y="100" width="86" height="4" rx="1"/><rect class="pl" x="226" y="108" width="78" height="4" rx="1"/><rect class="pl" x="226" y="116" width="86" height="4" rx="1"/>
+              <rect class="pp" x="226" y="128" width="86" height="32" rx="2"/><path class="pm" d="M226 160 L250 142 L266 152 L288 136 L312 160Z"/>
+              <rect class="pl" x="226" y="184" width="86" height="4" rx="1"/><rect class="pl" x="226" y="192" width="64" height="4" rx="1"/><rect class="pl" x="226" y="200" width="86" height="4" rx="1"/>
+              <rect class="pp" x="226" y="212" width="86" height="30" rx="2"/>
+              <line class="cutline s2-l1" x1="206" x2="332" y1="88" y2="88"/>
+              <line class="cutline s2-l2" x1="206" x2="332" y1="170" y2="170"/>
+              <g class="s2-c1"><circle class="c-acc" cx="346" cy="20" r="9"/><text class="tm c-accink" x="346" y="23" text-anchor="middle">1</text></g>
+              <g class="s2-c2"><circle class="c-acc" cx="346" cy="104" r="9"/><text class="tm c-accink" x="346" y="107" text-anchor="middle">2</text></g>
+              <g class="s2-c3"><circle class="c-acc" cx="346" cy="188" r="9"/><text class="tm c-accink" x="346" y="191" text-anchor="middle">3</text></g>
+
+              <rect class="c-surface k-line" x="18" y="28" width="156" height="194" rx="10" stroke-width="1.5"/>
+              <text class="tm c-mute" x="30" y="46">PAGE SIZE</text>
+              <rect class="c-soft k-acc" x="28" y="54" width="136" height="24" rx="7" stroke-width="1.5"/>
+              <circle class="k-acc" cx="42" cy="66" r="5" fill="none" stroke-width="1.5"/><circle class="c-acc" cx="42" cy="66" r="2.6"/>
+              <text class="tu c-ink" x="54" y="70">Letter</text>
+              <rect class="k-line" x="28" y="82" width="136" height="22" rx="7" fill="none" stroke-width="1"/>
+              <circle class="k-line" cx="42" cy="93" r="5" fill="none" stroke-width="1.5"/><text class="tu c-mute" x="54" y="97">A4</text>
+              <rect class="k-line" x="28" y="108" width="136" height="22" rx="7" fill="none" stroke-width="1"/>
+              <circle class="k-line" cx="42" cy="119" r="5" fill="none" stroke-width="1.5"/><text class="tu c-mute" x="54" y="123">Custom</text>
+              <text class="tm c-mute" x="30" y="152">CUTS</text>
+              <rect class="c-s2 k-line" x="28" y="158" width="136" height="28" rx="8" stroke-width="1"/>
+              <rect class="s2-hl c-soft k-acc" x="31" y="161" width="64" height="22" rx="6" stroke-width="1.5"/>
+              <text class="tu c-ink" x="63" y="176" text-anchor="middle">Automatic</text>
+              <text class="tu c-ink" x="127" y="176" text-anchor="middle">Manual</text>
+              <circle class="ripple s2-rip" cx="66" cy="172" r="12"/>
+              <g class="s2-cur"><use href="#cur" x="64" y="170" width="16" height="22"/></g>
+            </g>
+          </svg>
+          <span class="badge"><span class="b-hover">Hover to play</span><span class="b-tap">Tap to play</span><span class="b-on">Playing</span></span>
+        </button>
+        <div class="text">
+          <span class="num">Step 2</span>
+          <h2>Pick a page size</h2>
+          <p>Choose Letter, A4 or your own size. Leave Cuts on <span class="k">Automatic</span> and the tool finds the gaps for you.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <button type="button" class="media" data-label="Move a cut">
+          <svg class="scene s3" viewBox="0 0 400 250" role="img" aria-label="A dashed cut line is dragged from the middle of a picture to a clean gap between sections">
+            <rect class="c-s2" width="400" height="250"/>
+            <g class="scene-fade">
+              <rect class="c-paper k-line" x="130" y="-10" width="140" height="270" stroke-width="1.5"/>
+              <rect class="pt" x="146" y="16" width="64" height="7" rx="1"/>
+              <rect class="pl" x="146" y="30" width="108" height="4" rx="1"/><rect class="pl" x="146" y="38" width="90" height="4" rx="1"/>
+              <rect class="pp" x="146" y="52" width="108" height="56" rx="2"/><path class="pm" d="M146 108 L176 78 L196 96 L222 66 L254 108Z"/><circle class="ps" cx="166" cy="66" r="6"/>
+              <rect class="pl" x="146" y="120" width="108" height="4" rx="1"/><rect class="pl" x="146" y="128" width="98" height="4" rx="1"/><rect class="pl" x="146" y="136" width="108" height="4" rx="1"/>
+              <rect class="pl" x="146" y="166" width="108" height="4" rx="1"/><rect class="pl" x="146" y="174" width="94" height="4" rx="1"/><rect class="pl" x="146" y="182" width="108" height="4" rx="1"/>
+              <rect class="pp" x="146" y="196" width="108" height="44" rx="2"/><path class="pm" d="M146 240 L172 216 L192 230 L216 208 L254 240Z"/>
+              <g class="s3-cut">
+                <line class="cutline" x1="116" x2="284" y1="90" y2="90"/>
+                <g class="s3-pa"><rect class="c-warn" x="278" y="82" width="116" height="17" rx="8.5"/><text class="tm c-paper" x="287" y="93.5">Cut 1 · through content</text></g>
+                <g class="s3-pb"><rect class="c-cut" x="278" y="82" width="116" height="17" rx="8.5"/><text class="tm c-cutink" x="287" y="93.5">Cut 1 · clean</text></g>
+                <g class="s3-cur"><use href="#cur" x="356" y="92" width="16" height="22"/></g>
+              </g>
+            </g>
+          </svg>
+          <span class="badge"><span class="b-hover">Hover to play</span><span class="b-tap">Tap to play</span><span class="b-on">Playing</span></span>
+        </button>
+        <div class="text">
+          <span class="num">Step 3</span>
+          <h2>Move a cut if you want</h2>
+          <p>Drag any dashed line to a better spot. Its label says <span class="k">clean</span> when it sits in a gap.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <button type="button" class="media" data-label="Leave a section out">
+          <svg class="scene s4" viewBox="0 0 400 250" role="img" aria-label="Unticking the box on the middle page hatches it out and it is left out of the PDF">
+            <rect class="c-s2" width="400" height="250"/>
+            <g class="scene-fade">
+              <rect class="c-paper k-line" x="130" y="-10" width="140" height="270" stroke-width="1.5"/>
+              <rect class="pt" x="146" y="16" width="64" height="7" rx="1"/>
+              <rect class="pl" x="146" y="32" width="108" height="4" rx="1"/><rect class="pl" x="146" y="40" width="88" height="4" rx="1"/>
+              <rect class="pp" x="146" y="50" width="108" height="26" rx="2"/>
+              <rect class="pt" x="146" y="96" width="70" height="6" rx="1"/>
+              <rect class="k-line" x="146" y="110" width="7" height="7" fill="none" stroke-width="1.2"/><rect class="pl" x="160" y="111" width="90" height="4" rx="1"/>
+              <rect class="k-line" x="146" y="126" width="7" height="7" fill="none" stroke-width="1.2"/><rect class="pl" x="160" y="127" width="80" height="4" rx="1"/>
+              <rect class="k-line" x="146" y="142" width="7" height="7" fill="none" stroke-width="1.2"/><rect class="pl" x="160" y="143" width="90" height="4" rx="1"/>
+              <rect class="pl" x="146" y="182" width="108" height="4" rx="1"/><rect class="pl" x="146" y="190" width="94" height="4" rx="1"/><rect class="pl" x="146" y="198" width="108" height="4" rx="1"/>
+              <rect class="pp" x="146" y="210" width="108" height="30" rx="2"/>
+              <rect class="s4-hatch" x="130" y="84" width="140" height="82" fill="url(#hatch4)"/>
+              <line class="cutline" x1="116" x2="284" y1="84" y2="84"/>
+              <line class="cutline" x1="116" x2="284" y1="166" y2="166"/>
+
+              <g><rect class="c-surface k-line" x="288" y="20" width="84" height="18" rx="9" stroke-width="1"/><rect class="c-acc" x="294" y="24" width="10" height="10" rx="3"/><path d="M296 29 l2.2 2.4 l3.6 -4.4" fill="none" stroke="var(--accent-ink)" stroke-width="1.6"/><text class="tm c-ink" x="309" y="32">Page 1</text></g>
+              <g class="s4-in"><rect class="c-surface k-line" x="288" y="93" width="84" height="18" rx="9" stroke-width="1"/><rect class="c-acc" x="294" y="97" width="10" height="10" rx="3"/><path d="M296 102 l2.2 2.4 l3.6 -4.4" fill="none" stroke="var(--accent-ink)" stroke-width="1.6"/><text class="tm c-ink" x="309" y="105">Page 2</text></g>
+              <g class="s4-out"><rect class="c-surface k-warn" x="288" y="93" width="84" height="18" rx="9" stroke-width="1.2"/><rect class="c-surface k-warn" x="294" y="97" width="10" height="10" rx="3" stroke-width="1.4"/><text class="tm c-warn" x="309" y="105">Left out</text></g>
+              <g><rect class="c-surface k-line" x="288" y="176" width="84" height="18" rx="9" stroke-width="1"/><rect class="c-acc" x="294" y="180" width="10" height="10" rx="3"/><path d="M296 185 l2.2 2.4 l3.6 -4.4" fill="none" stroke="var(--accent-ink)" stroke-width="1.6"/>
+                <text class="tm c-ink s4-p3" x="309" y="188">Page 3</text><text class="tm c-ink s4-p2" x="309" y="188">Page 2</text></g>
+              <circle class="ripple s4-rip" cx="299" cy="102" r="12"/>
+              <g class="s4-cur"><use href="#cur" x="297" y="100" width="16" height="22"/></g>
+            </g>
+          </svg>
+          <span class="badge"><span class="b-hover">Hover to play</span><span class="b-tap">Tap to play</span><span class="b-on">Playing</span></span>
+        </button>
+        <div class="text">
+          <span class="num">Step 4</span>
+          <h2>Leave a section out</h2>
+          <p>Put a cut above and below anything you don't want, then untick its box. It is skipped in the PDF.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <button type="button" class="media" data-label="Download">
+          <svg class="scene s5" viewBox="0 0 400 250" role="img" aria-label="Pressing Download produces a normal multi-page PDF">
+            <rect class="c-s2" width="400" height="250"/>
+            <g class="scene-fade">
+              <g class="s5-btn"><rect class="c-acc" x="40" y="104" width="150" height="32" rx="9"/><text class="tu c-accink" x="115" y="124" text-anchor="middle">Download (3 pages)</text></g>
+              <circle class="ripple s5-rip" cx="128" cy="124" r="12"/>
+              <g transform="translate(232 82)"><g class="s5-p1"><g transform="rotate(-8 23 30)">
+                <rect class="c-paper k-line" width="46" height="60" rx="3" stroke-width="1.2"/><rect class="pt" x="6" y="8" width="20" height="3" rx="1"/><rect class="pl" x="6" y="16" width="34" height="3" rx="1"/><rect class="pl" x="6" y="22" width="28" height="3" rx="1"/><rect class="pp" x="6" y="30" width="34" height="18" rx="2"/></g></g></g>
+              <g transform="translate(300 82)"><g class="s5-p3"><g transform="rotate(8 23 30)">
+                <rect class="c-paper k-line" width="46" height="60" rx="3" stroke-width="1.2"/><rect class="pl" x="6" y="8" width="34" height="3" rx="1"/><rect class="pl" x="6" y="14" width="30" height="3" rx="1"/><rect class="pl" x="6" y="20" width="34" height="3" rx="1"/><rect class="pp" x="6" y="28" width="34" height="20" rx="2"/></g></g></g>
+              <g transform="translate(266 74)"><g class="s5-p2">
+                <rect class="c-paper k-line" width="46" height="60" rx="3" stroke-width="1.2"/><rect class="pt" x="6" y="8" width="20" height="3" rx="1"/><rect class="pl" x="6" y="16" width="34" height="3" rx="1"/><rect class="pp" x="6" y="24" width="34" height="24" rx="2"/><rect class="pl" x="6" y="52" width="24" height="3" rx="1"/></g></g>
+              <text class="tm c-mute s5-lab" x="300" y="166" text-anchor="middle">Normal pages, ready to print</text>
+              <g class="s5-cur"><use href="#cur" x="126" y="122" width="16" height="22"/></g>
+            </g>
+          </svg>
+          <span class="badge"><span class="b-hover">Hover to play</span><span class="b-tap">Tap to play</span><span class="b-on">Playing</span></span>
+        </button>
+        <div class="text">
+          <span class="num">Step 5</span>
+          <h2>Download your PDF</h2>
+          <p>You get a normal multi-page PDF. Print it or share it like any other.</p>
+        </div>
+      </li>
+    </ol>
+
+    <section class="cta">
+      <div>
+        <h2>Ready to try it?</h2>
+        <p>Free, and nothing is uploaded anywhere.</p>
+      </div>
+      <a class="pbtn" href="index.html#tool">Open the slicer</a>
+    </section>
+  </main>
+<footer class="site-foot"><span>A free tool by <a href="../">Verbose Studio</a>. Your files stay in your browser.</span><nav aria-label="Footer"><a href="index.html">Tool</a><a href="how-to.html">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="linkbtn" data-contact>Contact</button></nav></footer>
+</div>
+
+<dialog class="contact" id="contactDlg" aria-labelledby="contactTitle">
+  <form id="contactForm" method="dialog" novalidate>
+    <h2 id="contactTitle">Contact us</h2>
+    <p class="lead">Found a problem, or want a feature? Tell us. We read everything.</p>
+    <label>What is it about?
+      <select name="topic">
+        <option>Suggestion</option><option>Something is not working</option><option>Question</option><option>Other</option>
+      </select>
+    </label>
+    <label>Your message
+      <textarea name="message" required maxlength="4000" placeholder="What happened, or what would you like to see?"></textarea>
+    </label>
+    <label>Your email <small>(optional, only if you would like a reply)</small>
+      <input type="email" name="email" autocomplete="email" maxlength="200">
+    </label>
+    <div class="trap" aria-hidden="true"><label>Leave this empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label></div>
+    <p class="msg" id="contactMsg" role="status" aria-live="polite"></p>
+    <div class="row"><button type="button" class="ghost" id="contactCancel">Cancel</button><button type="submit" class="pbtn" id="contactSend">Send</button></div>
+  </form>
+  <div class="done" id="contactDone" hidden>
+    <h2>Thank you</h2>
+    <p class="lead" style="margin:0">Your message was sent.</p>
+    <div class="row"><button type="button" class="pbtn" id="contactClose">Close</button></div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  'use strict';
+  var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  if (!canHover) {
+    var th = document.querySelector('.tip-hover'), tt = document.querySelector('.tip-tap');
+    if (th && tt) { th.hidden = true; tt.hidden = false; }
+  }
+
+  /* Each picture plays on hover, on tap, or from the keyboard. To use a real screen recording instead,
+     replace the <svg> inside a .media button with <video src="..." muted loop playsinline preload="metadata"></video>.
+     The same hover and tap behaviour plays and rewinds it. */
+  document.querySelectorAll('.media').forEach(function (m) {
+    var video = m.querySelector('video');
+    function play() {
+      m.classList.add('playing');
+      if (video) { try { var p = video.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+    }
+    function stop() {
+      m.classList.remove('playing');
+      if (video) { try { video.pause(); video.currentTime = 0; } catch (e) {} }
+    }
+    m.setAttribute('aria-pressed', 'false');
+    m.setAttribute('aria-label', 'Play the demo for: ' + (m.dataset.label || 'this step'));
+    function sync() { m.setAttribute('aria-pressed', m.classList.contains('playing') ? 'true' : 'false'); }
+    m.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { play(); sync(); } });
+    m.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { stop(); sync(); } });
+    m.addEventListener('click', function (e) {
+      if (e.pointerType === 'mouse') return;
+      if (m.classList.contains('playing')) stop(); else play();
+      sync();
+    });
+    m.addEventListener('blur', function () { stop(); sync(); });
+  });
+})();
+</script><script>
+(function () {
+  var dlg = document.getElementById('contactDlg'); if (!dlg) return;
+  var form = document.getElementById('contactForm'), done = document.getElementById('contactDone');
+  var msg = document.getElementById('contactMsg'), send = document.getElementById('contactSend');
+  var ENDPOINT = 'https://api.web3forms.com/submit', KEY = 'YOUR_WEB3FORMS_ACCESS_KEY', TOOL = 'Tall PDF Slicer';
+  function open() {
+    form.hidden = false; done.hidden = true; msg.textContent = ''; msg.className = 'msg'; send.disabled = false;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    var t = form.querySelector('textarea'); if (t) t.focus();
+  }
+  function close() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  document.querySelectorAll('[data-contact]').forEach(function (b) { b.addEventListener('click', open); });
+  document.getElementById('contactCancel').addEventListener('click', close);
+  document.getElementById('contactClose').addEventListener('click', close);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = form.elements;
+    if (!f.message.value.trim()) { msg.className = 'msg err'; msg.textContent = 'Please write a short message first.'; f.message.focus(); return; }
+    if (f.email.value && !f.email.checkValidity()) { msg.className = 'msg err'; msg.textContent = 'That email does not look right. You can also leave it blank.'; return; }
+    if (f.botcheck.checked) { form.hidden = true; done.hidden = false; return; }
+    if (KEY.indexOf('YOUR_') === 0) { msg.className = 'msg err'; msg.textContent = 'The contact form is not switched on yet. Please try again soon.'; return; }
+    send.disabled = true; msg.className = 'msg'; msg.textContent = 'Sending...';
+    var body = { access_key: KEY, subject: TOOL + ': ' + f.topic.value, from_name: TOOL + ' contact form', topic: f.topic.value, message: f.message.value, page: location.pathname };
+    if (f.email.value) { body.email = f.email.value; body.replyto = f.email.value; }
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.success) { form.reset(); form.hidden = true; done.hidden = false; } else { throw new Error(); } })
+      .catch(function () { send.disabled = false; msg.className = 'msg err'; msg.textContent = 'Sorry, that did not send. Please try again in a moment.'; });
+  });
+})();
+</script>
+</body>
+</html>

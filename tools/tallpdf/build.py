@@ -434,6 +434,7 @@ a.tool .thumb { height: 64px; }
             '</div></section>%s</div>' % (head, thumb, foot))
     return doc('Verbose Studio: Small, Free, Private Tools', 'Small free tools that do one job well and run in your browser, so your files never leave your device.', css, body, '', False)
 
+OUT = os.path.join(HERE, '..', '..', 'public')
 import os as _os
 _os.makedirs(os.path.join(OUT, 'tallpdf'), exist_ok=True)
 
