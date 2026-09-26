@@ -25,3 +25,7 @@ tools/
 
 Cloudflare (Workers static assets): build command empty, deploy command `npx wrangler deploy`. `wrangler.jsonc` points it at `public/`.
 The contact form key is set in `tools/tallpdf/build.py` (`FORM_KEY`).
+
+## Vendored files
+
+`public/vendor/` holds pdf.js, pdf-lib and the two fonts (Instrument Sans, JetBrains Mono), so the site makes no third-party requests. To update a library, replace the file there.

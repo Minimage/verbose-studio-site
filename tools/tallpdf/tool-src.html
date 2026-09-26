@@ -240,7 +240,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
 .cut .pill .st { opacity: 0.92; }
 .cut .pill .st.bad { text-decoration: underline wavy; text-underline-offset: 3px; }
 .cut .x {
-  width: 20px; height: 20px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  width: 24px; height: 24px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
   background: rgba(0, 0, 0, 0.22); color: inherit; font-size: 14px; line-height: 1; display: grid; place-items: center;
 }
 .cut .x:hover { background: rgba(0, 0, 0, 0.4); }
@@ -378,7 +378,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
 <script>
 (function () {
   'use strict';
-  var PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var PDFJS_WORKER = '../vendor/pdf.worker.min.js';
   var STD = { a4: [595.28, 841.89], legal: [612, 1008], tabloid: [792, 1224], a5: [419.53, 595.28] };
   var $ = function (s) { return document.querySelector(s); };
 
@@ -387,7 +387,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
 
   var S = {
     pdfDoc: null, srcBytes: null, pageNo: 1, name: '', isSample: false,
-    W: 612, H: 792, view: [0, 0, 612, 792], rotated: false,
+    W: 612, H: 792, view: [0, 0, 612, 792], rot: 0, autoJson: '',
     pxPerPt: 1, clear: null,
     cuts: [], skip: [], mode: 'auto', size: 'letter-p', busy: false
   };
@@ -500,7 +500,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     var page = await S.pdfDoc.getPage(n);
     S.pageNo = n;
     var v1 = page.getViewport({ scale: 1 });
-    S.W = v1.width; S.H = v1.height; S.view = page.view.slice(); S.rotated = !!page.rotate;
+    S.W = v1.width; S.H = v1.height; S.view = page.view.slice(); S.rot = (((page.rotate || 0) % 360) + 360) % 360;
     var sc = Math.min(1000 / S.W, 32000 / S.H, Math.sqrt(60e6 / (S.W * S.H)));
     var vp = page.getViewport({ scale: sc });
     canvas.width = Math.max(1, Math.floor(vp.width));
@@ -515,7 +515,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     $('#sampleTag').hidden = !S.isSample;
     $('#fileMeta').textContent = fmtPt(S.W) + ' × ' + fmtPt(S.H) + ' pt · ' + inch(S.W) + ' × ' + inch(S.H) + ' in';
     buildRuler();
-    setCuts(S.mode === 'auto' ? autoCuts() : []);
+    if (S.mode === 'auto') applyAuto(); else setCuts([]);
     S.busy = false;
     rebuildCuts();
     setStatus('');
@@ -617,6 +617,8 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
   var cutNodes = [];
   /* S.skip[i] is true when section i (the band between cut i-1 and cut i) is left out of the PDF. */
   function setCuts(arr) { S.cuts = arr; S.skip = []; }
+  function applyAuto() { setCuts(autoCuts()); S.autoJson = JSON.stringify(S.cuts); }
+  function editedCuts() { return !!S.autoJson && JSON.stringify(S.cuts) !== S.autoJson; }
   function anyLeftOut() { return S.skip.some(function (v) { return v; }); }
   function rebuildCuts() {
     cutsEl.textContent = ''; cutNodes = [];
@@ -698,10 +700,9 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     });
     var notes = $('#notes'); notes.textContent = '';
     function note(t, good) { var li = document.createElement('li'); if (good) li.className = 'good'; li.textContent = t; notes.appendChild(li); }
-    if (S.cuts.length === 0) note('No cuts yet. Add one, or switch to Automatic.');
+    if (S.cuts.length === 0) note(S.mode === 'manual' ? 'No cuts yet. Click the page to add one.' : 'No cuts yet. Press Redo automatic cuts, or add one.');
     if (shrunk) note(shrunk + (shrunk === 1 ? ' page is' : ' pages are') + ' taller than the page size and will shrink (down to ' + shrinkMin + '%).');
     if (through) note(through + (through === 1 ? ' cut passes' : ' cuts pass') + ' through content. Drag to a gap to fix.');
-    if (S.rotated) note('This page is rotated in the file. The output may come out turned.');
     if (count === 0) note('Every section is left out, so there is nothing to download. Tick at least one box in the preview.');
     if (!shrunk && !through && S.cuts.length && count) note('Every cut sits in a gap and every page fits.', true);
     $('#dockTxt').textContent = count + (count === 1 ? ' page' : ' pages');
@@ -806,7 +807,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
   function saveSettings() {
     try {
       localStorage.setItem(KEY, JSON.stringify({
-        size: S.size, std: $('#std').value, cw: $('#cw').value, ch: $('#ch').value, mode: S.mode, zoom: zoom
+        size: S.size, std: $('#std').value, cw: $('#cw').value, ch: $('#ch').value, zoom: zoom
       }));
     } catch (e) { /* storage can be blocked; the page works without it */ }
   }
@@ -840,9 +841,6 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     var cw = num(o.cw, NaN), ch = num(o.ch, NaN);
     if (cw >= 1 && cw <= 200) $('#cw').value = cw;
     if (ch >= 1 && ch <= 200) $('#ch').value = ch;
-    if (o.mode === 'auto' || o.mode === 'manual') {
-      S.mode = o.mode; document.querySelector('input[name="mode"][value="' + o.mode + '"]').checked = true;
-    }
     if (typeof o.zoom === 'number') setZoom(o.zoom, false);
   }
   $('#zIn').addEventListener('click', function () { setZoom(zoom + 0.1, true); });
@@ -855,9 +853,11 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
     var r = document.querySelector('input[name="size"]:checked');
     S.size = r.value;
     if (S.mode === 'auto' && S.clear) {
-      var hadLeftOut = anyLeftOut();
-      setCuts(autoCuts());
-      if (hadLeftOut) setStatus('The cuts were redone for the new page size, so left-out sections were added back.');
+      var hadLeftOut = anyLeftOut(), hadEdits = editedCuts();
+      applyAuto();
+      if (hadEdits && hadLeftOut) setStatus('The cuts were redone for the new page size, so your changes to them were reset and left-out sections were added back.');
+      else if (hadEdits) setStatus('The cuts were redone for the new page size, so your changes to them were reset.');
+      else if (hadLeftOut) setStatus('The cuts were redone for the new page size, so left-out sections were added back.');
     }
     rebuildCuts();
     saveSettings();
@@ -877,12 +877,14 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
   document.querySelectorAll('input[name="mode"]').forEach(function (r) {
     r.addEventListener('change', function () {
       S.mode = document.querySelector('input[name="mode"]:checked').value;
-      setCuts(S.mode === 'auto' && S.clear ? autoCuts() : []);
+      var hadEdits = S.cuts.length && (S.mode === 'manual' || editedCuts());
+      if (S.mode === 'auto' && S.clear) applyAuto(); else setCuts([]);
+      if (hadEdits) setStatus('Switched cut mode, so the earlier cuts were cleared.');
       rebuildCuts();
       saveSettings();
     });
   });
-  $('#redo').addEventListener('click', function () { setCuts(autoCuts()); rebuildCuts(); });
+  $('#redo').addEventListener('click', function () { applyAuto(); rebuildCuts(); });
   $('#clearCuts').addEventListener('click', function () { setCuts([]); rebuildCuts(); });
   $('#addCut').addEventListener('click', addCutAuto);
   $('#pageNo').addEventListener('change', function () { openPage(parseInt(this.value, 10)).catch(fail); });
@@ -921,8 +923,24 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
       var out = await L.PDFDocument.create();
       var srcPage = src.getPage(S.pageNo - 1);
       var v = S.view, x0 = v[0], y0 = v[1], x1 = v[2], y1 = v[3];
-      var emb = await out.embedPage(srcPage, { left: x0, bottom: y0, right: x1, top: y1 });
-      var W = x1 - x0, H = y1 - y0, bounds = [0].concat(S.cuts, [H]);
+      if (!srcPage.node.Contents()) throw new Error('EMPTYPAGE');
+      var W = x1 - x0, H = y1 - y0, emb;
+      if (S.rot) {
+        // The page is turned in the file (/Rotate). Stand it upright first, so the cuts, which were
+        // measured on the upright preview, line up with the content.
+        var tmp = await L.PDFDocument.create();
+        var e0 = await tmp.embedPage(srcPage, { left: x0, bottom: y0, right: x1, top: y1 });
+        var tw = S.rot === 180 ? W : H, th = S.rot === 180 ? H : W;
+        var ox = S.rot === 90 ? 0 : S.rot === 180 ? W : H, oy = S.rot === 90 ? W : S.rot === 180 ? H : 0;
+        var tp = tmp.addPage([tw, th]);
+        tp.drawPage(e0, { x: ox, y: oy, width: W, height: H, rotate: L.degrees(-S.rot) });
+        var upright = await L.PDFDocument.load(await tmp.save());
+        emb = await out.embedPage(upright.getPage(0));
+        W = tw; H = th;
+      } else {
+        emb = await out.embedPage(srcPage, { left: x0, bottom: y0, right: x1, top: y1 });
+      }
+      var bounds = [0].concat(S.cuts, [H]);
       for (var i = 0; i < bounds.length - 1; i++) {
         if (S.skip[i]) continue;
         var top = bounds[i], segH = bounds[i + 1] - top;
@@ -935,6 +953,8 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
         page.drawPage(emb, { x: px, y: pg.h + top * s - H * s, width: W * s, height: H * s });
         page.pushOperators(L.popGraphicsState());
       }
+      out.setTitle(S.name.replace(/\.pdf$/i, '') || 'Sliced PDF');
+      out.setProducer('Tall PDF Slicer (verbosestudio.com/tallpdf)');
       var bytes = await out.save();
       var base = S.name.replace(/\.pdf$/i, '') || 'tall-page';
       var filename = base + '-sliced.pdf';
@@ -950,7 +970,8 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
         }
       } else { plainDownload(blob, filename); setStatus('Download started.'); }
     } catch (err) {
-      setStatus('Could not build the PDF. ' + (err && err.message ? err.message : ''), true);
+      if (err && err.message === 'EMPTYPAGE') setStatus('This page has no content in the file, so there is nothing to slice.', true);
+      else setStatus('Could not build the PDF. ' + (err && err.message ? err.message : ''), true);
     }
     S.busy = false;
   }
@@ -992,7 +1013,7 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
       if (caught) {
         // Let go when the scroll speeds up again (a deliberate new push), or after a short hold
         // (shorter for a mouse wheel, longer for trackpad momentum).
-        if ((d > lastD * 1.3 + 4 && now - caughtAt > 120) || now - caughtAt > (gap > 60 ? 350 : d > 40 ? 1000 : 1600)) { caught = false; return; }
+        if ((d > lastD * 1.3 + 4 && now - caughtAt > 120) || now - caughtAt > (gap > 60 ? 300 : d > 40 ? 450 : 700)) { caught = false; return; }
         lastD = d;
         e.preventDefault();
         if (Math.abs(window.pageYOffset - t) > 1) jump(t);
@@ -1015,7 +1036,10 @@ select.field { width: auto; max-width: 100%; font-family: var(--font-ui); }
       applySettings(loadSettings());
       var bytes = await makeSample();
       await loadBytes(bytes, 'sample-tall-page.pdf', true);
-    } catch (err) { fail(err); }
+    } catch (err) {
+      $('#fileName').textContent = 'Could not start';
+      setStatus((err && err.message ? err.message : 'Something went wrong.') + ' Try reloading the page.', true);
+    }
   })();
 })();
 </script>

@@ -125,7 +125,17 @@ def footer():
             '<nav aria-label="Footer"><a href="index.html">Tool</a><a href="how-to.html">How to use</a>'
             '<a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="linkbtn" data-contact>Contact</button></nav></footer>') % STUDIO_HREF
 
-def doc(title, desc, css, body, scripts='', artifact=False, head_extra=''):
+SITE = 'https://verbosestudio.com'
+def share_meta(slug, title, desc):
+    if slug is None: return ''
+    url = SITE + '/tallpdf/' + slug
+    img = SITE + '/tallpdf/og.png'
+    return ('<link rel="canonical" href="%s"><meta name="theme-color" content="#0e7490"><meta property="og:url" content="%s">'
+            '<meta property="og:image" content="%s"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+            '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s"><meta name="twitter:image" content="%s">'
+            % (url, url, img, title, desc, img))
+
+def doc(title, desc, css, body, scripts='', artifact=False, head_extra='', slug=None):
     """artifact=True: return a fragment (no doctype/html/head/body) for the Artifact tool's wrapper."""
     css = css + CONTACT_CSS
     body = body + CONTACT_HTML
@@ -135,8 +145,7 @@ def doc(title, desc, css, body, scripts='', artifact=False, head_extra=''):
         '<meta name="description" content="%s"><meta property="og:title" content="%s"><meta property="og:description" content="%s">'
         '<meta property="og:type" content="website">' % (desc, title, desc))
     fonts = ('<link rel="icon" href="%s">'
-             '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">' % FAVICON)
+             '<link rel="stylesheet" href="../vendor/fonts.css">' % FAVICON)
     inner = '<title>%s</title>%s%s%s<style>\n%s</style>\n%s\n%s' % (title, meta if not artifact else '', fonts, head_extra, css, body, scripts)
     if artifact:
         return inner
@@ -144,7 +153,7 @@ def doc(title, desc, css, body, scripts='', artifact=False, head_extra=''):
         inner.split('<style>')[0].replace('<title>', '<title>', 1), '', '') if False else (
         '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
         '<title>%s</title>\n<meta name="description" content="%s"><meta property="og:title" content="%s"><meta property="og:description" content="%s"><meta property="og:type" content="website">\n'
-        '%s%s\n<style>\n%s</style>\n</head>\n<body>\n%s\n%s\n</body>\n</html>\n' % (title, desc, title, desc, fonts, head_extra, css, body, scripts))
+        '%s\n%s%s\n<style>\n%s</style>\n</head>\n<body>\n%s\n%s\n</body>\n</html>\n' % (title, desc, title, desc, share_meta(slug, title, desc), fonts, head_extra, css, body, scripts))
 
 
 FORM_ENDPOINT = 'https://api.web3forms.com/submit'
@@ -270,8 +279,8 @@ tool_main = re.search(r'<main class="app">.*?</main>', tool, re.S).group(0)
 tool_main = re.sub(r'\s*<header class="top">.*?</header>', '', tool_main, count=1, flags=re.S)
 tool_dock = re.search(r'<div class="dock">.*?</div>\n', tool, re.S).group(0)
 tool_js = re.search(r'<script>\n\(function \(\) \{.*?\}\)\(\);\n</script>', tool, re.S).group(0)
-tool_libs = ('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n'
-             '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>')
+tool_libs = ('<script src="../vendor/pdf.min.js"></script>\n'
+             '<script src="../vendor/pdf-lib.min.js"></script>')
 
 def ico_cut():
     return ('<svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="8" y="1" width="28" height="28" rx="4" fill="#fff" stroke="var(--line)" stroke-width="1.5"/>'
@@ -287,6 +296,7 @@ def ico_skip():
 
 HOME_ABOVE = ('<section class="page-hero"><h1>Split a tall PDF into regular pages</h1>'
               '<p>Got a PDF that is one very long page, from a tablet note or a scanner? Drop it in and get normal Letter or A4 pages. Free, and your file never leaves your browser.</p>'
+              '<noscript><p><strong>This tool needs JavaScript.</strong> Turn it on for this page to split a PDF.</p></noscript>'
               '<span class="newhere">New here? <a href="how-to.html">See how it works in one minute</a>.</span></section>')
 
 HOME_BELOW = """
@@ -333,7 +343,7 @@ def home(artifact):
             (header('index.html'), HOME_ABOVE, tool_main, HOME_BELOW, footer(), tool_dock))
     scripts = tool_libs + '\n' + tool_js + '\n' + faq_ld()
     t = (ART_TITLE if artifact else SEO_TITLE)['index.html']
-    return doc(t, DESC['index.html'], css, body, scripts, artifact)
+    return doc(t, DESC['index.html'], css, body, scripts, artifact, slug='')
 
 # ---------- HOW TO ----------
 gcss = css_of(guide)
@@ -353,7 +363,7 @@ def howto(artifact):
     css = tokens + EXTRA_TOKENS + BASE_CSS + g_rest
     body = '<div class="wrap mid">\n%s\n%s\n<main id="top">%s</main>\n%s\n</div>\n' % (header('how-to.html'), g_defs, g_main_inner, footer())
     t = (ART_TITLE if artifact else SEO_TITLE)['how-to.html']
-    return doc(t, DESC['how-to.html'], css, body, g_js, artifact)
+    return doc(t, DESC['how-to.html'], css, body, g_js, artifact, slug='how-to.html')
 
 # ---------- ABOUT ----------
 ABOUT = """
@@ -375,25 +385,21 @@ def about(artifact):
     css = tokens + EXTRA_TOKENS + BASE_CSS
     body = '<div class="wrap narrow">\n%s\n%s\n%s\n</div>\n' % (header('about.html'), ABOUT, footer())
     t = (ART_TITLE if artifact else SEO_TITLE)['about.html']
-    return doc(t, DESC['about.html'], css, body, '', artifact)
+    return doc(t, DESC['about.html'], css, body, '', artifact, slug='about.html')
 
 # ---------- PRIVACY ----------
 PRIV = """
 <section class="page-hero"><h1>Privacy</h1><p>Short version: your PDF stays on your device.</p></section>
 <div class="prose">
-  <p class="meta">Last updated: September 25, 2026</p>
+  <p class="meta">Last updated: September 26, 2026</p>
   <h2>Your files</h2>
   <p>Tall PDF Slicer reads your PDF and builds the new one inside your browser. Your file is not uploaded, sent to a server or kept by this site. When you close or refresh the page, it is gone from the page.</p>
   <h2>What is saved on your device</h2>
   <p>The page remembers a few settings in your browser so you do not have to pick them again: the page size you chose, Automatic or Manual mode, and the zoom level. This stays on your device and is not sent anywhere. This site does not set cookies of its own.</p>
-  <h2>Other services this page loads</h2>
-  <ul>
-    <li>Google Fonts supplies the typefaces.</li>
-    <li>cdnjs, run by Cloudflare, supplies the open-source code libraries that read and build PDFs (pdf.js and pdf-lib).</li>
-  </ul>
-  <p>When your browser loads these, those services can see ordinary request details such as your IP address and browser type, as with any website. They never receive your PDF.</p>
+  <h2>Other services</h2>
+  <p>The fonts and the open-source code libraries that read and build PDFs (pdf.js and pdf-lib) are served from this site itself, so your browser does not fetch them from anyone else. The only outside service the page talks to is the contact form, and only when you send a message.</p>
   <h2>Analytics and ads</h2>
-  <p>At the moment this site has no analytics and shows no ads. If that changes, this page will be updated first to say what is used and how you can opt out.</p>
+  <p>This site is hosted on Cloudflare, which can count visits for us (page views, the country a visit came from, which page was opened) using its privacy-focused web analytics. It does not use cookies and does not follow you across other sites. We do not run any other analytics and the site shows no ads. If that changes, this page will be updated first to say what is used and how you can opt out.</p>
   <h2>If you contact us</h2>
   <p>The Contact form sends us your message, the topic you chose, and your email address only if you type one in. We use it to read and reply to you, and we do not share it or add it to any list. The message is delivered by a third-party form service. Please do not put anything private in it, and never include the contents of your PDF.</p>
 </div>
@@ -402,7 +408,7 @@ def privacy(artifact):
     css = tokens + EXTRA_TOKENS + BASE_CSS
     body = '<div class="wrap narrow">\n%s\n%s\n%s\n</div>\n' % (header('privacy.html'), PRIV, footer())
     t = (ART_TITLE if artifact else SEO_TITLE)['privacy.html']
-    return doc(t, DESC['privacy.html'], css, body, '', artifact)
+    return doc(t, DESC['privacy.html'], css, body, '', artifact, slug='privacy.html')
 
 
 # ---------- STUDIO LANDING PAGE ----------
