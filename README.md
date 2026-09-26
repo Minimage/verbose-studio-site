@@ -23,5 +23,5 @@ tools/
 
 ## Deploying
 
-Cloudflare Pages: build command empty, output directory `public`.
+Cloudflare (Workers static assets): build command empty, deploy command `npx wrangler deploy`. `wrangler.jsonc` points it at `public/`.
 The contact form key is set in `tools/tallpdf/build.py` (`FORM_KEY`).
