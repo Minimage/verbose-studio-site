@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verbose Studio: Small, Free, Private Tools</title>
+<meta name="description" content="Small free tools that do one job well and run in your browser, so your files never leave your device."><meta property="og:title" content="Verbose Studio: Small, Free, Private Tools"><meta property="og:description" content="Small free tools that do one job well and run in your browser, so your files never leave your device."><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 30'%3E%3Crect x='3' y='1' width='16' height='28' rx='3' fill='white' stroke='%230e7490' stroke-width='1.5'/%3E%3Crect x='7' y='5' width='8' height='2.4' rx='1' fill='%2339424f'/%3E%3Crect x='7' y='10' width='8' height='5' rx='1' fill='%232a8ea3'/%3E%3Cline x1='0' y1='18.5' x2='22' y2='18.5' stroke='%23d6246e' stroke-width='2' stroke-dasharray='3 2'/%3E%3C/svg%3E"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #eceff4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --ink: #182230;
+  --ink-2: #4b5567;
+  --line: #d3d9e3;
+  --accent: #0e7490;
+  --accent-hover: #0b5f77;
+  --accent-ink: #ffffff;
+  --cut: #d6246e;
+  --cut-soft: rgba(214, 36, 110, 0.12);
+  --ok: #1a7f52;
+  --warn: #a35200;
+  --warn-soft: rgba(163, 82, 0, 0.14);
+  --band-a: rgba(14, 116, 144, 0.08);
+  --out: rgba(24, 34, 48, 0.2);
+  --out-fill: rgba(255, 255, 255, 0.62);
+  --stage: #cdd4df;
+  --paper-shadow: 0 1px 2px rgba(20, 30, 50, 0.12), 0 10px 28px rgba(20, 30, 50, 0.14);
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1319;
+    --surface: #171d26;
+    --surface-2: #1e2632;
+    --ink: #e7ecf3;
+    --ink-2: #9aa6b8;
+    --line: #2b3444;
+    --accent: #4cc3dc;
+    --accent-hover: #74d3e8;
+    --accent-ink: #06222b;
+    --cut: #ff6fa8;
+    --cut-soft: rgba(255, 111, 168, 0.16);
+    --ok: #4fd08f;
+    --warn: #f2b04e;
+    --warn-soft: rgba(242, 176, 78, 0.16);
+    --band-a: rgba(76, 195, 220, 0.09);
+    --out: rgba(231, 236, 243, 0.2);
+    --out-fill: rgba(14, 19, 25, 0.6);
+    --stage: #0a0e13;
+    --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1319;
+  --surface: #171d26;
+  --surface-2: #1e2632;
+  --ink: #e7ecf3;
+  --ink-2: #9aa6b8;
+  --line: #2b3444;
+  --accent: #4cc3dc;
+  --accent-hover: #74d3e8;
+  --accent-ink: #06222b;
+  --cut: #ff6fa8;
+  --cut-soft: rgba(255, 111, 168, 0.16);
+  --ok: #4fd08f;
+  --warn: #f2b04e;
+  --warn-soft: rgba(242, 176, 78, 0.16);
+  --band-a: rgba(76, 195, 220, 0.09);
+  --out: rgba(231, 236, 243, 0.2);
+  --out-fill: rgba(14, 19, 25, 0.6);
+  --stage: #0a0e13;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+:root { --accent-soft: rgba(14, 116, 144, 0.1); --cut-ink: #ffffff; --shadow: 0 1px 2px rgba(20, 30, 50, 0.08), 0 12px 32px rgba(20, 30, 50, 0.1); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+}
+:root[data-theme="dark"] { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 48px;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: var(--accent); }
+.wrap { max-width: 1120px; margin: 0 auto; }
+.wrap.narrow { max-width: 46rem; }
+.wrap.mid { max-width: 1000px; }
+
+.site-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding-block: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.brand svg { flex: none; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.site-nav a {
+  padding: 7px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500;
+}
+.site-nav a:hover { background: var(--surface); color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); border-radius: 8px 8px 4px 4px; }
+
+.site-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; color: var(--ink-2); font-size: 14px; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.site-foot a { color: var(--ink-2); }
+.site-foot a:hover { color: var(--ink); }
+
+.page-hero { display: grid; gap: 12px; padding-block: 20px 20px; max-width: 46rem; }
+.page-hero h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
+.page-hero p { margin: 0; font-size: 19px; color: var(--ink-2); max-width: 38rem; }
+.page-hero .newhere { font-size: 15px; }
+.page-hero .newhere a { font-weight: 600; }
+
+.sec { padding-top: 56px; display: grid; gap: 18px; }
+.sec h2 { margin: 0; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+.sec > p { margin: 0; color: var(--ink-2); max-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { display: grid; align-content: start; gap: 8px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.card h3 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.card .ico { width: 44px; height: 30px; }
+.faq { display: grid; gap: 10px; max-width: 46rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { margin: 0; padding: 0 18px 16px; color: var(--ink-2); }
+.band-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 26px clamp(20px, 4vw, 34px); border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.band-cta h2 { margin: 0; font-size: 24px; letter-spacing: -0.015em; }
+.band-cta p { margin: 4px 0 0; color: var(--ink-2); font-size: 16px; }
+.pbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 20px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; text-decoration: none; }
+.pbtn:hover { background: var(--accent-hover); }
+
+.prose { display: grid; gap: 14px; padding-bottom: 8px; }
+.prose h2 { margin: 26px 0 0; font-size: 24px; letter-spacing: -0.015em; }
+.prose p, .prose li { color: var(--ink-2); margin: 0; }
+.prose ul { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.prose .meta { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); }
+.prose .todo { background: var(--accent-soft); border: 1px dashed var(--accent); color: var(--ink); padding: 2px 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.9em; }
+
+@media (max-width: 860px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+
+.tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.tool { display: grid; gap: 8px; align-content: start; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; color: var(--ink); text-decoration: none; }
+a.tool:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.tool h3 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+.tool p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+a.tool .go { color: var(--accent); font-weight: 600; font-size: 15px; }
+a.tool .thumb { height: 64px; }
+.soon { border-style: dashed; background: none; }
+.soon h3, .soon p { color: var(--ink-2); }
+
+.navbtn, .linkbtn { font: inherit; cursor: pointer; border: 0; background: none; }
+.navbtn { padding: 7px 12px; border-radius: 8px; color: var(--ink-2); font-size: 15px; font-weight: 500; }
+.navbtn:hover { background: var(--surface); color: var(--ink); }
+.linkbtn { padding: 0; color: var(--ink-2); font-size: 14px; text-decoration: underline; }
+.linkbtn:hover { color: var(--ink); }
+dialog.contact { width: min(30rem, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); overflow: auto; }
+dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
+.contact form, .contact .done { display: grid; gap: 14px; padding: 24px; }
+.contact h2 { margin: 0; font-size: 22px; letter-spacing: -0.015em; }
+.contact .lead { margin: -6px 0 0; color: var(--ink-2); font-size: 15px; }
+.contact label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+.contact label small { font-weight: 400; color: var(--ink-2); }
+.contact select, .contact textarea, .contact input[type=email] { font: inherit; font-weight: 400; font-size: 16px; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+.contact textarea { min-height: 130px; resize: vertical; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; align-items: center; }
+.contact .ghost { font: inherit; font-size: 15px; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.contact .pbtn { border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.contact .pbtn[disabled] { opacity: .6; cursor: default; }
+.contact .msg { margin: 0; font-size: 14px; color: var(--ink-2); }
+.contact .msg.err { color: var(--cut); }
+.contact .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="wrap"><header class="site-head"><a class="brand" href="index.html"><span>Verbose Studio</span></a><nav class="site-nav" aria-label="Main"><a href="tallpdf/" >Tall PDF Slicer</a><button type="button" class="navbtn" data-contact>Contact</button></nav></header><section class="page-hero"><h1>Small tools that do one thing well</h1><p>Free, simple tools for everyday jobs. Nothing to install, no account, and your files never leave your browser.</p></section><section class="sec" style="padding-top:24px"><h2>Tools</h2><div class="tools"><a class="tool" href="tallpdf/"><svg class="thumb" viewBox="0 0 120 64" aria-hidden="true"><rect x="46" y="2" width="28" height="60" rx="4" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="52" y="8" width="16" height="4" rx="1.5" fill="#39424f"/><rect x="52" y="16" width="16" height="12" rx="2" fill="#2a8ea3"/><line x1="34" y1="36" x2="86" y2="36" stroke="var(--cut)" stroke-width="2" stroke-dasharray="4 3"/><rect x="52" y="42" width="16" height="3" rx="1.5" fill="#c8cfda"/><rect x="52" y="49" width="16" height="3" rx="1.5" fill="#c8cfda"/></svg><h3>Tall PDF Slicer</h3><p>Cut a PDF that is one very long page, like a tablet note or a scan, into regular Letter or A4 pages.</p><span class="go">Open the tool &rarr;</span></a><div class="tool soon"><h3>More on the way</h3><p>Have an idea for a tool, or something that annoys you? Use Contact and tell us.</p></div></div></section><footer class="site-foot"><span>Small, free, private tools. Your files stay in your browser.</span><nav aria-label="Footer"><a href="tallpdf/privacy.html">Privacy</a><button type="button" class="linkbtn" data-contact>Contact</button></nav></footer></div>
+<dialog class="contact" id="contactDlg" aria-labelledby="contactTitle">
+  <form id="contactForm" method="dialog" novalidate>
+    <h2 id="contactTitle">Contact us</h2>
+    <p class="lead">Found a problem, or want a feature? Tell us. We read everything.</p>
+    <label>What is it about?
+      <select name="topic">
+        <option>Suggestion</option><option>Something is not working</option><option>Question</option><option>Other</option>
+      </select>
+    </label>
+    <label>Your message
+      <textarea name="message" required maxlength="4000" placeholder="What happened, or what would you like to see?"></textarea>
+    </label>
+    <label>Your email <small>(optional, only if you would like a reply)</small>
+      <input type="email" name="email" autocomplete="email" maxlength="200">
+    </label>
+    <div class="trap" aria-hidden="true"><label>Leave this empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label></div>
+    <p class="msg" id="contactMsg" role="status" aria-live="polite"></p>
+    <div class="row"><button type="button" class="ghost" id="contactCancel">Cancel</button><button type="submit" class="pbtn" id="contactSend">Send</button></div>
+  </form>
+  <div class="done" id="contactDone" hidden>
+    <h2>Thank you</h2>
+    <p class="lead" style="margin:0">Your message was sent.</p>
+    <div class="row"><button type="button" class="pbtn" id="contactClose">Close</button></div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var dlg = document.getElementById('contactDlg'); if (!dlg) return;
+  var form = document.getElementById('contactForm'), done = document.getElementById('contactDone');
+  var msg = document.getElementById('contactMsg'), send = document.getElementById('contactSend');
+  var ENDPOINT = 'https://api.web3forms.com/submit', KEY = 'YOUR_WEB3FORMS_ACCESS_KEY', TOOL = 'Tall PDF Slicer';
+  function open() {
+    form.hidden = false; done.hidden = true; msg.textContent = ''; msg.className = 'msg'; send.disabled = false;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    var t = form.querySelector('textarea'); if (t) t.focus();
+  }
+  function close() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  document.querySelectorAll('[data-contact]').forEach(function (b) { b.addEventListener('click', open); });
+  document.getElementById('contactCancel').addEventListener('click', close);
+  document.getElementById('contactClose').addEventListener('click', close);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = form.elements;
+    if (!f.message.value.trim()) { msg.className = 'msg err'; msg.textContent = 'Please write a short message first.'; f.message.focus(); return; }
+    if (f.email.value && !f.email.checkValidity()) { msg.className = 'msg err'; msg.textContent = 'That email does not look right. You can also leave it blank.'; return; }
+    if (f.botcheck.checked) { form.hidden = true; done.hidden = false; return; }
+    if (KEY.indexOf('YOUR_') === 0) { msg.className = 'msg err'; msg.textContent = 'The contact form is not switched on yet. Please try again soon.'; return; }
+    send.disabled = true; msg.className = 'msg'; msg.textContent = 'Sending...';
+    var body = { access_key: KEY, subject: TOOL + ': ' + f.topic.value, from_name: TOOL + ' contact form', topic: f.topic.value, message: f.message.value, page: location.pathname };
+    if (f.email.value) { body.email = f.email.value; body.replyto = f.email.value; }
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.success) { form.reset(); form.hidden = true; done.hidden = false; } else { throw new Error(); } })
+      .catch(function () { send.disabled = false; msg.className = 'msg err'; msg.textContent = 'Sorry, that did not send. Please try again in a moment.'; });
+  });
+})();
+</script>
+</body>
+</html>
