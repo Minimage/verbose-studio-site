@@ -176,6 +176,7 @@ a { color: var(--accent); }
 .step kbd, .step .k {
   font-family: var(--font-mono); font-size: 0.86em; padding: 1px 7px; border-radius: 6px;
   background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+  white-space: nowrap;
 }
 
 .media {
@@ -229,7 +230,7 @@ a { color: var(--accent); }
 /* Resting frames show the finished state, so a still picture already explains the step. */
 .s1-prompt, .dz-idle, .s1-cur, .s3-pa, .s3-cur, .s4-in, .s4-p3, .s4-cur, .s2-cur, .s5-cur { opacity: 0; }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .playing .scene-fade { animation: sfade var(--dur) linear infinite; }
   @keyframes sfade { 0% { opacity: 0; } 4% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; } }
   @keyframes hideAt40 { 0%, 40% { opacity: 1; } 44%, 100% { opacity: 0; } }
