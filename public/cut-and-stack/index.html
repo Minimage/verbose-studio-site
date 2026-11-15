@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cut and Stack PDF: Free Imposition Tool for Tickets and Cards</title>
+<meta name="description" content="Make a cut and stack PDF for free: 2, 4, 6 or 8 tickets, cards or postcards per Letter or A4 sheet, so after you print, stack and cut, every pile is in order. Double-sided too. Runs in your browser; your file is never uploaded."><meta property="og:title" content="Cut and Stack PDF: Free Imposition Tool for Tickets and Cards"><meta property="og:description" content="Make a cut and stack PDF for free: 2, 4, 6 or 8 tickets, cards or postcards per Letter or A4 sheet, so after you print, stack and cut, every pile is in order. Double-sided too. Runs in your browser; your file is never uploaded."><meta property="og:type" content="website">
+<link rel="canonical" href="https://verbosestudio.com/cut-and-stack/"><meta name="theme-color" content="#0e7490"><meta property="og:url" content="https://verbosestudio.com/cut-and-stack/"><meta property="og:site_name" content="Verbose Studio"><meta property="og:image" content="https://verbosestudio.com/cut-and-stack/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cut and Stack PDF: Free Imposition Tool for Tickets and Cards"><meta name="twitter:description" content="Make a cut and stack PDF for free: 2, 4, 6 or 8 tickets, cards or postcards per Letter or A4 sheet, so after you print, stack and cut, every pile is in order. Double-sided too. Runs in your browser; your file is never uploaded."><meta name="twitter:image" content="https://verbosestudio.com/cut-and-stack/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Crect x='6' y='5' width='21' height='23' rx='1.5' fill='white' stroke='%230e7490' stroke-width='1.5'/%3E%3Crect x='3' y='2' width='21' height='23' rx='1.5' fill='white' stroke='%230e7490' stroke-width='1.5'/%3E%3Crect x='5.5' y='4.5' width='7' height='8' rx='1' fill='%232a8ea3'/%3E%3Cline x1='13.5' y1='0.5' x2='13.5' y2='29.5' stroke='%23d6246e' stroke-width='2' stroke-dasharray='3 2'/%3E%3Cline x1='0.5' y1='13.5' x2='29.5' y2='13.5' stroke='%23d6246e' stroke-width='2' stroke-dasharray='3 2'/%3E%3C/svg%3E"><link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+:root {
+  --bg: #eceff4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --ink: #182230;
+  --ink-2: #4b5567;
+  --line: #d3d9e3;
+  --accent: #0e7490;
+  --accent-hover: #0b5f77;
+  --accent-ink: #ffffff;
+  --cut: #d6246e;
+  --cut-soft: rgba(214, 36, 110, 0.12);
+  --ok: #1a7f52;
+  --ok-soft: rgba(26, 127, 82, 0.14);
+  --warn: #a35200;
+  --warn-soft: rgba(163, 82, 0, 0.14);
+  --band-a: rgba(14, 116, 144, 0.08);
+  --out: rgba(24, 34, 48, 0.2);
+  --out-fill: rgba(255, 255, 255, 0.62);
+  --stage: #cdd4df;
+  --paper-shadow: 0 1px 2px rgba(20, 30, 50, 0.12), 0 10px 28px rgba(20, 30, 50, 0.14);
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1319;
+    --surface: #171d26;
+    --surface-2: #1e2632;
+    --ink: #e7ecf3;
+    --ink-2: #9aa6b8;
+    --line: #2b3444;
+    --accent: #4cc3dc;
+    --accent-hover: #74d3e8;
+    --accent-ink: #06222b;
+    --cut: #ff6fa8;
+    --cut-soft: rgba(255, 111, 168, 0.16);
+    --ok: #4fd08f;
+    --ok-soft: rgba(79, 208, 143, 0.16);
+    --warn: #f2b04e;
+    --warn-soft: rgba(242, 176, 78, 0.16);
+    --band-a: rgba(76, 195, 220, 0.09);
+    --out: rgba(231, 236, 243, 0.2);
+    --out-fill: rgba(14, 19, 25, 0.6);
+    --stage: #0a0e13;
+    --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1319;
+  --surface: #171d26;
+  --surface-2: #1e2632;
+  --ink: #e7ecf3;
+  --ink-2: #9aa6b8;
+  --line: #2b3444;
+  --accent: #4cc3dc;
+  --accent-hover: #74d3e8;
+  --accent-ink: #06222b;
+  --cut: #ff6fa8;
+  --cut-soft: rgba(255, 111, 168, 0.16);
+  --ok: #4fd08f;
+  --ok-soft: rgba(79, 208, 143, 0.16);
+  --warn: #f2b04e;
+  --warn-soft: rgba(242, 176, 78, 0.16);
+  --band-a: rgba(76, 195, 220, 0.09);
+  --out: rgba(231, 236, 243, 0.2);
+  --out-fill: rgba(14, 19, 25, 0.6);
+  --stage: #0a0e13;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+:root { --accent-soft: rgba(14, 116, 144, 0.1); --cut-ink: #ffffff; --shadow: 0 1px 2px rgba(20, 30, 50, 0.08), 0 12px 32px rgba(20, 30, 50, 0.1); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+}
+:root[data-theme="dark"] { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 48px;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: var(--accent); }
+.wrap { max-width: 1120px; margin: 0 auto; }
+.wrap.narrow { max-width: 46rem; }
+
+.site-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding-block: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.brand svg { flex: none; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.site-nav a {
+  padding: 7px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500;
+}
+.site-nav a:hover { background: var(--surface); color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); border-radius: 8px 8px 4px 4px; }
+
+.site-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; color: var(--ink-2); font-size: 14px; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.site-foot a { color: var(--ink-2); }
+.site-foot a:hover { color: var(--ink); }
+
+.page-hero { display: grid; gap: 12px; padding-block: 20px 20px; max-width: 46rem; }
+.page-hero h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
+.page-hero p { margin: 0; font-size: 19px; color: var(--ink-2); max-width: 38rem; }
+.page-hero .newhere { font-size: 15px; }
+.page-hero .newhere a { font-weight: 600; }
+
+.sec { padding-top: 56px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.sec h2 { margin: 0; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+.sec > p { margin: 0; color: var(--ink-2); max-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { display: grid; align-content: start; gap: 8px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.card h3 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.card .ico { width: 44px; height: 30px; }
+.uses { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; max-width: 46rem; }
+.uses li { padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 600; }
+.uses li span { display: block; font-weight: 400; font-size: 15px; color: var(--ink-2); }
+.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 44rem; color: var(--ink-2); }
+.steps b { color: var(--ink); font-weight: 600; }
+.faq { display: grid; gap: 10px; max-width: 46rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { margin: 0; padding: 0 18px 16px; color: var(--ink-2); }
+.band-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 26px clamp(20px, 4vw, 34px); border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.band-cta h2 { margin: 0; font-size: 24px; letter-spacing: -0.015em; }
+.band-cta p { margin: 4px 0 0; color: var(--ink-2); font-size: 16px; }
+.pbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 20px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; text-decoration: none; }
+.pbtn:hover { background: var(--accent-hover); }
+
+.prose { display: grid; gap: 14px; padding-bottom: 8px; }
+.prose h2 { margin: 26px 0 0; font-size: 24px; letter-spacing: -0.015em; }
+.prose p, .prose li { color: var(--ink-2); margin: 0; }
+.prose ul, .prose ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose .meta { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); }
+
+@media (max-width: 860px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 20px 24px;
+  align-items: start;
+}
+.top { grid-column: 1 / -1; display: grid; gap: 4px; }
+.top h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.top p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+
+.panel {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.group { display: grid; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.group > legend, .label {
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 2px;
+}
+
+.file-row { display: grid; gap: 8px; }
+.file-name { font-weight: 600; overflow-wrap: anywhere; }
+.file-meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); overflow-wrap: anywhere; }
+.tag {
+  display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line);
+  vertical-align: 1px;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 38px; padding: 8px 14px;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 600;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.btn.small { min-height: 32px; padding: 5px 10px; font-size: 13px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.opt {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface);
+}
+.opt:has(input:checked) { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt input[type="radio"], .opt input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.opt .name { font-weight: 600; }
+.opt .dim { grid-column: 2; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.opt .sub { grid-column: 2; font-size: 13px; color: var(--ink-2); }
+
+.seg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.seg.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.seg label { position: relative; display: grid; }
+.seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.seg span {
+  display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 4px 6px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-weight: 600; text-align: center;
+}
+.seg input:checked + span { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); }
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.hint { margin: 0; font-size: 13px; color: var(--ink-2); }
+.summary { display: grid; gap: 6px; padding: 12px; border-radius: 8px; background: var(--surface-2); font-size: 14px; }
+.summary .big { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.summary .row { display: flex; justify-content: space-between; gap: 12px; }
+.summary .row span:last-child { font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.summary .warn { color: var(--warn); font-size: 13px; }
+.status { min-height: 1.4em; margin: 0; font-size: 13px; color: var(--ink-2); }
+.status.err { color: var(--cut); }
+
+.order { display: grid; gap: 8px; padding: 12px; border-radius: 8px; border: 1px solid var(--line); }
+.order ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+.order b { font-weight: 600; }
+.pilemap { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 4px; padding: 6px; background: #fff; border-radius: 6px; box-shadow: var(--paper-shadow); }
+.pilemap div { display: grid; gap: 0; place-items: center; padding: 6px 2px; border: 1px dashed var(--cut); border-radius: 3px; color: #182230; font-size: 12px; line-height: 1.25; text-align: center; }
+.pilemap b { font-size: 13px; }
+.pilemap span { font-family: var(--font-mono); font-size: 11px; color: #4b5567; }
+.pilemap .none { opacity: 0.5; }
+
+.tip { display: grid; gap: 6px; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); }
+.tip ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+.tip b { font-weight: 600; }
+
+.stage {
+  background: var(--stage);
+  border-radius: 10px;
+  padding: 20px 16px 24px;
+  min-width: 0;
+}
+.stage.dropping { outline: 3px dashed var(--accent); outline-offset: -8px; }
+.stage-head { margin: 0 auto 16px; max-width: 820px; display: grid; gap: 4px; }
+.stage-head p { margin: 0; font-size: 13px; color: var(--ink-2); }
+.sheets { max-width: 820px; margin: 0 auto; display: grid; gap: 22px; }
+.sheets.single { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.sheet-card { display: grid; gap: 8px; align-content: start; }
+.sheet-card .cap { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.sides { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sheets.single .sides { grid-template-columns: minmax(0, 1fr); }
+.side { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.side .lab { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.paper { position: relative; aspect-ratio: var(--ar, 0.773); background: #fff; box-shadow: var(--paper-shadow); line-height: 0; }
+.paper canvas { display: block; width: 100%; height: 100%; }
+.badge {
+  position: absolute; margin: 3px; padding: 1px 5px; border-radius: 4px; line-height: 1.35;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500; background: rgba(24, 34, 48, 0.8); color: #fff; pointer-events: none;
+}
+.badge.back { background: rgba(14, 116, 144, 0.88); }
+.empty { max-width: 820px; margin: 0 auto; padding: 48px 16px; text-align: center; color: var(--ink-2); }
+
+.dock { display: none; }
+@media (max-width: 860px) {
+  body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; max-height: none; }
+  .dock {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface); border-top: 1px solid var(--line);
+  }
+  .dock .txt { font-weight: 600; }
+}
+@media (max-width: 560px) { .sides { grid-template-columns: minmax(0, 1fr); } }
+.dm { display: grid; gap: 16px; padding: clamp(14px, 3vw, 22px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; font-size: 15px; line-height: 1.45; }
+.dm-controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: end; }
+.dm-field { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; min-width: 0; }
+.dm-field legend { padding: 0; margin-bottom: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.dm-field.per { flex: 0 1 248px; }
+.dm-stepper { display: inline-flex; align-items: center; gap: 6px; }
+.dm-stepper button { width: 44px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 20px; font-weight: 600; cursor: pointer; }
+.dm-stepper button:hover { background: var(--surface-2); }
+.dm-stepper button[disabled] { opacity: 0.4; cursor: not-allowed; }
+.dm-stepper output { min-width: 2.4ch; text-align: center; font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
+.dm-steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.dm-step {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--ink-2); font-weight: 600; cursor: pointer;
+}
+.dm-step span { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 12px; font-family: var(--font-mono); }
+.dm-step:hover { color: var(--ink); }
+.dm-step[aria-current="step"] { border-color: var(--accent); color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--accent); }
+.dm-step[aria-current="step"] span { background: var(--accent); color: var(--accent-ink); }
+.dm-lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.dm-lane { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.dm-lane figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.dm-lane figcaption b { font-size: 17px; }
+.dm-lane figcaption span { font-size: 14px; color: var(--ink-2); }
+.dm-stage { position: relative; overflow: hidden; background: var(--stage); border-radius: 12px; height: 240px; transition: height 0.5s ease; }
+.dm-stage > * { position: absolute; left: 0; top: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.6s, height 0.6s, opacity 0.35s, font-size 0.6s, border-color 0.3s; }
+.dm-sheet { background: #fff; border-radius: 3px; box-shadow: 0 1px 2px rgba(20, 30, 50, 0.15), 0 4px 12px rgba(20, 30, 50, 0.12); }
+.dm-card { display: grid; place-items: center; border: 1px solid rgba(24, 34, 48, 0.2); border-radius: 3px; color: #182230; font-family: var(--font-mono); font-weight: 600; line-height: 1; overflow: hidden; }
+.dm-card.ok { border: 2px solid var(--ok); }
+.dm-card.bad { border: 2px solid var(--cut); }
+.dm-slab, .dm-cap { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); line-height: 1.3; }
+.dm-line { opacity: 0; z-index: 500; }
+.dm-line.v { width: 2px; background: repeating-linear-gradient(to bottom, var(--cut) 0 6px, transparent 6px 10px); }
+.dm-line.h { height: 2px; background: repeating-linear-gradient(to right, var(--cut) 0 6px, transparent 6px 10px); }
+.dm-line.on { opacity: 1; }
+.dm-line.v.on { animation: dm-cut-v 0.45s ease-out both; }
+.dm-line.h.on { animation: dm-cut-h 0.45s ease-out both; }
+@keyframes dm-cut-v { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes dm-cut-h { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+.dm-still, .dm-still > * { transition: none !important; }
+.dm-note { margin: 0; font-size: 14.5px; color: var(--ink-2); min-height: 3em; }
+.dm-note .good { color: var(--ok); font-weight: 600; }
+.dm-note .bad { color: var(--cut); font-weight: 600; }
+.dm-nav { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.dm-live { margin: 0; flex: 1 1 18rem; font-weight: 600; }
+.dm-nav .btn-row { flex: none; }
+.dm .btn { min-height: 44px; }
+@media (max-width: 520px) { .dm-step { flex-direction: column; gap: 2px; font-size: 13px; } }
+@media (prefers-reduced-motion: reduce) {
+  .dm-stage, .dm-stage > * { transition: none !important; }
+  .dm-line.on { animation: none !important; }
+}
+
+.app { font-size: 15px; line-height: 1.45; }
+#tool, #demo { scroll-margin-top: 12px; }
+
+.navbtn, .linkbtn { font: inherit; cursor: pointer; border: 0; background: none; }
+.navbtn { padding: 7px 12px; border-radius: 8px; color: var(--ink-2); font-size: 15px; font-weight: 500; }
+.navbtn:hover { background: var(--surface); color: var(--ink); }
+.linkbtn { padding: 0; color: var(--ink-2); font-size: 14px; text-decoration: underline; }
+.linkbtn:hover { color: var(--ink); }
+dialog.contact { width: min(30rem, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); overflow: auto; }
+dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
+.contact form, .contact .done { display: grid; gap: 14px; padding: 24px; }
+.contact h2 { margin: 0; font-size: 22px; letter-spacing: -0.015em; }
+.contact .lead { margin: -6px 0 0; color: var(--ink-2); font-size: 15px; }
+.contact label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+.contact label small { font-weight: 400; color: var(--ink-2); }
+.contact select, .contact textarea, .contact input[type=email] { font: inherit; font-weight: 400; font-size: 16px; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+.contact textarea { min-height: 130px; resize: vertical; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; align-items: center; }
+.contact .ghost { font: inherit; font-size: 15px; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.contact .pbtn { border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.contact .pbtn[disabled] { opacity: .6; cursor: default; }
+.contact .msg { margin: 0; font-size: 14px; color: var(--ink-2); }
+.contact .msg.err { color: var(--cut); }
+.contact .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="site-head"><a class="brand" href="index.html"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="6" y="5" width="21" height="23" rx="1.5" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="3" y="2" width="21" height="23" rx="1.5" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="5.5" y="4.5" width="7" height="8" rx="1" fill="#2a8ea3"/><rect x="14.5" y="4.5" width="7" height="8" rx="1" fill="#c8cfda"/><rect x="5.5" y="14.5" width="7" height="8" rx="1" fill="#c8cfda"/><rect x="14.5" y="14.5" width="7" height="8" rx="1" fill="#c8cfda"/><line x1="13.5" y1="0.5" x2="13.5" y2="29.5" stroke="var(--cut)" stroke-width="1.8" stroke-dasharray="3 2"/><line x1="0.5" y1="13.5" x2="29.5" y2="13.5" stroke="var(--cut)" stroke-width="1.8" stroke-dasharray="3 2"/></svg><span>Cut and Stack PDF Imposer</span></a><nav class="site-nav" aria-label="Main"><a href="index.html" aria-current="page">Tool</a><a href="how-to.html">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="navbtn" data-contact>Contact</button></nav></header>
+<section class="page-hero"><h1>Make a cut and stack PDF</h1><p>Drop in a PDF of tickets, cards or postcards and get a print-ready PDF with 2, 4, 6 or 8 on each sheet. Print, stack, cut once, and every pile is already in order. Free, and your file never leaves your browser.</p><noscript><p><strong>This tool needs JavaScript.</strong> Turn it on for this page to use it.</p></noscript><span class="newhere">New here? <a href="#demo">See how cut and stack works</a>, or read the <a href="how-to.html">step-by-step guide</a>.</span></section>
+<section id="tool" aria-label="Cut and stack PDF imposer">
+<main class="app">
+
+  <aside class="panel" aria-label="Cut and stack settings">
+    <div class="group file-row">
+      <span class="label">PDF</span>
+      <div>
+        <span class="file-name" id="fileName">Loading sample…</span><span class="tag" id="sampleTag" hidden>sample</span>
+        <div class="file-meta" id="fileMeta"></div>
+      </div>
+      <div class="btn-row">
+        <label class="btn small" for="fileInput">Open a PDF…</label>
+        <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+      </div>
+      <p class="hint">One item per page. Or drop a PDF anywhere on this page.</p>
+    </div>
+
+    <fieldset class="group">
+      <legend>Items per sheet</legend>
+      <div class="seg">
+        <label><input type="radio" name="per" value="2"><span>2</span></label>
+        <label><input type="radio" name="per" value="4"><span>4</span></label>
+        <label><input type="radio" name="per" value="6"><span>6</span></label>
+        <label><input type="radio" name="per" value="8"><span>8</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Paper you print on</legend>
+      <div class="seg two">
+        <label><input type="radio" name="paper" value="letter"><span>Letter</span></label>
+        <label><input type="radio" name="paper" value="a4"><span>A4</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Sides</legend>
+      <label class="opt"><input type="radio" name="sides" value="single">
+        <span class="name">Single-sided</span><span class="sub">Every page of the PDF is one item.</span></label>
+      <label class="opt"><input type="radio" name="sides" value="alt">
+        <span class="name">Double-sided</span><span class="sub">Pages alternate: front of item 1, back of item 1, front of item 2…</span></label>
+      <label class="opt"><input type="radio" name="sides" value="same">
+        <span class="name">Double-sided, one shared back</span><span class="sub">The last page is the back of every item.</span></label>
+    </fieldset>
+
+    <fieldset class="group" id="flipGroup">
+      <legend>Your printer flips on the</legend>
+      <div class="seg two">
+        <label><input type="radio" name="flip" value="long"><span>Long edge</span></label>
+        <label><input type="radio" name="flip" value="short"><span>Short edge</span></label>
+      </div>
+      <p class="hint">Long edge is the usual setting. The backs are mirrored to match, so each back lands behind its front.</p>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Item size</legend>
+      <label class="opt"><input type="radio" name="fit" value="actual">
+        <span class="name">Actual size</span><span class="sub">Shrinks only if the items do not fit.</span></label>
+      <label class="opt"><input type="radio" name="fit" value="fill">
+        <span class="name">Fill the sheet</span><span class="sub">Enlarges or shrinks to use the paper.</span></label>
+      <label class="opt"><input type="checkbox" id="guides">
+        <span class="name">Cut guide lines</span><span class="sub">Short lines in the margin, lined up with every cut.</span></label>
+    </fieldset>
+
+    <p class="hint">Your choices are remembered in this browser.</p>
+
+    <div class="group">
+      <span class="label">Result</span>
+      <div class="summary" id="summary" aria-live="polite"></div>
+    </div>
+
+    <div class="group">
+      <button type="button" class="btn primary" id="dl">Download cut and stack PDF</button>
+      <p class="status" id="status" role="status"></p>
+    </div>
+
+    <div class="order" id="order" hidden>
+      <span class="label">After printing</span>
+      <ol id="orderSteps"></ol>
+    </div>
+  </aside>
+
+  <section class="stage" id="stage" aria-label="Preview">
+    <div class="stage-head">
+      <p id="stageHint">Every sheet, as it prints. The numbers are item numbers and the pink dashed lines are the cuts.</p>
+    </div>
+    <div class="sheets" id="sheets"></div>
+  </section>
+</main>
+</section>
+<section class="sec" aria-labelledby="demo">
+  <h2 id="demo">See how cut and stack works</h2>
+  <p>Try it with numbered cards, no file needed. Step through printing, stacking, cutting and collecting, and watch what comes out with the normal order and with the cut and stack order.</p>
+  <div class="dm" id="dm">
+    <div class="dm-controls">
+      <fieldset class="dm-field per">
+        <legend>Cards per sheet</legend>
+        <div class="seg">
+          <label><input type="radio" name="dmPer" value="2"><span>2</span></label>
+          <label><input type="radio" name="dmPer" value="4" checked><span>4</span></label>
+          <label><input type="radio" name="dmPer" value="6"><span>6</span></label>
+          <label><input type="radio" name="dmPer" value="8"><span>8</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="dm-field">
+        <legend>Sheets</legend>
+        <div class="dm-stepper">
+          <button type="button" id="dmLess" aria-label="Fewer sheets">&minus;</button>
+          <output id="dmCount" aria-live="polite">4</output>
+          <button type="button" id="dmMore" aria-label="More sheets">+</button>
+        </div>
+      </fieldset>
+    </div>
+
+    <ol class="dm-steps" aria-label="Steps">
+      <li><button type="button" class="dm-step" data-step="0"><span>1</span>Print</button></li>
+      <li><button type="button" class="dm-step" data-step="1"><span>2</span>Stack</button></li>
+      <li><button type="button" class="dm-step" data-step="2"><span>3</span>Cut</button></li>
+      <li><button type="button" class="dm-step" data-step="3"><span>4</span>Collect</button></li>
+    </ol>
+
+    <div class="dm-lanes">
+      <figure class="dm-lane" data-mode="normal">
+        <figcaption><b>Normal order</b><span>Cards go onto each sheet one after another.</span></figcaption>
+        <div class="dm-stage" aria-hidden="true"></div>
+        <p class="dm-note"></p>
+      </figure>
+      <figure class="dm-lane" data-mode="stack">
+        <figcaption><b>Cut and stack order</b><span>What this tool makes.</span></figcaption>
+        <div class="dm-stage" aria-hidden="true"></div>
+        <p class="dm-note"></p>
+      </figure>
+    </div>
+
+    <div class="dm-nav">
+      <p class="dm-live" id="dmLive" aria-live="polite"></p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="dmBack">Back</button>
+        <button type="button" class="btn primary" id="dmNext">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="what">
+  <h2 id="what">What it does</h2>
+  <p>It takes a PDF with one item on each page and lays the items out on Letter or A4 sheets in cut and stack order.</p>
+  <div class="cards">
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="4" y="3" width="16" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="24" y="3" width="16" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><text x="12" y="19.5" font-size="10" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#2a8ea3">1</text><text x="32" y="19.5" font-size="10" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#2a8ea3">2</text></svg><h3>Keeps numbers in order</h3><p>Each position on the sheet is its own pile. Cut the stack, put the piles together, and item 1 is on top with the rest in order underneath.</p></div>
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="4" y="3" width="16" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="24" y="3" width="16" height="24" rx="2" fill="#2a8ea3" stroke="var(--line)" stroke-width="1.5"/><path d="M14 15 H30 M26 11 L30 15 L26 19" fill="none" stroke="var(--cut)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Lines up the backs</h3><p>For double-sided items, the backs are mirrored to match how your printer flips the paper, so each back lands behind its own front.</p></div>
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="4" y="3" width="16" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="8" y="8" width="8" height="2" rx="1" fill="#39424f"/><rect x="8" y="13" width="8" height="2" rx="1" fill="#c8cfda"/><rect x="8" y="17" width="6" height="2" rx="1" fill="#c8cfda"/><rect x="24" y="3" width="16" height="24" rx="2" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="3 2"/></svg><h3>Fills the last sheet</h3><p>If your items do not fill every sheet, the tool adds blank spaces so the piles still come out right, and tells you which piles to keep.</p></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="howto">
+  <h2 id="howto">How to cut and stack a PDF</h2>
+  <ol class="steps">
+    <li><b>Open your PDF</b> in the tool above. It should have one item per page, at the size you want it printed.</li>
+    <li><b>Pick how many go on a sheet</b> (2, 4, 6 or 8), your paper, and single or double-sided.</li>
+    <li><b>Check the preview</b> and press <b>Download cut and stack PDF</b>.</li>
+    <li><b>Print it at actual size</b>. For double-sided items, use the same flip setting you chose in the tool.</li>
+    <li><b>Stack the sheets</b> with sheet 1 on top, <b>cut the stack</b> along the guides, and <b>put pile 1 on pile 2</b>, then on pile 3, and so on.</li>
+  </ol>
+  <p>The <a href="how-to.html">full guide</a> covers lining up the backs, cutting without a guillotine and setting up your PDF.</p>
+</section>
+
+<section class="sec" aria-labelledby="useful">
+  <h2 id="useful">What it is useful for</h2>
+  <p>Anything small that you print several to a sheet and then cut apart. If the items are numbered, or just need to stay in a set order, cut and stack saves you sorting them by hand afterwards. Print 200 tickets four to a sheet the usual way and the cut piles come out as 1, 5, 9 and so on, ready for a long evening of sorting.</p>
+  <ul class="uses">
+    <li>Raffle and event tickets<span>Numbered tickets that come off the cutter in order, stubs and all.</span></li>
+    <li>Numbered cards<span>Bingo cards, game cards and anything with a serial number.</span></li>
+    <li>Flashcards<span>Question on the front, answer on the back, in lesson order.</span></li>
+    <li>Place cards<span>Name cards for a wedding or dinner, in seating order.</span></li>
+    <li>Postcards<span>A set of postcards or invitations with a printed back.</span></li>
+    <li>Business cards<span>Eight to a sheet, with the back lined up behind each front.</span></li>
+    <li>Small notepads<span>Quarter-page note sheets that stack straight into a pad.</span></li>
+  </ul>
+</section>
+
+<section class="sec" aria-labelledby="faq">
+  <h2 id="faq">Common questions</h2>
+  <div class="faq"><details><summary>Is my file uploaded anywhere?</summary><p>No. The whole job runs inside your browser. Your PDF is read on your own device and the new PDF is built there too. Nothing is sent to a server.</p></details><details><summary>What does cut and stack mean?</summary><p>It is a way of laying out small items on sheets so a whole stack can be cut at once. Each position on the sheet becomes its own pile, and each pile runs down through the stack in order. With 4 on a sheet and 4 sheets, sheet 1 holds items 1, 5, 9 and 13, and sheet 2 holds 2, 6, 10 and 14. After one cut, the piles hold 1 to 4, 5 to 8, 9 to 12 and 13 to 16, so you just put them on top of each other.</p></details><details><summary>How should my PDF be set up?</summary><p>One item per page, at the size you want it printed. For double-sided items, either put each back right after its front (front 1, back 1, front 2, back 2), or put one shared back as the very last page.</p></details><details><summary>The backs do not line up with the fronts. What can I do?</summary><p>First check that the flip setting in the tool matches the one in the print dialog. Then print one test sheet and hold it up to a light. Most home printers shift the back by a millimetre or two, so leave a little white space around the edge of your design rather than a tight border.</p></details><details><summary>Why are some spaces blank?</summary><p>Every sheet has the same number of spaces, so if your item count does not fill the last round, the tool adds blank spaces. They end up at the bottom of the last piles, or as whole piles of blank paper you can throw away.</p></details><details><summary>Can I cut it with scissors?</summary><p>Yes. Cut a few sheets at a time, keep each position in its own pile as you go, and keep the sheets in order. A paper trimmer or guillotine is faster because it cuts the whole stack in one go.</p></details></div>
+</section>
+
+<section class="sec">
+  <div class="band-cta">
+    <div><h2>First time cutting a stack?</h2><p>The guide walks through printing, cutting and putting the piles together.</p></div>
+    <a class="pbtn" href="how-to.html">See how to use it</a>
+  </div>
+</section>
+
+<footer class="site-foot"><span>A free tool by <a href="../">Verbose Studio</a>. Your files stay in your browser.</span><nav aria-label="Footer"><a href="index.html">Tool</a><a href="how-to.html">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="linkbtn" data-contact>Contact</button></nav></footer>
+</div>
+<div class="dock">
+  <span class="txt" id="dockTxt"></span>
+  <button type="button" class="btn primary" id="dl2">Download</button>
+</div>
+
+
+<dialog class="contact" id="contactDlg" aria-labelledby="contactTitle">
+  <form id="contactForm" method="dialog" novalidate>
+    <h2 id="contactTitle">Contact us</h2>
+    <p class="lead">Found a problem, or want a feature? Tell us. We read everything.</p>
+    <label>What is it about?
+      <select name="topic">
+        <option>Suggestion</option><option>Something is not working</option><option>Question</option><option>Other</option>
+      </select>
+    </label>
+    <label>Your message
+      <textarea name="message" required maxlength="4000" placeholder="What happened, or what would you like to see?"></textarea>
+    </label>
+    <label>Your email <small>(optional, only if you would like a reply)</small>
+      <input type="email" name="email" autocomplete="email" maxlength="200">
+    </label>
+    <div class="trap" aria-hidden="true"><label>Leave this empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label></div>
+    <p class="msg" id="contactMsg" role="status" aria-live="polite"></p>
+    <div class="row"><button type="button" class="ghost" id="contactCancel">Cancel</button><button type="submit" class="pbtn" id="contactSend">Send</button></div>
+  </form>
+  <div class="done" id="contactDone" hidden>
+    <h2>Thank you</h2>
+    <p class="lead" style="margin:0">Your message was sent.</p>
+    <div class="row"><button type="button" class="pbtn" id="contactClose">Close</button></div>
+  </div>
+</dialog>
+
+<script src="../vendor/pdf.min.js"></script>
+<script src="../vendor/pdf-lib.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var PDFJS_WORKER = '../vendor/pdf.worker.min.js';
+  // Sheet sizes in points, portrait. The layout may turn the sheet to landscape if the items fit better.
+  var PAPER = {
+    letter: { w: 612, h: 792, name: 'Letter' },
+    a4: { w: 595.28, h: 841.89, name: 'A4' }
+  };
+  var MARGIN = 18; // a quarter inch on every side, which most printers can print up to
+  var KEY = 'verbose-cutstack-v1';
+  var $ = function (s) { return document.querySelector(s); };
+
+  var S = {
+    bytes: null, pdf: null, n: 0, sizes: [], name: '', isSample: false,
+    paper: 'letter', per: 4, sides: 'single', flip: 'long', fit: 'actual', guides: true,
+    busy: false, token: 0, thumbs: {}, queue: [], rendering: false
+  };
+
+  if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER; }
+
+  function setStatus(t, err) { var el = $('#status'); el.textContent = t || ''; el.className = 'status' + (err ? ' err' : ''); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+  function range(a, b) { return a === b ? String(a) : a + '–' + b; }
+
+  /* ---------- Layout ---------- */
+  // Picks the grid (columns × rows) and sheet orientation that show the items largest.
+  // Ties go to portrait, then to fewer columns.
+  function grid(P, k, iw, ih, fill) {
+    var best = null;
+    [[P.w, P.h], [P.h, P.w]].forEach(function (d) {
+      for (var c = 1; c <= k; c++) {
+        if (k % c) continue;
+        var r = k / c, s = Math.min((d[0] - 2 * MARGIN) / (c * iw), (d[1] - 2 * MARGIN) / (r * ih));
+        if (!best || s > best.fit * 1.0001) best = { w: d[0], h: d[1], cols: c, rows: r, fit: s };
+      }
+    });
+    var g = best;
+    g.scale = fill ? g.fit : Math.min(1, g.fit);
+    g.cellW = iw * g.scale; g.cellH = ih * g.scale;
+    g.x0 = (g.w - g.cols * g.cellW) / 2;           // left edge of the block of items
+    g.top0 = (g.h - g.rows * g.cellH) / 2;         // top edge, measured down from the top of the sheet
+    g.portrait = g.h >= g.w;
+    return g;
+  }
+  // Slot j, in reading order, as a rectangle measured from the top left of the sheet.
+  function cell(g, j) {
+    var c = j % g.cols, r = Math.floor(j / g.cols);
+    return { x: g.x0 + c * g.cellW, top: g.top0 + r * g.cellH, w: g.cellW, h: g.cellH };
+  }
+
+  // The whole job. Items are numbered 0..m-1. Position j on sheet s holds item j*sheets + s,
+  // so each position is its own pile and a pile runs down through the stack in order.
+  function plan() {
+    var n = S.n, k = S.per, fronts = [], backs = null, i;
+    if (S.sides === 'single') { for (i = 0; i < n; i++) fronts.push(i); }
+    else if (S.sides === 'alt') { backs = []; for (i = 0; i < n; i += 2) { fronts.push(i); backs.push(i + 1 < n ? i + 1 : -1); } }
+    else {
+      if (n < 2) return { error: 'A shared back needs at least two pages: the fronts, then one back page last.' };
+      backs = []; for (i = 0; i < n - 1; i++) { fronts.push(i); backs.push(n - 1); }
+    }
+    var m = fronts.length, count = Math.ceil(m / k), iw = 0, ih = 0;
+    fronts.concat(backs || []).forEach(function (p) { if (p >= 0) { iw = Math.max(iw, S.sizes[p].w); ih = Math.max(ih, S.sizes[p].h); } });
+    var g = grid(PAPER[S.paper], k, iw, ih, S.fit === 'fill');
+    // Long edge on a portrait sheet turns it like a book page, so the columns swap. On a landscape sheet it turns top to bottom.
+    var mirrorCols = g.portrait === (S.flip === 'long');
+    function mirror(j) {
+      var c = j % g.cols, r = Math.floor(j / g.cols);
+      if (mirrorCols) c = g.cols - 1 - c; else r = g.rows - 1 - r;
+      return r * g.cols + c;
+    }
+    var sheets = [];
+    for (var s = 0; s < count; s++) {
+      var front = [], back = backs ? [] : null;
+      for (var j = 0; j < k; j++) {
+        var item = j * count + s;
+        front[j] = item < m ? { item: item, page: fronts[item] } : { item: -1, page: -1 };
+      }
+      if (backs) for (j = 0; j < k; j++) {
+        var f = front[j];
+        back[mirror(j)] = f.item < 0 ? { item: -1, page: -1 } : { item: f.item, page: backs[f.item] };
+      }
+      sheets.push({ front: front, back: back });
+    }
+    var piles = [];
+    for (j = 0; j < k; j++) {
+      var a = j * count, b = Math.min(m, (j + 1) * count) - 1;
+      piles.push(a < m ? { first: a + 1, last: b + 1 } : null);
+    }
+    return { m: m, k: k, count: count, blanks: count * k - m, g: g, sheets: sheets, piles: piles, duplex: !!backs, iw: iw, ih: ih };
+  }
+
+  /* ---------- Settings ---------- */
+  function guessPaper() {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var region = (lang.split('-')[1] || '').toUpperCase();
+    return ['US', 'CA', 'MX', 'PH', 'CL', 'CO', 'VE', 'GT', 'CR', 'PA', 'SV', 'DO', 'PR'].indexOf(region) >= 0 ? 'letter' : 'a4';
+  }
+  function loadSettings() {
+    try { var raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+  }
+  function saveSettings() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ paper: S.paper, per: S.per, sides: S.sides, flip: S.flip, fit: S.fit, guides: S.guides }));
+    } catch (e) { /* storage can be blocked; the page works without it */ }
+  }
+  function pick(name, value) { document.querySelector('input[name="' + name + '"][value="' + value + '"]').checked = true; }
+  (function () {
+    var s = loadSettings() || {};
+    S.paper = PAPER[s.paper] ? s.paper : guessPaper();
+    S.per = [2, 4, 6, 8].indexOf(s.per) >= 0 ? s.per : 4;
+    S.sides = ['single', 'alt', 'same'].indexOf(s.sides) >= 0 ? s.sides : 'single';
+    S.flip = s.flip === 'short' ? 'short' : 'long';
+    S.fit = s.fit === 'fill' ? 'fill' : 'actual';
+    S.guides = s.guides !== false;
+    pick('paper', S.paper); pick('per', S.per); pick('sides', S.sides); pick('flip', S.flip); pick('fit', S.fit);
+    $('#guides').checked = S.guides;
+  })();
+
+  /* ---------- Summary ---------- */
+  function inches(pt) { return (pt / 72).toFixed(2).replace(/\.?0+$/, ''); }
+  function mm(pt) { return Math.round(pt / 72 * 25.4); }
+  function updateSummary() {
+    var P = PAPER[S.paper];
+    $('#flipGroup').hidden = S.sides === 'single';
+    var order = $('#order');
+    if (!S.n) { $('#summary').innerHTML = '<span class="hint">Open a PDF to see the result.</span>'; $('#dockTxt').textContent = ''; order.hidden = true; return; }
+    var L = plan();
+    if (L.error) { $('#summary').innerHTML = '<span class="warn">' + L.error + '</span>'; $('#dockTxt').textContent = ''; order.hidden = true; return; }
+    var g = L.g, size = S.paper === 'a4' ? mm(L.iw * g.scale) + ' × ' + mm(L.ih * g.scale) + ' mm' : inches(L.iw * g.scale) + ' × ' + inches(L.ih * g.scale) + ' in';
+    var pct = Math.round(g.scale * 100);
+    var rows = [
+      ['Items', L.m],
+      ['Blank spaces added', L.blanks],
+      ['Layout', g.cols + ' across × ' + g.rows + ' down'],
+      ['Paper', P.name + ' ' + (g.portrait ? 'portrait' : 'landscape') + (L.duplex ? ', both sides' : '')],
+      ['Each item prints at', size + (pct === 100 ? '' : ' (' + pct + '%)')]
+    ];
+    var html = '<div class="big">' + plural(L.count, 'sheet', 'sheets') + ' of paper</div>' +
+      rows.map(function (r) { return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>'; }).join('');
+    if (S.fit === 'actual' && g.fit < 1) html += '<div class="warn">The items are too big for ' + S.per + ' on a sheet, so they are shrunk to ' + pct + '%. Choose fewer per sheet to keep them full size.</div>';
+    $('#summary').innerHTML = html;
+    $('#dockTxt').textContent = plural(L.count, 'sheet', 'sheets') + ', ' + plural(L.k, 'pile', 'piles');
+
+    // What to do with the printed sheets, including where each pile sits on the sheet.
+    var steps = [];
+    steps.push('Print ' + (L.duplex ? '<b>double-sided, flip on ' + S.flip + ' edge</b>' : '<b>single-sided</b>') + ' on ' + P.name + ' at <b>actual size</b> (100%).');
+    steps.push('Stack the sheets in order with <b>sheet 1 on top</b>, face up. If your printer stacks them face down, just turn the whole stack over.');
+    steps.push('Cut the whole stack along the lines into <b>' + plural(L.k, 'pile', 'piles') + '</b>.');
+    var map = '';
+    if (g.cols <= 4) {
+      map = '<div class="pilemap" style="--cols:' + g.cols + '">' + L.piles.map(function (p, j) {
+        return '<div' + (p ? '' : ' class="none"') + '><b>Pile ' + (j + 1) + '</b><span>' + (p ? range(p.first, p.last) : 'blank') + '</span></div>';
+      }).join('') + '</div>';
+    } else {
+      map = 'Piles from left to right: ' + L.piles.map(function (p, j) { return (j + 1) + ' (' + (p ? range(p.first, p.last) : 'blank') + ')'; }).join(', ') + '.';
+    }
+    steps.push('Put <b>pile 1 on top of pile 2</b>, then both on pile 3, and so on. The numbers say what each pile holds:' + map);
+    var blankPiles = L.piles.filter(function (p) { return !p; }).length, partial = L.blanks - blankPiles * L.count;
+    if (partial) steps.push('The ' + plural(partial, 'blank piece ends', 'blank pieces end') + ' up at the bottom of pile ' + (L.k - blankPiles) + '.');
+    if (blankPiles) steps.push((blankPiles === 1 ? 'Pile ' + L.k + ' is' : 'Piles ' + (L.k - blankPiles + 1) + ' to ' + L.k + ' are') + ' blank paper and can go in the recycling.');
+    $('#orderSteps').innerHTML = steps.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+    order.hidden = false;
+  }
+
+  /* ---------- Preview ---------- */
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); fillCard(e.target); } });
+  }, { rootMargin: '600px 0px' }) : null;
+
+  function buildPreview() {
+    var box = $('#sheets');
+    if (io) io.disconnect();
+    box.innerHTML = '';
+    if (!S.n) { box.innerHTML = '<p class="empty">Open a PDF, or drop one here, to see the sheets.</p>'; return; }
+    var L = plan();
+    if (L.error) { box.innerHTML = '<p class="empty">' + L.error + '</p>'; return; }
+    var g = L.g, frag = document.createDocumentFragment();
+    box.className = 'sheets' + (L.duplex ? '' : ' single');
+    box.style.setProperty('--ar', (g.w / g.h).toFixed(4));
+    L.sheets.forEach(function (sh, si) {
+      var card = document.createElement('div');
+      card.className = 'sheet-card';
+      card.innerHTML = '<div class="cap">Sheet ' + (si + 1) + ' of ' + L.count + '</div><div class="sides">' +
+        side('Front', sh.front, false) + (L.duplex ? side('Back, flip on ' + S.flip + ' edge', sh.back, true) : '') + '</div>';
+      card._sheet = sh; card._plan = L;
+      frag.appendChild(card);
+    });
+    box.appendChild(frag);
+    Array.prototype.forEach.call(box.querySelectorAll('.sheet-card'), function (c) { if (io) io.observe(c); else fillCard(c); });
+
+    function side(label, slots, isBack) {
+      var names = slots.map(function (t) { return t.item < 0 ? 'blank' : String(t.item + 1); });
+      var badges = slots.map(function (t, j) {
+        if (t.item < 0) return '';
+        var c = cell(g, j);
+        return '<span class="badge' + (isBack ? ' back' : '') + '" style="left:' + (c.x / g.w * 100).toFixed(2) + '%;top:' + (c.top / g.h * 100).toFixed(2) + '%">' + (t.item + 1) + '</span>';
+      }).join('');
+      return '<div class="side"><span class="lab">' + label + '</span><div class="paper" data-side="' + (isBack ? 'back' : 'front') + '" role="img" aria-label="' + label +
+        ', items in reading order: ' + names.join(', ') + '"><canvas></canvas>' + badges + '</div></div>';
+    }
+  }
+
+  // Draws one sheet side the same way the export does, plus dashed cut lines across the sheet.
+  function fillCard(card) {
+    var L = card._plan, g = L.g, tok = S.token;
+    Array.prototype.forEach.call(card.querySelectorAll('.paper'), function (paper) {
+      var isBack = paper.getAttribute('data-side') === 'back', slots = isBack ? card._sheet.back : card._sheet.front;
+      var c = paper.querySelector('canvas'), W = 640, H = Math.round(W * g.h / g.w), f = W / g.w;
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+      var pending = slots.map(function (t, j) {
+        var r = cell(g, j);
+        if (t.page < 0) {
+          ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = '#c8cfda'; ctx.lineWidth = 1;
+          ctx.strokeRect(r.x * f + 6, r.top * f + 6, r.w * f - 12, r.h * f - 12); ctx.restore();
+          return null;
+        }
+        var sz = S.sizes[t.page], w = sz.w * g.scale * f, h = sz.h * g.scale * f;
+        return thumb(t.page).then(function (im) {
+          if (tok !== S.token || !im) return;
+          ctx.drawImage(im, r.x * f + (r.w * f - w) / 2, r.top * f + (r.h * f - h) / 2, w, h);
+        });
+      });
+      Promise.all(pending).then(function () {
+        if (tok !== S.token) return;
+        if (S.guides && !isBack) drawMarks(ctx, g, f);
+        // Where the cuts go: through the block of items, edge to edge.
+        ctx.save(); ctx.strokeStyle = 'rgba(214, 36, 110, 0.75)'; ctx.lineWidth = 1.2; ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        for (var cx = 0; cx <= g.cols; cx++) { var x = (g.x0 + cx * g.cellW) * f; ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+        for (var ry = 0; ry <= g.rows; ry++) { var y = (g.top0 + ry * g.cellH) * f; ctx.moveTo(0, y); ctx.lineTo(W, y); }
+        ctx.stroke(); ctx.restore();
+      });
+    });
+  }
+  function markLines(g) {
+    var gap = 4, lines = [], bottom = g.top0 + g.rows * g.cellH, right = g.x0 + g.cols * g.cellW;
+    for (var c = 0; c <= g.cols; c++) {
+      var x = g.x0 + c * g.cellW;
+      if (g.top0 - gap > 2) { lines.push([x, 0, x, g.top0 - gap]); lines.push([x, bottom + gap, x, g.h]); }
+    }
+    for (var r = 0; r <= g.rows; r++) {
+      var y = g.top0 + r * g.cellH;
+      if (g.x0 - gap > 2) { lines.push([0, y, g.x0 - gap, y]); lines.push([right + gap, y, g.w, y]); }
+    }
+    return lines; // [x1, top1, x2, top2], measured from the top left
+  }
+  function drawMarks(ctx, g, f) {
+    ctx.save(); ctx.strokeStyle = '#5a5a5a'; ctx.lineWidth = 1; ctx.beginPath();
+    markLines(g).forEach(function (l) { ctx.moveTo(l[0] * f, l[1] * f); ctx.lineTo(l[2] * f, l[3] * f); });
+    ctx.stroke(); ctx.restore();
+  }
+
+  function thumb(i) {
+    if (S.thumbs[i]) return S.thumbs[i];
+    var tok = S.token;
+    S.thumbs[i] = new Promise(function (resolve) { S.queue.push({ i: i, tok: tok, resolve: resolve }); pump(); });
+    return S.thumbs[i];
+  }
+  async function pump() {
+    if (S.rendering) return;
+    S.rendering = true;
+    while (S.queue.length) {
+      var job = S.queue.shift();
+      if (job.tok !== S.token) { job.resolve(null); continue; }
+      try {
+        var page = await S.pdf.getPage(job.i + 1);
+        var v1 = page.getViewport({ scale: 1 });
+        var scale = Math.min(480 / v1.width, 480 / v1.height) * Math.min(2, window.devicePixelRatio || 1) / 1.4;
+        var vp = page.getViewport({ scale: scale });
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(vp.width)); c.height = Math.max(1, Math.round(vp.height));
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+        page.cleanup();
+        job.resolve(c);
+      } catch (err) { job.resolve(null); }
+    }
+    S.rendering = false;
+  }
+
+  function refresh() { updateSummary(); buildPreview(); }
+
+  /* ---------- Controls ---------- */
+  function onRadio(name, fn) {
+    document.querySelectorAll('input[name="' + name + '"]').forEach(function (r) {
+      r.addEventListener('change', function () { fn(this.value); saveSettings(); refresh(); });
+    });
+  }
+  onRadio('paper', function (v) { S.paper = v; });
+  onRadio('per', function (v) { S.per = parseInt(v, 10); });
+  onRadio('sides', function (v) { S.sides = v; });
+  onRadio('flip', function (v) { S.flip = v; });
+  onRadio('fit', function (v) { S.fit = v; });
+  $('#guides').addEventListener('change', function () { S.guides = this.checked; saveSettings(); refresh(); });
+
+  /* ---------- Opening files ---------- */
+  // The visible size of each page in points: the crop box inside the media box, turned by /Rotate.
+  function visibleBox(pg) {
+    var cb = pg.getCropBox(), mb = pg.getMediaBox();
+    var left = Math.max(cb.x, mb.x), bottom = Math.max(cb.y, mb.y);
+    var right = Math.min(cb.x + cb.width, mb.x + mb.width), top = Math.min(cb.y + cb.height, mb.y + mb.height);
+    if (right <= left || top <= bottom) { left = mb.x; bottom = mb.y; right = mb.x + mb.width; top = mb.y + mb.height; }
+    var rot = ((pg.getRotation().angle % 360) + 360) % 360;
+    rot = Math.round(rot / 90) * 90 % 360;
+    var w = right - left, h = top - bottom;
+    return { left: left, bottom: bottom, right: right, top: top, rot: rot, w: rot % 180 ? h : w, h: rot % 180 ? w : h };
+  }
+  async function loadBytes(bytes, name, isSample) {
+    var L = PDFLib, doc;
+    try {
+      doc = await L.PDFDocument.load(bytes, { updateMetadata: false });
+    } catch (err) {
+      if (err && /encrypt/i.test(err.name + ' ' + err.message)) throw new Error('LOCKED');
+      throw err;
+    }
+    var sizes = doc.getPages().map(visibleBox);
+    var pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+    if (!pdf.numPages || !sizes.length) throw new Error('This PDF has no pages.');
+    if (S.pdf) { try { S.pdf.destroy(); } catch (e) {} }
+    S.token++;
+    S.pdf = pdf; S.bytes = bytes; S.n = sizes.length; S.sizes = sizes; S.name = name; S.isSample = isSample;
+    S.thumbs = {}; S.queue = [];
+    $('#fileName').textContent = name;
+    $('#sampleTag').hidden = !isSample;
+    var mixed = sizes.some(function (z) { return Math.abs(z.w - sizes[0].w) > 1 || Math.abs(z.h - sizes[0].h) > 1; });
+    $('#fileMeta').textContent = plural(S.n, 'page', 'pages') + ' · ' + (mixed ? 'mixed sizes, largest used' : inches(sizes[0].w) + ' × ' + inches(sizes[0].h) + ' in');
+    setStatus('');
+    refresh();
+  }
+  function fail(err) {
+    S.busy = false;
+    if (err && err.message === 'LOCKED') setStatus('This PDF is password-protected or locked against changes, so its pages cannot be rearranged. Remove the protection first, then try again.', true);
+    else setStatus('Could not open that file. ' + (err && err.message ? err.message : ''), true);
+  }
+  async function openFile(file) {
+    if (!file) return;
+    if (!/pdf$/i.test(file.type) && !/\.pdf$/i.test(file.name)) { setStatus('That is not a PDF file.', true); return; }
+    if (S.busy) return;
+    S.busy = true;
+    setStatus('Opening ' + file.name + '…');
+    try {
+      var buf = new Uint8Array(await file.arrayBuffer());
+      await loadBytes(buf, file.name, false);
+    } catch (err) { fail(err); }
+    S.busy = false;
+  }
+  $('#fileInput').addEventListener('change', function () { openFile(this.files[0]); this.value = ''; });
+  var stage = $('#stage'), depth = 0;
+  function hasFiles(e) { return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0; }
+  window.addEventListener('dragenter', function (e) { if (!hasFiles(e)) return; e.preventDefault(); depth++; stage.classList.add('dropping'); });
+  window.addEventListener('dragover', function (e) { if (!hasFiles(e)) return; e.preventDefault(); });
+  window.addEventListener('dragleave', function () { depth = Math.max(0, depth - 1); if (!depth) stage.classList.remove('dropping'); });
+  window.addEventListener('drop', function (e) {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); depth = 0; stage.classList.remove('dropping');
+    openFile(e.dataTransfer.files[0]);
+  });
+
+  /* ---------- Export ---------- */
+  // Places one source page, upright, at scale s and centred in its cell. (cx, cy) is the cell's bottom left.
+  function place(L, sheet, e, rot, cx, cy, cw, ch, s) {
+    var W0 = e.width, H0 = e.height, turned = rot % 180 !== 0;
+    var dw = (turned ? H0 : W0) * s, dh = (turned ? W0 : H0) * s;
+    var ox = cx + (cw - dw) / 2, oy = cy + (ch - dh) / 2;
+    var x = ox, y = oy;
+    if (rot === 90) { y = oy + W0 * s; }
+    else if (rot === 180) { x = ox + W0 * s; y = oy + H0 * s; }
+    else if (rot === 270) { x = ox + H0 * s; }
+    sheet.drawPage(e, { x: x, y: y, width: W0 * s, height: H0 * s, rotate: L.degrees(-rot) });
+  }
+
+  async function buildPdf(job) {
+    var L = PDFLib, g = job.g;
+    var src = await L.PDFDocument.load(S.bytes, { updateMetadata: false });
+    // Filled-in form fields live outside the page content. Flatten them so they print.
+    try { var form = src.getForm(); if (form.getFields().length) form.flatten(); } catch (e) { /* keep going without */ }
+    var out = await L.PDFDocument.create();
+    var pages = src.getPages(), emb = {};
+    async function embed(i) {
+      if (i in emb) return emb[i];
+      var pg = pages[i];
+      if (!pg.node.Contents()) return (emb[i] = null);
+      var b = visibleBox(pg);
+      emb[i] = { e: await out.embedPage(pg, { left: b.left, bottom: b.bottom, right: b.right, top: b.top }), rot: b.rot };
+      return emb[i];
+    }
+    var grey = L.rgb(0.35, 0.35, 0.35);
+    for (var s = 0; s < job.sheets.length; s++) {
+      var sides = [job.sheets[s].front];
+      if (job.duplex) sides.push(job.sheets[s].back);
+      for (var k = 0; k < sides.length; k++) {
+        var sheet = out.addPage([g.w, g.h]);
+        for (var j = 0; j < sides[k].length; j++) {
+          var t = sides[k][j];
+          if (t.page < 0) continue;
+          var e = await embed(t.page);
+          if (!e) continue;
+          var c = cell(g, j);
+          place(L, sheet, e.e, e.rot, c.x, g.h - c.top - c.h, c.w, c.h, g.scale);
+        }
+        if (S.guides && k === 0) {
+          markLines(g).forEach(function (l) {
+            sheet.drawLine({ start: { x: l[0], y: g.h - l[1] }, end: { x: l[2], y: g.h - l[3] }, thickness: 0.5, color: grey });
+          });
+        }
+      }
+    }
+    var base = S.name.replace(/\.pdf$/i, '') || 'document';
+    out.setTitle(base + ' (cut and stack)');
+    out.setProducer('Cut and Stack PDF Imposer (verbosestudio.com/cut-and-stack)');
+    return out.save();
+  }
+
+  async function exportPdf() {
+    if (S.busy || !S.bytes) return;
+    var job = plan();
+    if (job.error) { setStatus(job.error, true); return; }
+    S.busy = true; setStatus('Building the PDF…');
+    try {
+      var bytes = await buildPdf(job);
+      var base = S.name.replace(/\.pdf$/i, '') || 'document';
+      var filename = base + '-cut-and-stack.pdf';
+      plainDownload(new Blob([bytes], { type: 'application/pdf' }), filename);
+      setStatus('Download started: ' + filename + '. Print it at actual size' + (job.duplex ? ', double-sided, flip on ' + S.flip + ' edge.' : '.'));
+    } catch (err) {
+      if (err && /encrypt/i.test(err.name + ' ' + err.message)) setStatus('This PDF is locked against changes, so its pages cannot be rearranged.', true);
+      else setStatus('Could not build the PDF. ' + (err && err.message ? err.message : ''), true);
+    }
+    S.busy = false;
+  }
+  function plainDownload(blob, filename) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  }
+  $('#dl').addEventListener('click', exportPdf);
+  $('#dl2').addEventListener('click', exportPdf);
+
+  /* ---------- Sample ---------- */
+  // Fourteen numbered raffle tickets, so the page shows how the order works before you open your own file.
+  async function makeSample() {
+    var L = PDFLib, doc = await L.PDFDocument.create();
+    var font = await doc.embedFont(L.StandardFonts.Helvetica), bold = await doc.embedFont(L.StandardFonts.HelveticaBold);
+    var ink = L.rgb(0.09, 0.13, 0.19), soft = L.rgb(0.55, 0.6, 0.66), teal = L.rgb(0.16, 0.56, 0.64), pink = L.rgb(0.84, 0.14, 0.43);
+    var W = 396, H = 153; // 5.5 × 2.125 in
+    for (var i = 1; i <= 14; i++) {
+      var p = doc.addPage([W, H]), no = ('00' + i).slice(-3);
+      p.drawRectangle({ x: 6, y: 6, width: W - 12, height: H - 12, borderColor: teal, borderWidth: 1.5 });
+      p.drawRectangle({ x: 6, y: 6, width: 104, height: H - 12, color: L.rgb(0.9, 0.95, 0.96) });
+      p.drawLine({ start: { x: 110, y: 10 }, end: { x: 110, y: H - 10 }, thickness: 1, color: soft, dashArray: [3, 3] });
+      p.drawText('No.', { x: 22, y: 92, size: 12, font: font, color: soft });
+      p.drawText(no, { x: 20, y: 56, size: 30, font: bold, color: teal });
+      p.drawText('Keep this stub', { x: 20, y: 30, size: 9, font: font, color: soft });
+      p.drawText('Spring Fair Raffle', { x: 128, y: 104, size: 20, font: bold, color: ink });
+      p.drawText('Saturday, 2 pm, school hall', { x: 128, y: 84, size: 11, font: font, color: ink });
+      p.drawText('Ticket ' + no, { x: 128, y: 34, size: 26, font: bold, color: pink });
+    }
+    return doc.save();
+  }
+
+  if (!window.pdfjsLib || !window.PDFLib) {
+    $('#fileName').textContent = 'No file';
+    setStatus('The PDF libraries did not load. Please refresh the page.', true);
+    return;
+  }
+  updateSummary();
+  makeSample().then(function (bytes) { return loadBytes(new Uint8Array(bytes), 'sample-tickets.pdf', true); })
+    .catch(function () { $('#fileName').textContent = 'No file yet'; refresh(); });
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('dm');
+  if (!root) return;
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  var STEPS = ['Print', 'Stack', 'Cut', 'Collect'];
+  var HUES = [190, 330, 40, 140, 265, 15, 95, 220];
+  var MIN_SHEETS = 2, MAX_SHEETS = 6;
+  var D = { k: 4, S: 4, step: 0 };
+  var lanes = Array.prototype.map.call(root.querySelectorAll('.dm-lane'), function (el) {
+    return { el: el, stage: el.querySelector('.dm-stage'), note: el.querySelector('.dm-note'), mode: el.getAttribute('data-mode'), timers: [] };
+  });
+
+  // The number printed at position j of sheet s.
+  function num(mode, s, j) { return mode === 'stack' ? j * D.S + s + 1 : s * D.k + j + 1; }
+  function gridOf(k) { var c = k === 2 ? 1 : 2; return { cols: c, rows: k / c }; }
+  function el(cls, text) { var d = document.createElement('div'); d.className = cls; if (text != null) d.textContent = text; return d; }
+  function put(e, x, y, w, h, z) {
+    e.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    if (w != null) { e.style.width = w.toFixed(1) + 'px'; e.style.height = h.toFixed(1) + 'px'; }
+    if (z != null) e.style.zIndex = z;
+  }
+
+  function build(lane) {
+    var st = lane.stage, g = gridOf(D.k), s, j;
+    st.innerHTML = '';
+    lane.sheets = []; lane.labels = []; lane.cards = []; lane.lines = []; lane.caps = [];
+    for (s = 0; s < D.S; s++) {
+      lane.sheets.push(st.appendChild(el('dm-sheet')));
+      lane.labels.push(st.appendChild(el('dm-slab', 'Sheet ' + (s + 1))));
+    }
+    for (s = 0; s < D.S; s++) for (j = 0; j < D.k; j++) {
+      var c = st.appendChild(el('dm-card', String(num(lane.mode, s, j))));
+      c.style.background = 'hsl(' + HUES[j] + ' 75% 92%)';
+      lane.cards.push({ e: c, s: s, j: j, n: num(lane.mode, s, j) });
+    }
+    for (j = 1; j < g.cols; j++) lane.lines.push({ e: st.appendChild(el('dm-line v')), v: true, at: j });
+    for (j = 1; j < g.rows; j++) lane.lines.push({ e: st.appendChild(el('dm-line h')), v: false, at: j });
+    for (j = 0; j < D.k; j++) {
+      var pile = [];
+      for (s = 0; s < D.S; s++) pile.push(num(lane.mode, s, j));
+      lane.caps.push(st.appendChild(el('dm-cap', pile.join(' '))));
+    }
+  }
+
+  // Positions everything in one lane for the current step. Phase is a sub-step used while animating.
+  function layout(lane, phase) {
+    var W = lane.stage.clientWidth || 320, k = D.k, S = D.S, g = gridOf(k), pad = 12, H = 200;
+    var stackW = Math.min(170, W * 0.45), stackH = stackW * 1.294, off = Math.min(6, 30 / S);
+    var sx = (W - stackW - off * (S - 1)) / 2, sy = pad;
+    var ip = stackW * 0.07, cw = (stackW - 2 * ip) / g.cols, ch = (stackH - 2 * ip) / g.rows;
+    function font(w, h) { return Math.max(9, Math.min(h * 0.5, w * 0.34)).toFixed(1) + 'px'; }
+    function cardsOnSheets(sheetPos) {
+      lane.cards.forEach(function (c) {
+        var p = sheetPos[c.s], i2 = p.w * 0.07, w2 = (p.w - 2 * i2) / g.cols, h2 = (p.h - 2 * i2) / g.rows;
+        var col = c.j % g.cols, row = Math.floor(c.j / g.cols);
+        put(c.e, p.x + i2 + col * w2 + 1, p.y + i2 + row * h2 + 1, w2 - 2, h2 - 2, p.z + 1);
+        c.e.style.fontSize = font(w2, h2);
+      });
+    }
+    function stackPos() {
+      var a = [];
+      for (var s = 0; s < S; s++) a.push({ x: sx + s * off, y: sy + s * off, w: stackW, h: stackH, z: (S - s) * 2 });
+      return a;
+    }
+    function showSheets(pos, op) { lane.sheets.forEach(function (e, s) { put(e, pos[s].x, pos[s].y, pos[s].w, pos[s].h, pos[s].z); e.style.opacity = op; }); }
+    function hide(list) { list.forEach(function (e) { e.style.opacity = 0; }); }
+    lane.cards.forEach(function (c) { c.e.classList.remove('ok', 'bad'); });
+    lane.lines.forEach(function (l) { l.e.classList.remove('on'); });
+
+    // Pile spots after cutting: the same grid as on the sheet, pulled apart.
+    var gapX = 22, capH = 32, pw = cw + off * (S - 1), ph = ch + off * (S - 1);
+    var px0 = (W - (g.cols * pw + (g.cols - 1) * gapX)) / 2;
+    function pileXY(j) { return { x: px0 + (j % g.cols) * (pw + gapX), y: pad + Math.floor(j / g.cols) * (ph + capH + 8) }; }
+    var pilesH = pad + g.rows * (ph + capH + 8) + pad - 8;
+
+    if (D.step === 0) {
+      var gap = 12, pr = Math.max(1, Math.min(S, Math.floor((W - 2 * pad + gap) / (64 + gap))));
+      var sw = Math.min(120, (W - 2 * pad - gap * (pr - 1)) / pr), sh = sw * 1.294, ox = (W - (pr * sw + (pr - 1) * gap)) / 2, pos = [];
+      for (var s = 0; s < S; s++) pos.push({ x: ox + (s % pr) * (sw + gap), y: pad + Math.floor(s / pr) * (sh + 28), w: sw, h: sh, z: 2 });
+      showSheets(pos, 1); cardsOnSheets(pos);
+      lane.labels.forEach(function (e, s) { put(e, pos[s].x, pos[s].y + sh + 5); e.style.opacity = 1; });
+      hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      H = pad + Math.ceil(S / pr) * (sh + 28) + 2;
+    } else if (D.step === 1 || phase === 'lines') {
+      var sp = stackPos();
+      showSheets(sp, 1); cardsOnSheets(sp);
+      hide(lane.labels); hide(lane.caps);
+      lane.lines.forEach(function (l) {
+        if (l.v) put(l.e, sx + ip + l.at * cw - 1, sy - 8, 2, stackH + off * (S - 1) + 16, 500);
+        else put(l.e, sx - 8, sy + ip + l.at * ch - 1, stackW + off * (S - 1) + 16, 2, 500);
+        if (phase === 'lines') l.e.classList.add('on'); else l.e.style.opacity = 0;
+      });
+      H = phase === 'lines' ? Math.max(pilesH, 2 * pad + stackH + off * (S - 1)) : 2 * pad + stackH + off * (S - 1);
+    } else if (D.step === 2) {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.lines.map(function (l) { return l.e; }));
+      lane.cards.forEach(function (c) {
+        var p = pileXY(c.j);
+        put(c.e, p.x + c.s * off, p.y + c.s * off, cw - 2, ch - 2, S - c.s + 1);
+        c.e.style.fontSize = font(cw, ch);
+      });
+      lane.caps.forEach(function (e, j) {
+        var p = pileXY(j);
+        put(e, p.x, p.y + ph + 3, pw + gapX - 6, capH, 1);
+        e.style.opacity = 1;
+      });
+      H = pilesH;
+    } else if (phase === 'join') {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      var N = S * k, step = Math.min(1.5, 24 / N), jx = (W - cw - step * N) / 2;
+      lane.cards.forEach(function (c) {
+        var q = c.j * S + c.s; // pile 1 on top, then pile 2 under it, and so on
+        put(c.e, jx + q * step, pad + q * step, cw - 2, ch - 2, N - q + 1);
+      });
+      H = pilesH;
+    } else {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      var n = S * k, chipW = W < 400 ? 34 : 40, chipH = Math.round(chipW * 0.78), cg = 6;
+      var per = Math.max(1, Math.min(n, Math.floor((W - 2 * pad + cg) / (chipW + cg))));
+      if (per < n && per > 8) per = Math.floor(per / 4) * 4 || per; // even rows read more easily
+      var fx = (W - (per * (chipW + cg) - cg)) / 2;
+      lane.cards.forEach(function (c) {
+        var q = c.j * S + c.s;
+        put(c.e, fx + (q % per) * (chipW + cg), pad + Math.floor(q / per) * (chipH + cg), chipW, chipH, 2);
+        c.e.style.fontSize = font(chipW, chipH);
+        c.e.classList.add(c.n === q + 1 ? 'ok' : 'bad');
+      });
+      H = 2 * pad + Math.ceil(n / per) * (chipH + cg) - cg;
+    }
+    lane.stage.style.height = Math.ceil(H) + 'px';
+  }
+
+  /* ---------- Words ---------- */
+  function list(a, max) { return a.length > max ? a.slice(0, max).join(', ') + ', …' : a.join(', '); }
+  function noteFor(lane) {
+    var k = D.k, S = D.S, s, j, a, mode = lane.mode, N = S * k;
+    function sheet(s) { var r = []; for (var j = 0; j < k; j++) r.push(num(mode, s, j)); return r; }
+    function pile(j) { var r = []; for (var s = 0; s < S; s++) r.push(num(mode, s, j)); return r; }
+    if (D.step === 0) return 'Sheet 1 holds ' + list(sheet(0), 8) + '. Sheet 2 holds ' + list(sheet(1), 8) + '.';
+    if (D.step === 1) return 'Sheet 1 goes on top, showing ' + list(sheet(0), 8) + '. Sheet ' + S + ' is at the bottom.';
+    if (D.step === 2) {
+      a = [];
+      for (j = 0; j < Math.min(k, 3); j++) a.push('Pile ' + (j + 1) + ': ' + pile(j).join(' '));
+      return a.join('. ') + (k > 3 ? '. …' : '.') + ' ' + (mode === 'stack' ? '<span class="good">Each pile counts up in order.</span>' : '<span class="bad">Each pile skips numbers.</span>');
+    }
+    var out = [];
+    for (j = 0; j < k; j++) for (s = 0; s < S; s++) out.push(num(mode, s, j));
+    return 'From the top: ' + list(out, 10) + ' ' + (mode === 'stack'
+      ? '<span class="good">All ' + N + ' cards are in order, ready to use.</span>'
+      : '<span class="bad">Scrambled: you would have to sort ' + N + ' cards by hand.</span>');
+  }
+  var DESC = [
+    function () { return 'Each sheet holds ' + D.k + ' cards. The two layouts put the same cards on the sheets in a different order.'; },
+    function () { return 'Put the printed sheets in one stack, sheet 1 on top.'; },
+    function () { return 'Cut the whole stack at once. Each position on the sheet becomes its own pile of ' + D.S + ' cards.'; },
+    function () { return 'Put pile 1 on top of pile 2, then on pile 3, and so on. Read the cards from the top.'; }
+  ];
+
+  function updateText() {
+    root.querySelectorAll('.dm-step').forEach(function (b, i) {
+      if (i === D.step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    });
+    var next = document.getElementById('dmNext');
+    next.textContent = D.step < 3 ? 'Next: ' + STEPS[D.step + 1] : 'Start over';
+    document.getElementById('dmBack').disabled = D.step === 0;
+    document.getElementById('dmLess').disabled = D.S <= MIN_SHEETS;
+    document.getElementById('dmMore').disabled = D.S >= MAX_SHEETS;
+    document.getElementById('dmCount').textContent = D.S;
+    lanes.forEach(function (lane) { lane.note.innerHTML = noteFor(lane); });
+    document.getElementById('dmLive').textContent = 'Step ' + (D.step + 1) + ' of 4, ' + STEPS[D.step] + '. ' + DESC[D.step]();
+  }
+
+  // animate: true for a single step forward, which plays the cut and the collect in two parts.
+  function show(animate, sliding) {
+    var quick = !sliding || reduce.matches;
+    lanes.forEach(function (lane) {
+      lane.timers.forEach(clearTimeout); lane.timers = [];
+      if (!animate) lane.stage.classList.add('dm-still');
+      if (D.step === 2 && !quick) {
+        layout(lane, 'lines');
+        lane.timers.push(setTimeout(function () { layout(lane); }, 650));
+      } else if (D.step === 3 && !quick) {
+        layout(lane, 'join');
+        lane.timers.push(setTimeout(function () { layout(lane); }, 900));
+      } else layout(lane);
+      if (!animate) { void lane.stage.offsetWidth; lane.stage.classList.remove('dm-still'); }
+    });
+    updateText();
+  }
+  function go(step) {
+    var forwardOne = step === D.step + 1;
+    D.step = step;
+    show(true, forwardOne);
+  }
+  function rebuild() { lanes.forEach(build); show(false); }
+
+  root.querySelectorAll('.dm-step').forEach(function (b) {
+    b.addEventListener('click', function () { go(parseInt(b.getAttribute('data-step'), 10)); });
+  });
+  document.getElementById('dmNext').addEventListener('click', function () { go(D.step < 3 ? D.step + 1 : 0); });
+  document.getElementById('dmBack').addEventListener('click', function () { if (D.step > 0) go(D.step - 1); });
+  document.getElementById('dmLess').addEventListener('click', function () { if (D.S > MIN_SHEETS) { D.S--; rebuild(); } });
+  document.getElementById('dmMore').addEventListener('click', function () { if (D.S < MAX_SHEETS) { D.S++; rebuild(); } });
+  root.querySelectorAll('input[name="dmPer"]').forEach(function (r) {
+    r.addEventListener('change', function () { D.k = parseInt(this.value, 10); rebuild(); });
+  });
+  var lastW = 0;
+  function onResize() { var w = root.clientWidth; if (w !== lastW) { lastW = w; show(false); } }
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(root);
+  else window.addEventListener('resize', onResize);
+
+  rebuild();
+})();
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my file uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. The whole job runs inside your browser. Your PDF is read on your own device and the new PDF is built there too. Nothing is sent to a server."}}, {"@type": "Question", "name": "What does cut and stack mean?", "acceptedAnswer": {"@type": "Answer", "text": "It is a way of laying out small items on sheets so a whole stack can be cut at once. Each position on the sheet becomes its own pile, and each pile runs down through the stack in order. With 4 on a sheet and 4 sheets, sheet 1 holds items 1, 5, 9 and 13, and sheet 2 holds 2, 6, 10 and 14. After one cut, the piles hold 1 to 4, 5 to 8, 9 to 12 and 13 to 16, so you just put them on top of each other."}}, {"@type": "Question", "name": "How should my PDF be set up?", "acceptedAnswer": {"@type": "Answer", "text": "One item per page, at the size you want it printed. For double-sided items, either put each back right after its front (front 1, back 1, front 2, back 2), or put one shared back as the very last page."}}, {"@type": "Question", "name": "The backs do not line up with the fronts. What can I do?", "acceptedAnswer": {"@type": "Answer", "text": "First check that the flip setting in the tool matches the one in the print dialog. Then print one test sheet and hold it up to a light. Most home printers shift the back by a millimetre or two, so leave a little white space around the edge of your design rather than a tight border."}}, {"@type": "Question", "name": "Why are some spaces blank?", "acceptedAnswer": {"@type": "Answer", "text": "Every sheet has the same number of spaces, so if your item count does not fill the last round, the tool adds blank spaces. They end up at the bottom of the last piles, or as whole piles of blank paper you can throw away."}}, {"@type": "Question", "name": "Can I cut it with scissors?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Cut a few sheets at a time, keep each position in its own pile as you go, and keep the sheets in order. A paper trimmer or guillotine is faster because it cuts the whole stack in one go."}}]}</script><script>
+(function () {
+  var dlg = document.getElementById('contactDlg'); if (!dlg) return;
+  var form = document.getElementById('contactForm'), done = document.getElementById('contactDone');
+  var msg = document.getElementById('contactMsg'), send = document.getElementById('contactSend');
+  var ENDPOINT = 'https://api.web3forms.com/submit', KEY = '00640895-65d1-4e34-b1c1-8dc6575510a4', TOOL = 'Cut and Stack PDF Imposer';
+  function open() {
+    form.hidden = false; done.hidden = true; msg.textContent = ''; msg.className = 'msg'; send.disabled = false;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    var t = form.querySelector('textarea'); if (t) t.focus();
+  }
+  function close() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  document.querySelectorAll('[data-contact]').forEach(function (b) { b.addEventListener('click', open); });
+  document.getElementById('contactCancel').addEventListener('click', close);
+  document.getElementById('contactClose').addEventListener('click', close);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = form.elements;
+    if (!f.message.value.trim()) { msg.className = 'msg err'; msg.textContent = 'Please write a short message first.'; f.message.focus(); return; }
+    if (f.email.value && !f.email.checkValidity()) { msg.className = 'msg err'; msg.textContent = 'That email does not look right. You can also leave it blank.'; return; }
+    if (f.botcheck.checked) { form.hidden = true; done.hidden = false; return; }
+    if (KEY.indexOf('YOUR_') === 0) { msg.className = 'msg err'; msg.textContent = 'The contact form is not switched on yet. Please try again soon.'; return; }
+    send.disabled = true; msg.className = 'msg'; msg.textContent = 'Sending...';
+    var body = { access_key: KEY, subject: TOOL + ': ' + f.topic.value, from_name: TOOL + ' contact form', topic: f.topic.value, message: f.message.value, page: location.pathname };
+    if (f.email.value) { body.email = f.email.value; body.replyto = f.email.value; }
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.success) { form.reset(); form.hidden = true; done.hidden = false; } else { throw new Error(); } })
+      .catch(function () { send.disabled = false; msg.className = 'msg err'; msg.textContent = 'Sorry, that did not send. Please try again in a moment.'; });
+  });
+})();
+</script>
+</body>
+</html>

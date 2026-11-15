@@ -1,0 +1,327 @@
+<style>
+.dm { display: grid; gap: 16px; padding: clamp(14px, 3vw, 22px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; font-size: 15px; line-height: 1.45; }
+.dm-controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: end; }
+.dm-field { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; min-width: 0; }
+.dm-field legend { padding: 0; margin-bottom: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.dm-field.per { flex: 0 1 248px; }
+.dm-stepper { display: inline-flex; align-items: center; gap: 6px; }
+.dm-stepper button { width: 44px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 20px; font-weight: 600; cursor: pointer; }
+.dm-stepper button:hover { background: var(--surface-2); }
+.dm-stepper button[disabled] { opacity: 0.4; cursor: not-allowed; }
+.dm-stepper output { min-width: 2.4ch; text-align: center; font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
+.dm-steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.dm-step {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--ink-2); font-weight: 600; cursor: pointer;
+}
+.dm-step span { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 12px; font-family: var(--font-mono); }
+.dm-step:hover { color: var(--ink); }
+.dm-step[aria-current="step"] { border-color: var(--accent); color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--accent); }
+.dm-step[aria-current="step"] span { background: var(--accent); color: var(--accent-ink); }
+.dm-lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.dm-lane { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.dm-lane figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.dm-lane figcaption b { font-size: 17px; }
+.dm-lane figcaption span { font-size: 14px; color: var(--ink-2); }
+.dm-stage { position: relative; overflow: hidden; background: var(--stage); border-radius: 12px; height: 240px; transition: height 0.5s ease; }
+.dm-stage > * { position: absolute; left: 0; top: 0; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.6s, height 0.6s, opacity 0.35s, font-size 0.6s, border-color 0.3s; }
+.dm-sheet { background: #fff; border-radius: 3px; box-shadow: 0 1px 2px rgba(20, 30, 50, 0.15), 0 4px 12px rgba(20, 30, 50, 0.12); }
+.dm-card { display: grid; place-items: center; border: 1px solid rgba(24, 34, 48, 0.2); border-radius: 3px; color: #182230; font-family: var(--font-mono); font-weight: 600; line-height: 1; overflow: hidden; }
+.dm-card.ok { border: 2px solid var(--ok); }
+.dm-card.bad { border: 2px solid var(--cut); }
+.dm-slab, .dm-cap { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); line-height: 1.3; }
+.dm-line { opacity: 0; z-index: 500; }
+.dm-line.v { width: 2px; background: repeating-linear-gradient(to bottom, var(--cut) 0 6px, transparent 6px 10px); }
+.dm-line.h { height: 2px; background: repeating-linear-gradient(to right, var(--cut) 0 6px, transparent 6px 10px); }
+.dm-line.on { opacity: 1; }
+.dm-line.v.on { animation: dm-cut-v 0.45s ease-out both; }
+.dm-line.h.on { animation: dm-cut-h 0.45s ease-out both; }
+@keyframes dm-cut-v { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes dm-cut-h { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+.dm-still, .dm-still > * { transition: none !important; }
+.dm-note { margin: 0; font-size: 14.5px; color: var(--ink-2); min-height: 3em; }
+.dm-note .good { color: var(--ok); font-weight: 600; }
+.dm-note .bad { color: var(--cut); font-weight: 600; }
+.dm-nav { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.dm-live { margin: 0; flex: 1 1 18rem; font-weight: 600; }
+.dm-nav .btn-row { flex: none; }
+.dm .btn { min-height: 44px; }
+@media (max-width: 520px) { .dm-step { flex-direction: column; gap: 2px; font-size: 13px; } }
+@media (prefers-reduced-motion: reduce) {
+  .dm-stage, .dm-stage > * { transition: none !important; }
+  .dm-line.on { animation: none !important; }
+}
+</style>
+
+<section class="sec" aria-labelledby="demo">
+  <h2 id="demo">See how cut and stack works</h2>
+  <p>Try it with numbered cards, no file needed. Step through printing, stacking, cutting and collecting, and watch what comes out with the normal order and with the cut and stack order.</p>
+  <div class="dm" id="dm">
+    <div class="dm-controls">
+      <fieldset class="dm-field per">
+        <legend>Cards per sheet</legend>
+        <div class="seg">
+          <label><input type="radio" name="dmPer" value="2"><span>2</span></label>
+          <label><input type="radio" name="dmPer" value="4" checked><span>4</span></label>
+          <label><input type="radio" name="dmPer" value="6"><span>6</span></label>
+          <label><input type="radio" name="dmPer" value="8"><span>8</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="dm-field">
+        <legend>Sheets</legend>
+        <div class="dm-stepper">
+          <button type="button" id="dmLess" aria-label="Fewer sheets">&minus;</button>
+          <output id="dmCount" aria-live="polite">4</output>
+          <button type="button" id="dmMore" aria-label="More sheets">+</button>
+        </div>
+      </fieldset>
+    </div>
+
+    <ol class="dm-steps" aria-label="Steps">
+      <li><button type="button" class="dm-step" data-step="0"><span>1</span>Print</button></li>
+      <li><button type="button" class="dm-step" data-step="1"><span>2</span>Stack</button></li>
+      <li><button type="button" class="dm-step" data-step="2"><span>3</span>Cut</button></li>
+      <li><button type="button" class="dm-step" data-step="3"><span>4</span>Collect</button></li>
+    </ol>
+
+    <div class="dm-lanes">
+      <figure class="dm-lane" data-mode="normal">
+        <figcaption><b>Normal order</b><span>Cards go onto each sheet one after another.</span></figcaption>
+        <div class="dm-stage" aria-hidden="true"></div>
+        <p class="dm-note"></p>
+      </figure>
+      <figure class="dm-lane" data-mode="stack">
+        <figcaption><b>Cut and stack order</b><span>What this tool makes.</span></figcaption>
+        <div class="dm-stage" aria-hidden="true"></div>
+        <p class="dm-note"></p>
+      </figure>
+    </div>
+
+    <div class="dm-nav">
+      <p class="dm-live" id="dmLive" aria-live="polite"></p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="dmBack">Back</button>
+        <button type="button" class="btn primary" id="dmNext">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('dm');
+  if (!root) return;
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  var STEPS = ['Print', 'Stack', 'Cut', 'Collect'];
+  var HUES = [190, 330, 40, 140, 265, 15, 95, 220];
+  var MIN_SHEETS = 2, MAX_SHEETS = 6;
+  var D = { k: 4, S: 4, step: 0 };
+  var lanes = Array.prototype.map.call(root.querySelectorAll('.dm-lane'), function (el) {
+    return { el: el, stage: el.querySelector('.dm-stage'), note: el.querySelector('.dm-note'), mode: el.getAttribute('data-mode'), timers: [] };
+  });
+
+  // The number printed at position j of sheet s.
+  function num(mode, s, j) { return mode === 'stack' ? j * D.S + s + 1 : s * D.k + j + 1; }
+  function gridOf(k) { var c = k === 2 ? 1 : 2; return { cols: c, rows: k / c }; }
+  function el(cls, text) { var d = document.createElement('div'); d.className = cls; if (text != null) d.textContent = text; return d; }
+  function put(e, x, y, w, h, z) {
+    e.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    if (w != null) { e.style.width = w.toFixed(1) + 'px'; e.style.height = h.toFixed(1) + 'px'; }
+    if (z != null) e.style.zIndex = z;
+  }
+
+  function build(lane) {
+    var st = lane.stage, g = gridOf(D.k), s, j;
+    st.innerHTML = '';
+    lane.sheets = []; lane.labels = []; lane.cards = []; lane.lines = []; lane.caps = [];
+    for (s = 0; s < D.S; s++) {
+      lane.sheets.push(st.appendChild(el('dm-sheet')));
+      lane.labels.push(st.appendChild(el('dm-slab', 'Sheet ' + (s + 1))));
+    }
+    for (s = 0; s < D.S; s++) for (j = 0; j < D.k; j++) {
+      var c = st.appendChild(el('dm-card', String(num(lane.mode, s, j))));
+      c.style.background = 'hsl(' + HUES[j] + ' 75% 92%)';
+      lane.cards.push({ e: c, s: s, j: j, n: num(lane.mode, s, j) });
+    }
+    for (j = 1; j < g.cols; j++) lane.lines.push({ e: st.appendChild(el('dm-line v')), v: true, at: j });
+    for (j = 1; j < g.rows; j++) lane.lines.push({ e: st.appendChild(el('dm-line h')), v: false, at: j });
+    for (j = 0; j < D.k; j++) {
+      var pile = [];
+      for (s = 0; s < D.S; s++) pile.push(num(lane.mode, s, j));
+      lane.caps.push(st.appendChild(el('dm-cap', pile.join(' '))));
+    }
+  }
+
+  // Positions everything in one lane for the current step. Phase is a sub-step used while animating.
+  function layout(lane, phase) {
+    var W = lane.stage.clientWidth || 320, k = D.k, S = D.S, g = gridOf(k), pad = 12, H = 200;
+    var stackW = Math.min(170, W * 0.45), stackH = stackW * 1.294, off = Math.min(6, 30 / S);
+    var sx = (W - stackW - off * (S - 1)) / 2, sy = pad;
+    var ip = stackW * 0.07, cw = (stackW - 2 * ip) / g.cols, ch = (stackH - 2 * ip) / g.rows;
+    function font(w, h) { return Math.max(9, Math.min(h * 0.5, w * 0.34)).toFixed(1) + 'px'; }
+    function cardsOnSheets(sheetPos) {
+      lane.cards.forEach(function (c) {
+        var p = sheetPos[c.s], i2 = p.w * 0.07, w2 = (p.w - 2 * i2) / g.cols, h2 = (p.h - 2 * i2) / g.rows;
+        var col = c.j % g.cols, row = Math.floor(c.j / g.cols);
+        put(c.e, p.x + i2 + col * w2 + 1, p.y + i2 + row * h2 + 1, w2 - 2, h2 - 2, p.z + 1);
+        c.e.style.fontSize = font(w2, h2);
+      });
+    }
+    function stackPos() {
+      var a = [];
+      for (var s = 0; s < S; s++) a.push({ x: sx + s * off, y: sy + s * off, w: stackW, h: stackH, z: (S - s) * 2 });
+      return a;
+    }
+    function showSheets(pos, op) { lane.sheets.forEach(function (e, s) { put(e, pos[s].x, pos[s].y, pos[s].w, pos[s].h, pos[s].z); e.style.opacity = op; }); }
+    function hide(list) { list.forEach(function (e) { e.style.opacity = 0; }); }
+    lane.cards.forEach(function (c) { c.e.classList.remove('ok', 'bad'); });
+    lane.lines.forEach(function (l) { l.e.classList.remove('on'); });
+
+    // Pile spots after cutting: the same grid as on the sheet, pulled apart.
+    var gapX = 22, capH = 32, pw = cw + off * (S - 1), ph = ch + off * (S - 1);
+    var px0 = (W - (g.cols * pw + (g.cols - 1) * gapX)) / 2;
+    function pileXY(j) { return { x: px0 + (j % g.cols) * (pw + gapX), y: pad + Math.floor(j / g.cols) * (ph + capH + 8) }; }
+    var pilesH = pad + g.rows * (ph + capH + 8) + pad - 8;
+
+    if (D.step === 0) {
+      var gap = 12, pr = Math.max(1, Math.min(S, Math.floor((W - 2 * pad + gap) / (64 + gap))));
+      var sw = Math.min(120, (W - 2 * pad - gap * (pr - 1)) / pr), sh = sw * 1.294, ox = (W - (pr * sw + (pr - 1) * gap)) / 2, pos = [];
+      for (var s = 0; s < S; s++) pos.push({ x: ox + (s % pr) * (sw + gap), y: pad + Math.floor(s / pr) * (sh + 28), w: sw, h: sh, z: 2 });
+      showSheets(pos, 1); cardsOnSheets(pos);
+      lane.labels.forEach(function (e, s) { put(e, pos[s].x, pos[s].y + sh + 5); e.style.opacity = 1; });
+      hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      H = pad + Math.ceil(S / pr) * (sh + 28) + 2;
+    } else if (D.step === 1 || phase === 'lines') {
+      var sp = stackPos();
+      showSheets(sp, 1); cardsOnSheets(sp);
+      hide(lane.labels); hide(lane.caps);
+      lane.lines.forEach(function (l) {
+        if (l.v) put(l.e, sx + ip + l.at * cw - 1, sy - 8, 2, stackH + off * (S - 1) + 16, 500);
+        else put(l.e, sx - 8, sy + ip + l.at * ch - 1, stackW + off * (S - 1) + 16, 2, 500);
+        if (phase === 'lines') l.e.classList.add('on'); else l.e.style.opacity = 0;
+      });
+      H = phase === 'lines' ? Math.max(pilesH, 2 * pad + stackH + off * (S - 1)) : 2 * pad + stackH + off * (S - 1);
+    } else if (D.step === 2) {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.lines.map(function (l) { return l.e; }));
+      lane.cards.forEach(function (c) {
+        var p = pileXY(c.j);
+        put(c.e, p.x + c.s * off, p.y + c.s * off, cw - 2, ch - 2, S - c.s + 1);
+        c.e.style.fontSize = font(cw, ch);
+      });
+      lane.caps.forEach(function (e, j) {
+        var p = pileXY(j);
+        put(e, p.x, p.y + ph + 3, pw + gapX - 6, capH, 1);
+        e.style.opacity = 1;
+      });
+      H = pilesH;
+    } else if (phase === 'join') {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      var N = S * k, step = Math.min(1.5, 24 / N), jx = (W - cw - step * N) / 2;
+      lane.cards.forEach(function (c) {
+        var q = c.j * S + c.s; // pile 1 on top, then pile 2 under it, and so on
+        put(c.e, jx + q * step, pad + q * step, cw - 2, ch - 2, N - q + 1);
+      });
+      H = pilesH;
+    } else {
+      showSheets(stackPos(), 0);
+      hide(lane.labels); hide(lane.caps); hide(lane.lines.map(function (l) { return l.e; }));
+      var n = S * k, chipW = W < 400 ? 34 : 40, chipH = Math.round(chipW * 0.78), cg = 6;
+      var per = Math.max(1, Math.min(n, Math.floor((W - 2 * pad + cg) / (chipW + cg))));
+      if (per < n && per > 8) per = Math.floor(per / 4) * 4 || per; // even rows read more easily
+      var fx = (W - (per * (chipW + cg) - cg)) / 2;
+      lane.cards.forEach(function (c) {
+        var q = c.j * S + c.s;
+        put(c.e, fx + (q % per) * (chipW + cg), pad + Math.floor(q / per) * (chipH + cg), chipW, chipH, 2);
+        c.e.style.fontSize = font(chipW, chipH);
+        c.e.classList.add(c.n === q + 1 ? 'ok' : 'bad');
+      });
+      H = 2 * pad + Math.ceil(n / per) * (chipH + cg) - cg;
+    }
+    lane.stage.style.height = Math.ceil(H) + 'px';
+  }
+
+  /* ---------- Words ---------- */
+  function list(a, max) { return a.length > max ? a.slice(0, max).join(', ') + ', …' : a.join(', '); }
+  function noteFor(lane) {
+    var k = D.k, S = D.S, s, j, a, mode = lane.mode, N = S * k;
+    function sheet(s) { var r = []; for (var j = 0; j < k; j++) r.push(num(mode, s, j)); return r; }
+    function pile(j) { var r = []; for (var s = 0; s < S; s++) r.push(num(mode, s, j)); return r; }
+    if (D.step === 0) return 'Sheet 1 holds ' + list(sheet(0), 8) + '. Sheet 2 holds ' + list(sheet(1), 8) + '.';
+    if (D.step === 1) return 'Sheet 1 goes on top, showing ' + list(sheet(0), 8) + '. Sheet ' + S + ' is at the bottom.';
+    if (D.step === 2) {
+      a = [];
+      for (j = 0; j < Math.min(k, 3); j++) a.push('Pile ' + (j + 1) + ': ' + pile(j).join(' '));
+      return a.join('. ') + (k > 3 ? '. …' : '.') + ' ' + (mode === 'stack' ? '<span class="good">Each pile counts up in order.</span>' : '<span class="bad">Each pile skips numbers.</span>');
+    }
+    var out = [];
+    for (j = 0; j < k; j++) for (s = 0; s < S; s++) out.push(num(mode, s, j));
+    return 'From the top: ' + list(out, 10) + ' ' + (mode === 'stack'
+      ? '<span class="good">All ' + N + ' cards are in order, ready to use.</span>'
+      : '<span class="bad">Scrambled: you would have to sort ' + N + ' cards by hand.</span>');
+  }
+  var DESC = [
+    function () { return 'Each sheet holds ' + D.k + ' cards. The two layouts put the same cards on the sheets in a different order.'; },
+    function () { return 'Put the printed sheets in one stack, sheet 1 on top.'; },
+    function () { return 'Cut the whole stack at once. Each position on the sheet becomes its own pile of ' + D.S + ' cards.'; },
+    function () { return 'Put pile 1 on top of pile 2, then on pile 3, and so on. Read the cards from the top.'; }
+  ];
+
+  function updateText() {
+    root.querySelectorAll('.dm-step').forEach(function (b, i) {
+      if (i === D.step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    });
+    var next = document.getElementById('dmNext');
+    next.textContent = D.step < 3 ? 'Next: ' + STEPS[D.step + 1] : 'Start over';
+    document.getElementById('dmBack').disabled = D.step === 0;
+    document.getElementById('dmLess').disabled = D.S <= MIN_SHEETS;
+    document.getElementById('dmMore').disabled = D.S >= MAX_SHEETS;
+    document.getElementById('dmCount').textContent = D.S;
+    lanes.forEach(function (lane) { lane.note.innerHTML = noteFor(lane); });
+    document.getElementById('dmLive').textContent = 'Step ' + (D.step + 1) + ' of 4, ' + STEPS[D.step] + '. ' + DESC[D.step]();
+  }
+
+  // animate: true for a single step forward, which plays the cut and the collect in two parts.
+  function show(animate, sliding) {
+    var quick = !sliding || reduce.matches;
+    lanes.forEach(function (lane) {
+      lane.timers.forEach(clearTimeout); lane.timers = [];
+      if (!animate) lane.stage.classList.add('dm-still');
+      if (D.step === 2 && !quick) {
+        layout(lane, 'lines');
+        lane.timers.push(setTimeout(function () { layout(lane); }, 650));
+      } else if (D.step === 3 && !quick) {
+        layout(lane, 'join');
+        lane.timers.push(setTimeout(function () { layout(lane); }, 900));
+      } else layout(lane);
+      if (!animate) { void lane.stage.offsetWidth; lane.stage.classList.remove('dm-still'); }
+    });
+    updateText();
+  }
+  function go(step) {
+    var forwardOne = step === D.step + 1;
+    D.step = step;
+    show(true, forwardOne);
+  }
+  function rebuild() { lanes.forEach(build); show(false); }
+
+  root.querySelectorAll('.dm-step').forEach(function (b) {
+    b.addEventListener('click', function () { go(parseInt(b.getAttribute('data-step'), 10)); });
+  });
+  document.getElementById('dmNext').addEventListener('click', function () { go(D.step < 3 ? D.step + 1 : 0); });
+  document.getElementById('dmBack').addEventListener('click', function () { if (D.step > 0) go(D.step - 1); });
+  document.getElementById('dmLess').addEventListener('click', function () { if (D.S > MIN_SHEETS) { D.S--; rebuild(); } });
+  document.getElementById('dmMore').addEventListener('click', function () { if (D.S < MAX_SHEETS) { D.S++; rebuild(); } });
+  root.querySelectorAll('input[name="dmPer"]').forEach(function (r) {
+    r.addEventListener('change', function () { D.k = parseInt(this.value, 10); rebuild(); });
+  });
+  var lastW = 0;
+  function onResize() { var w = root.clientWidth; if (w !== lastW) { lastW = w; show(false); } }
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(root);
+  else window.addEventListener('resize', onResize);
+
+  rebuild();
+})();
+</script>

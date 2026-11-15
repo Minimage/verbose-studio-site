@@ -9,6 +9,7 @@ public/                 What gets deployed (Cloudflare Pages output directory)
   index.html            Studio landing page (edit by hand)
   tallpdf/              Tall PDF Slicer, generated. Do not edit by hand.
   pdf-booklet/          PDF Booklet Maker, generated (og.png is kept by hand).
+  cut-and-stack/        Cut and Stack PDF Imposer, generated (og.png is kept by hand).
 tools/
   tallpdf/              Source for Tall PDF Slicer
     tool-src.html       The tool itself
@@ -17,6 +18,10 @@ tools/
   pdf-booklet/          Source for PDF Booklet Maker
     tool-src.html       The tool itself
     build.py            Builds public/pdf-booklet/ (python3 build.py)
+  cut-and-stack/        Source for Cut and Stack PDF Imposer
+    tool-src.html       The tool itself
+    demo-src.html       The interactive cut and stack demo on the tool page
+    build.py            Builds public/cut-and-stack/ (python3 build.py)
 ```
 
 ## Adding a new tool
