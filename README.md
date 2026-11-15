@@ -8,11 +8,15 @@ Small, free, private browser tools. Live at verbosestudio.com.
 public/                 What gets deployed (Cloudflare Pages output directory)
   index.html            Studio landing page (edit by hand)
   tallpdf/              Tall PDF Slicer, generated. Do not edit by hand.
+  pdf-booklet/          PDF Booklet Maker, generated (og.png is kept by hand).
 tools/
   tallpdf/              Source for Tall PDF Slicer
     tool-src.html       The tool itself
     guide-src.html      How-to page source
     build.py            Builds public/tallpdf/ (python3 build.py)
+  pdf-booklet/          Source for PDF Booklet Maker
+    tool-src.html       The tool itself
+    build.py            Builds public/pdf-booklet/ (python3 build.py)
 ```
 
 ## Adding a new tool

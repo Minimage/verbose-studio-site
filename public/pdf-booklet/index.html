@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Print a PDF as a Booklet: Free PDF Booklet Maker</title>
+<meta name="description" content="Free tool that turns a PDF into a print-ready booklet on A4 or Letter: print double-sided, fold and staple, and the pages are in order. Runs in your browser; your file is never uploaded."><meta property="og:title" content="Print a PDF as a Booklet: Free PDF Booklet Maker"><meta property="og:description" content="Free tool that turns a PDF into a print-ready booklet on A4 or Letter: print double-sided, fold and staple, and the pages are in order. Runs in your browser; your file is never uploaded."><meta property="og:type" content="website">
+<link rel="canonical" href="https://verbosestudio.com/pdf-booklet/"><meta name="theme-color" content="#0e7490"><meta property="og:url" content="https://verbosestudio.com/pdf-booklet/"><meta property="og:image" content="https://verbosestudio.com/pdf-booklet/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Print a PDF as a Booklet: Free PDF Booklet Maker"><meta name="twitter:description" content="Free tool that turns a PDF into a print-ready booklet on A4 or Letter: print double-sided, fold and staple, and the pages are in order. Runs in your browser; your file is never uploaded."><meta name="twitter:image" content="https://verbosestudio.com/pdf-booklet/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath d='M15 6 L3 3 V25 L15 28 Z' fill='white' stroke='%230e7490' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M15 6 L27 3 V25 L15 28 Z' fill='white' stroke='%230e7490' stroke-width='1.5' stroke-linejoin='round'/%3E%3Crect x='6' y='13' width='6' height='5' rx='1' fill='%232a8ea3'/%3E%3Cline x1='15' y1='2' x2='15' y2='29.5' stroke='%23d6246e' stroke-width='2' stroke-dasharray='3 2'/%3E%3C/svg%3E"><link rel="stylesheet" href="../vendor/fonts.css">
+<style>
+:root {
+  --bg: #eceff4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --ink: #182230;
+  --ink-2: #4b5567;
+  --line: #d3d9e3;
+  --accent: #0e7490;
+  --accent-hover: #0b5f77;
+  --accent-ink: #ffffff;
+  --cut: #d6246e;
+  --cut-soft: rgba(214, 36, 110, 0.12);
+  --ok: #1a7f52;
+  --warn: #a35200;
+  --warn-soft: rgba(163, 82, 0, 0.14);
+  --band-a: rgba(14, 116, 144, 0.08);
+  --out: rgba(24, 34, 48, 0.2);
+  --out-fill: rgba(255, 255, 255, 0.62);
+  --stage: #cdd4df;
+  --paper-shadow: 0 1px 2px rgba(20, 30, 50, 0.12), 0 10px 28px rgba(20, 30, 50, 0.14);
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1319;
+    --surface: #171d26;
+    --surface-2: #1e2632;
+    --ink: #e7ecf3;
+    --ink-2: #9aa6b8;
+    --line: #2b3444;
+    --accent: #4cc3dc;
+    --accent-hover: #74d3e8;
+    --accent-ink: #06222b;
+    --cut: #ff6fa8;
+    --cut-soft: rgba(255, 111, 168, 0.16);
+    --ok: #4fd08f;
+    --warn: #f2b04e;
+    --warn-soft: rgba(242, 176, 78, 0.16);
+    --band-a: rgba(76, 195, 220, 0.09);
+    --out: rgba(231, 236, 243, 0.2);
+    --out-fill: rgba(14, 19, 25, 0.6);
+    --stage: #0a0e13;
+    --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1319;
+  --surface: #171d26;
+  --surface-2: #1e2632;
+  --ink: #e7ecf3;
+  --ink-2: #9aa6b8;
+  --line: #2b3444;
+  --accent: #4cc3dc;
+  --accent-hover: #74d3e8;
+  --accent-ink: #06222b;
+  --cut: #ff6fa8;
+  --cut-soft: rgba(255, 111, 168, 0.16);
+  --ok: #4fd08f;
+  --warn: #f2b04e;
+  --warn-soft: rgba(242, 176, 78, 0.16);
+  --band-a: rgba(76, 195, 220, 0.09);
+  --out: rgba(231, 236, 243, 0.2);
+  --out-fill: rgba(14, 19, 25, 0.6);
+  --stage: #0a0e13;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+:root { --accent-soft: rgba(14, 116, 144, 0.1); --cut-ink: #ffffff; --shadow: 0 1px 2px rgba(20, 30, 50, 0.08), 0 12px 32px rgba(20, 30, 50, 0.1); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+}
+:root[data-theme="dark"] { --accent-soft: rgba(76, 195, 220, 0.13); --cut-ink: #2a0715; --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45); }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 48px;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: var(--accent); }
+.wrap { max-width: 1120px; margin: 0 auto; }
+.wrap.narrow { max-width: 46rem; }
+
+.site-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding-block: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.brand svg { flex: none; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.site-nav a {
+  padding: 7px 12px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500;
+}
+.site-nav a:hover { background: var(--surface); color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); border-radius: 8px 8px 4px 4px; }
+
+.site-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; color: var(--ink-2); font-size: 14px; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.site-foot a { color: var(--ink-2); }
+.site-foot a:hover { color: var(--ink); }
+
+.page-hero { display: grid; gap: 12px; padding-block: 20px 20px; max-width: 46rem; }
+.page-hero h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
+.page-hero p { margin: 0; font-size: 19px; color: var(--ink-2); max-width: 38rem; }
+.page-hero .newhere { font-size: 15px; }
+.page-hero .newhere a { font-weight: 600; }
+
+.sec { padding-top: 56px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.sec h2 { margin: 0; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+.sec > p { margin: 0; color: var(--ink-2); max-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { display: grid; align-content: start; gap: 8px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.card h3 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.card .ico { width: 44px; height: 30px; }
+.uses { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; max-width: 46rem; }
+.uses li { padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 600; }
+.uses li span { display: block; font-weight: 400; font-size: 15px; color: var(--ink-2); }
+.faq { display: grid; gap: 10px; max-width: 46rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { margin: 0; padding: 0 18px 16px; color: var(--ink-2); }
+.band-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 26px clamp(20px, 4vw, 34px); border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.band-cta h2 { margin: 0; font-size: 24px; letter-spacing: -0.015em; }
+.band-cta p { margin: 4px 0 0; color: var(--ink-2); font-size: 16px; }
+.pbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 20px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; text-decoration: none; }
+.pbtn:hover { background: var(--accent-hover); }
+
+.prose { display: grid; gap: 14px; padding-bottom: 8px; }
+.prose h2 { margin: 26px 0 0; font-size: 24px; letter-spacing: -0.015em; }
+.prose p, .prose li { color: var(--ink-2); margin: 0; }
+.prose ul, .prose ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose .meta { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); }
+
+@media (max-width: 860px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 20px 24px;
+  align-items: start;
+}
+.top { grid-column: 1 / -1; display: grid; gap: 4px; }
+.top h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.top p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+
+.panel {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.group { display: grid; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.group > legend, .label {
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 2px;
+}
+
+.file-row { display: grid; gap: 8px; }
+.file-name { font-weight: 600; overflow-wrap: anywhere; }
+.file-meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); overflow-wrap: anywhere; }
+.tag {
+  display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line);
+  vertical-align: 1px;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 38px; padding: 8px 14px;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 600;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.btn.small { min-height: 32px; padding: 5px 10px; font-size: 13px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.opt {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface);
+}
+.opt:has(input:checked) { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt input[type="radio"], .opt input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.opt .name { font-weight: 600; }
+.opt .dim { grid-column: 2; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.opt .inline { grid-column: 2; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.opt .sub { grid-column: 2; font-size: 13px; color: var(--ink-2); }
+.field {
+  min-height: 32px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); width: 84px;
+  font-family: var(--font-mono); font-size: 13px;
+}
+
+.hint { margin: 0; font-size: 13px; color: var(--ink-2); }
+.summary { display: grid; gap: 6px; padding: 12px; border-radius: 8px; background: var(--surface-2); font-size: 14px; }
+.summary .big { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.summary .row { display: flex; justify-content: space-between; gap: 12px; }
+.summary .row span:last-child { font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.status { min-height: 1.4em; margin: 0; font-size: 13px; color: var(--ink-2); }
+.status.err { color: var(--cut); }
+.each { display: grid; gap: 6px; }
+.each .btn { justify-content: space-between; font-weight: 500; }
+.each .btn span:last-child { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+
+.tip { display: grid; gap: 6px; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); }
+.tip ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+.tip b { font-weight: 600; }
+
+.stage {
+  background: var(--stage);
+  border-radius: 10px;
+  padding: 20px 16px 24px;
+  min-width: 0;
+}
+.stage.dropping { outline: 3px dashed var(--accent); outline-offset: -8px; }
+.stage-head { margin: 0 auto 16px; max-width: 820px; display: grid; gap: 4px; }
+.stage-head p { margin: 0; font-size: 13px; color: var(--ink-2); }
+.sheets { max-width: 820px; margin: 0 auto; display: grid; gap: 22px; }
+.bk-head { margin: 10px 0 -8px; font-size: 14px; font-weight: 700; }
+.bk-head span { font-weight: 400; color: var(--ink-2); font-family: var(--font-mono); font-size: 12px; margin-left: 6px; }
+.sheet-card { display: grid; gap: 8px; }
+.sheet-card .cap { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.sides { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.side { display: grid; gap: 6px; min-width: 0; }
+.side .lab { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.paper {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr;
+  aspect-ratio: var(--ar, 1.294); background: #fff; box-shadow: var(--paper-shadow); line-height: 0;
+}
+.paper::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1.5px dashed var(--cut); opacity: 0.7; pointer-events: none; }
+.slot { position: relative; min-width: 0; overflow: hidden; }
+.slot canvas { display: block; width: 100%; height: 100%; }
+.nums { display: grid; grid-template-columns: 1fr 1fr; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+.nums .b { color: var(--ink-2); font-style: italic; }
+.empty { max-width: 820px; margin: 0 auto; padding: 48px 16px; text-align: center; color: var(--ink-2); }
+
+.dock { display: none; }
+@media (max-width: 860px) {
+  body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; max-height: none; }
+  .dock {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface); border-top: 1px solid var(--line);
+  }
+  .dock .txt { font-weight: 600; }
+}
+@media (max-width: 560px) { .sides { grid-template-columns: minmax(0, 1fr); } }
+
+.app { font-size: 15px; line-height: 1.45; }
+#tool { scroll-margin-top: 12px; }
+
+.navbtn, .linkbtn { font: inherit; cursor: pointer; border: 0; background: none; }
+.navbtn { padding: 7px 12px; border-radius: 8px; color: var(--ink-2); font-size: 15px; font-weight: 500; }
+.navbtn:hover { background: var(--surface); color: var(--ink); }
+.linkbtn { padding: 0; color: var(--ink-2); font-size: 14px; text-decoration: underline; }
+.linkbtn:hover { color: var(--ink); }
+dialog.contact { width: min(30rem, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); overflow: auto; }
+dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
+.contact form, .contact .done { display: grid; gap: 14px; padding: 24px; }
+.contact h2 { margin: 0; font-size: 22px; letter-spacing: -0.015em; }
+.contact .lead { margin: -6px 0 0; color: var(--ink-2); font-size: 15px; }
+.contact label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+.contact label small { font-weight: 400; color: var(--ink-2); }
+.contact select, .contact textarea, .contact input[type=email] { font: inherit; font-weight: 400; font-size: 16px; padding: 10px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+.contact textarea { min-height: 130px; resize: vertical; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; align-items: center; }
+.contact .ghost { font: inherit; font-size: 15px; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+.contact .pbtn { border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.contact .pbtn[disabled] { opacity: .6; cursor: default; }
+.contact .msg { margin: 0; font-size: 14px; color: var(--ink-2); }
+.contact .msg.err { color: var(--cut); }
+.contact .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="site-head"><a class="brand" href="index.html"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 6 L3 3 V25 L15 28 Z" fill="#fff" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/><path d="M15 6 L27 3 V25 L15 28 Z" fill="#fff" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="6" height="2.2" rx="1" fill="#39424f"/><rect x="6" y="13" width="6" height="5" rx="1" fill="#2a8ea3"/><rect x="18" y="9" width="6" height="2" rx="1" fill="#c8cfda"/><rect x="18" y="13" width="6" height="2" rx="1" fill="#c8cfda"/><rect x="18" y="17" width="4" height="2" rx="1" fill="#c8cfda"/><line x1="15" y1="2" x2="15" y2="29.5" stroke="var(--cut)" stroke-width="1.8" stroke-dasharray="3 2"/></svg><span>PDF Booklet Maker</span></a><nav class="site-nav" aria-label="Main"><a href="index.html" aria-current="page">Tool</a><a href="how-to.html">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="navbtn" data-contact>Contact</button></nav></header>
+<section class="page-hero"><h1>Print a PDF as a booklet</h1><p>Drop in a PDF and get a print-ready booklet: print it double-sided, fold it in half, staple the middle, and the pages read in order. Free, and your file never leaves your browser.</p><noscript><p><strong>This tool needs JavaScript.</strong> Turn it on for this page to make a booklet.</p></noscript><span class="newhere">New here? <a href="how-to.html">See how it works, step by step</a>.</span></section>
+<section id="tool" aria-label="PDF booklet maker">
+<main class="app">
+
+  <aside class="panel" aria-label="Booklet settings">
+    <div class="group file-row">
+      <span class="label">PDF</span>
+      <div>
+        <span class="file-name" id="fileName">Loading sample…</span><span class="tag" id="sampleTag" hidden>sample</span>
+        <div class="file-meta" id="fileMeta"></div>
+      </div>
+      <div class="btn-row">
+        <label class="btn small" for="fileInput">Open a PDF…</label>
+        <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+      </div>
+      <p class="hint">Or drop a PDF anywhere on this page.</p>
+    </div>
+
+    <fieldset class="group" id="paperGroup">
+      <legend>Paper you print on</legend>
+      <label class="opt"><input type="radio" name="paper" value="letter">
+        <span class="name">Letter</span><span class="dim">Each page 5.5 × 8.5 in</span></label>
+      <label class="opt"><input type="radio" name="paper" value="a4">
+        <span class="name">A4</span><span class="dim">Each page A5, 148 × 210 mm</span></label>
+    </fieldset>
+
+    <fieldset class="group" id="splitGroup">
+      <legend>Booklets</legend>
+      <label class="opt"><input type="radio" name="split" value="one">
+        <span class="name">One booklet</span><span class="dim">All pages in a single booklet</span></label>
+      <label class="opt"><input type="radio" name="split" value="many">
+        <span class="name">Several booklets</span>
+        <span class="inline"><input id="per" class="field" type="number" min="4" max="400" step="4" value="16" aria-label="Pages in each booklet"><span class="hint">pages each</span></span></label>
+      <p class="hint" id="perHint">A thick booklet is hard to fold and staple. Past about 40 pages (10 sheets), splitting helps.</p>
+      <label class="opt"><input type="checkbox" id="keepBack">
+        <span class="name">Keep the last page on the back cover</span><span class="sub">Blank pages go just before it instead of at the end.</span></label>
+    </fieldset>
+
+    <p class="hint">Your choices are remembered in this browser.</p>
+
+    <div class="group">
+      <span class="label">Result</span>
+      <div class="summary" id="summary" aria-live="polite"></div>
+    </div>
+
+    <div class="group">
+      <button type="button" class="btn primary" id="dl">Download booklet PDF</button>
+      <div class="each" id="each" hidden></div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+
+    <div class="tip" id="tip">
+      <span class="label">How to print it</span>
+      <ol>
+        <li>Print <b>double-sided</b> (on both sides of the paper).</li>
+        <li>Choose <b>flip on short edge</b>. Some printers call it short-edge binding. With long edge, every back side comes out upside down.</li>
+        <li>Use <b id="tipPaper">Letter</b> paper and print at actual size (100%).</li>
+        <li>Keep the sheets in the order they come out, fold the stack in half and staple along the fold.</li>
+      </ol>
+    </div>
+  </aside>
+
+  <section class="stage" id="stage" aria-label="Preview">
+    <div class="stage-head">
+      <p id="stageHint">Each sheet is shown front and back. The dashed line is the fold.</p>
+    </div>
+    <div class="sheets" id="sheets"></div>
+  </section>
+</main>
+</section>
+
+<section class="sec" aria-labelledby="what">
+  <h2 id="what">What it does</h2>
+  <p>It puts two pages on each side of a sheet of paper, in the order a folded booklet needs, and gives you a new PDF to print.</p>
+  <div class="cards">
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="2" y="3" width="40" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><line x1="22" y1="3" x2="22" y2="27" stroke="var(--cut)" stroke-width="1.6" stroke-dasharray="3 2"/><text x="12" y="19.5" font-size="10" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#2a8ea3">8</text><text x="32" y="19.5" font-size="10" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#2a8ea3">1</text></svg><h3>Puts pages in booklet order</h3><p>The first sheet carries your first two and last two pages, the next sheet the ones inside those, and so on to the middle.</p></div>
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><rect x="4" y="3" width="16" height="24" rx="2" fill="#fff" stroke="var(--line)" stroke-width="1.5"/><rect x="8" y="8" width="8" height="2" rx="1" fill="#39424f"/><rect x="8" y="13" width="8" height="2" rx="1" fill="#c8cfda"/><rect x="8" y="17" width="6" height="2" rx="1" fill="#c8cfda"/><rect x="24" y="3" width="16" height="24" rx="2" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="3 2"/></svg><h3>Fills the last sheet</h3><p>A booklet needs a multiple of four pages. The tool adds the blank pages for you, at the end or just before the back cover.</p></div>
+    <div class="card"><svg class="ico" viewBox="0 0 44 30" aria-hidden="true"><path d="M11 6 L3 4 V24 L11 26 Z M11 6 L19 4 V24 L11 26 Z" fill="#fff" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/><path d="M33 6 L25 4 V24 L33 26 Z M33 6 L41 4 V24 L33 26 Z" fill="#fff" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/><rect x="5" y="11" width="4" height="6" rx="1" fill="#2a8ea3"/><rect x="27" y="11" width="4" height="6" rx="1" fill="#2a8ea3"/></svg><h3>Splits long documents</h3><p>A thick stack will not fold flat. Split a long PDF into several booklets of the size you choose, each one folded and stapled on its own.</p></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="useful">
+  <h2 id="useful">What it is useful for</h2>
+  <p>Print a PDF the usual way and you get one page on each side of a sheet: a loose stack you can only staple in the corner. A folded booklet puts four pages on every sheet, and not in a simple order. In an 8-page booklet the outside sheet carries pages 8 and 1 on one side and 2 and 7 on the other, and one slip when you work that out by hand leaves pages out of order once it is folded.</p>
+  <ul class="uses">
+    <li>Church programs and bulletins<span>The weekly order of service, folded and handed out at the door.</span></li>
+    <li>Zines<span>Small self-published magazines, printed at home.</span></li>
+    <li>Recipe collections<span>Family recipes in a little book for the kitchen.</span></li>
+    <li>School handouts and study guides<span>Notes students can carry and flip through.</span></li>
+    <li>Event programs<span>Weddings, recitals, plays and memorial services.</span></li>
+    <li>Small manuals<span>Instructions for a product, a club or a new job.</span></li>
+    <li>Short stories and poetry chapbooks<span>Your own writing as a small printed book.</span></li>
+  </ul>
+</section>
+
+<section class="sec" aria-labelledby="faq">
+  <h2 id="faq">Common questions</h2>
+  <div class="faq"><details><summary>Is my file uploaded anywhere?</summary><p>No. The whole job runs inside your browser. Your PDF is read on your own device and the booklet is built there too. Nothing is sent to a server.</p></details><details><summary>How do I print the booklet?</summary><p>Print it double-sided and choose flip on short edge (some printers call it short-edge binding). Use the paper size you picked, at actual size. Then keep the sheets in order, fold the stack in half and staple along the fold.</p></details><details><summary>The back sides came out upside down. What went wrong?</summary><p>The printer flipped the paper on the long edge. Print again with flip on short edge.</p></details><details><summary>My printer cannot print on both sides. Can I still make a booklet?</summary><p>Yes, by hand. Print only the odd pages of the booklet PDF, put the printed stack back in the paper tray, then print the even pages. Which way round the stack goes back in depends on your printer, so try it with the first sheet before printing the rest.</p></details><details><summary>Why were blank pages added?</summary><p>Each sheet of paper holds four booklet pages, two on each side. So a booklet always has a multiple of four pages, and the tool adds blank pages to fill the last sheet. They go at the end, or just before the last page if you tick Keep the last page on the back cover.</p></details><details><summary>How many pages can one booklet have?</summary><p>The tool has no limit, but paper does. Past about 40 pages (10 sheets) a booklet gets hard to fold flat and staple. Use Several booklets to split a long document into smaller ones that each fold and staple on their own.</p></details><details><summary>What size are the pages in the booklet?</summary><p>On Letter paper each page is 5.5 by 8.5 inches. On A4 paper each page is A5, 148 by 210 mm. Your pages are scaled down to fit, and kept in proportion.</p></details><details><summary>Will the text stay sharp?</summary><p>Yes. Pages are placed on the sheet as they are, not turned into pictures, so text and drawings stay crisp.</p></details><details><summary>Is it free?</summary><p>Yes. There is no account to make and nothing to install.</p></details></div>
+</section>
+
+<section class="sec">
+  <div class="band-cta">
+    <div><h2>First booklet?</h2><p>The guide walks through printing, folding and stapling.</p></div>
+    <a class="pbtn" href="how-to.html">See how to use it</a>
+  </div>
+</section>
+
+<footer class="site-foot"><span>A free tool by <a href="../">Verbose Studio</a>. Your files stay in your browser.</span><nav aria-label="Footer"><a href="index.html">Tool</a><a href="how-to.html">How to use</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><button type="button" class="linkbtn" data-contact>Contact</button></nav></footer>
+</div>
+<div class="dock">
+  <span class="txt" id="dockTxt"></span>
+  <button type="button" class="btn primary" id="dl2">Download</button>
+</div>
+
+
+<dialog class="contact" id="contactDlg" aria-labelledby="contactTitle">
+  <form id="contactForm" method="dialog" novalidate>
+    <h2 id="contactTitle">Contact us</h2>
+    <p class="lead">Found a problem, or want a feature? Tell us. We read everything.</p>
+    <label>What is it about?
+      <select name="topic">
+        <option>Suggestion</option><option>Something is not working</option><option>Question</option><option>Other</option>
+      </select>
+    </label>
+    <label>Your message
+      <textarea name="message" required maxlength="4000" placeholder="What happened, or what would you like to see?"></textarea>
+    </label>
+    <label>Your email <small>(optional, only if you would like a reply)</small>
+      <input type="email" name="email" autocomplete="email" maxlength="200">
+    </label>
+    <div class="trap" aria-hidden="true"><label>Leave this empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label></div>
+    <p class="msg" id="contactMsg" role="status" aria-live="polite"></p>
+    <div class="row"><button type="button" class="ghost" id="contactCancel">Cancel</button><button type="submit" class="pbtn" id="contactSend">Send</button></div>
+  </form>
+  <div class="done" id="contactDone" hidden>
+    <h2>Thank you</h2>
+    <p class="lead" style="margin:0">Your message was sent.</p>
+    <div class="row"><button type="button" class="pbtn" id="contactClose">Close</button></div>
+  </div>
+</dialog>
+
+<script src="../vendor/pdf.min.js"></script>
+<script src="../vendor/pdf-lib.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var PDFJS_WORKER = '../vendor/pdf.worker.min.js';
+  // Sheet sizes in points, landscape. Each sheet holds two pages side by side on each side.
+  var PAPER = {
+    letter: { w: 792, h: 612, name: 'Letter', page: '5.5 × 8.5 in' },
+    a4: { w: 841.89, h: 595.28, name: 'A4', page: 'A5 (148 × 210 mm)' }
+  };
+  var KEY = 'verbose-booklet-v1';
+  var $ = function (s) { return document.querySelector(s); };
+
+  var S = {
+    bytes: null, pdf: null, n: 0, name: '', isSample: false,
+    paper: 'letter', split: false, per: 16, keepBack: false,
+    busy: false, token: 0, thumbs: {}, queue: [], rendering: false
+  };
+
+  if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER; }
+
+  function setStatus(t, err) { var el = $('#status'); el.textContent = t || ''; el.className = 'status' + (err ? ' err' : ''); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+
+  /* ---------- Page order ---------- */
+  // Splits pages 0..n-1 into booklets and pads each to a multiple of four with blanks (-1).
+  function plan(n, split, per, keepBack) {
+    var size = split ? per : n, books = [];
+    for (var start = 0; start < n; start += size) {
+      var end = Math.min(n, start + size), pages = [];
+      for (var i = start; i < end; i++) pages.push(i);
+      var pad = (4 - pages.length % 4) % 4, at = keepBack && pages.length > 1 ? pages.length - 1 : pages.length;
+      for (var b = 0; b < pad; b++) pages.splice(at, 0, -1);
+      books.push({ first: start + 1, last: end, pages: pages, blanks: pad, sheets: impose(pages) });
+    }
+    return books;
+  }
+  // Saddle stitch: sheet s carries the outermost pages still unplaced.
+  // Front: last, first. Back: second, second to last. Printed short-edge duplex, then folded.
+  function impose(p) {
+    var m = p.length, sheets = [];
+    for (var s = 0; s < m / 4; s++) {
+      sheets.push({ front: [p[m - 1 - 2 * s], p[2 * s]], back: [p[2 * s + 1], p[m - 2 - 2 * s]] });
+    }
+    return sheets;
+  }
+  function currentPlan() { return plan(S.n, S.split, S.per, S.keepBack); }
+
+  /* ---------- Settings ---------- */
+  function guessPaper() {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var region = (lang.split('-')[1] || '').toUpperCase();
+    return ['US', 'CA', 'MX', 'PH', 'CL', 'CO', 'VE', 'GT', 'CR', 'PA', 'SV', 'DO', 'PR'].indexOf(region) >= 0 ? 'letter' : 'a4';
+  }
+  function loadSettings() {
+    try { var raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+  }
+  function saveSettings() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ paper: S.paper, split: S.split, per: S.per, keepBack: S.keepBack }));
+    } catch (e) { /* storage can be blocked; the page works without it */ }
+  }
+  (function () {
+    var s = loadSettings() || {};
+    S.paper = PAPER[s.paper] ? s.paper : guessPaper();
+    S.split = !!s.split;
+    S.per = cleanPer(s.per) || 16;
+    S.keepBack = !!s.keepBack;
+    document.querySelector('input[name="paper"][value="' + S.paper + '"]').checked = true;
+    document.querySelector('input[name="split"][value="' + (S.split ? 'many' : 'one') + '"]').checked = true;
+    $('#per').value = S.per;
+    $('#keepBack').checked = S.keepBack;
+  })();
+  function cleanPer(v) {
+    v = Math.round(Number(v));
+    if (!isFinite(v) || v < 1) return 0;
+    return Math.min(400, Math.ceil(v / 4) * 4);
+  }
+
+  /* ---------- Summary ---------- */
+  function updateSummary() {
+    var P = PAPER[S.paper];
+    $('#tipPaper').textContent = P.name;
+    if (!S.n) { $('#summary').innerHTML = '<span class="hint">Open a PDF to see the result.</span>'; $('#dockTxt').textContent = ''; $('#each').hidden = true; return; }
+    var books = currentPlan(), sheets = 0, blanks = 0;
+    books.forEach(function (b) { sheets += b.sheets.length; blanks += b.blanks; });
+    var rows = [
+      ['Pages in your PDF', S.n],
+      ['Blank pages added', blanks],
+      ['Booklets', books.length],
+      ['Paper', P.name + ', both sides'],
+      ['Each page prints at', P.page]
+    ];
+    $('#summary').innerHTML = '<div class="big">' + plural(sheets, 'sheet', 'sheets') + ' of paper</div>' +
+      rows.map(function (r) { return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>'; }).join('');
+    $('#dockTxt').textContent = plural(sheets, 'sheet', 'sheets') + (books.length > 1 ? ', ' + books.length + ' booklets' : '');
+    $('#dl').textContent = books.length > 1 ? 'Download all booklets in one PDF' : 'Download booklet PDF';
+    var each = $('#each');
+    each.innerHTML = '';
+    each.hidden = books.length < 2;
+    if (books.length > 1) {
+      books.forEach(function (b, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn small';
+        btn.innerHTML = '<span>Booklet ' + (i + 1) + ' only</span><span>pages ' + b.first + '–' + b.last + '</span>';
+        btn.addEventListener('click', function () { exportPdf(i); });
+        each.appendChild(btn);
+      });
+    }
+  }
+
+  /* ---------- Preview ---------- */
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); fillCard(e.target); } });
+  }, { rootMargin: '600px 0px' }) : null;
+
+  function pageLabel(i) { return i < 0 ? 'blank' : 'page ' + (i + 1); }
+  function buildPreview() {
+    var box = $('#sheets');
+    if (io) io.disconnect();
+    box.innerHTML = '';
+    if (!S.n) { box.innerHTML = '<p class="empty">Open a PDF, or drop one here, to see the booklet.</p>'; return; }
+    var P = PAPER[S.paper], books = currentPlan(), frag = document.createDocumentFragment(), sheetNo = 0;
+    books.forEach(function (b, bi) {
+      if (books.length > 1) {
+        var h = document.createElement('h3');
+        h.className = 'bk-head';
+        h.innerHTML = 'Booklet ' + (bi + 1) + '<span>pages ' + b.first + '–' + b.last + ', ' + plural(b.sheets.length, 'sheet', 'sheets') + '</span>';
+        frag.appendChild(h);
+      }
+      b.sheets.forEach(function (sh, si) {
+        sheetNo++;
+        var card = document.createElement('div');
+        card.className = 'sheet-card';
+        card.innerHTML = '<div class="cap">Sheet ' + (si + 1) + (si === 0 ? ' (outside)' : si === b.sheets.length - 1 && si > 0 ? ' (middle, staple here)' : '') + '</div>' +
+          '<div class="sides">' + side('Front', sh.front) + side('Back, after flipping on the short edge', sh.back) + '</div>';
+        card._pages = sh.front.concat(sh.back);
+        frag.appendChild(card);
+      });
+    });
+    box.appendChild(frag);
+    box.style.setProperty('--ar', (P.w / P.h).toFixed(4));
+    Array.prototype.forEach.call(box.querySelectorAll('.sheet-card'), function (c) { if (io) io.observe(c); else fillCard(c); });
+
+    function side(label, pair) {
+      return '<div class="side"><span class="lab">' + label + '</span><div class="paper" role="img" aria-label="' + label + ': ' + pageLabel(pair[0]) + ' on the left, ' + pageLabel(pair[1]) + ' on the right">' +
+        pair.map(function (i) {
+          return '<div class="slot" data-p="' + i + '"><canvas></canvas></div>';
+        }).join('') + '</div><div class="nums" aria-hidden="true">' +
+        pair.map(function (i) { return i < 0 ? '<span class="b">blank</span>' : '<span>' + (i + 1) + '</span>'; }).join('') + '</div></div>';
+    }
+  }
+
+  // Draws a page thumbnail into a slot, scaled and centred the same way the export does.
+  function fillCard(card) {
+    var P = PAPER[S.paper], tok = S.token;
+    Array.prototype.forEach.call(card.querySelectorAll('.slot'), function (slot) {
+      var c = slot.querySelector('canvas'), i = parseInt(slot.getAttribute('data-p'), 10);
+      var W = 300, H = Math.round(W * P.h / (P.w / 2));
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+      if (i < 0) return;
+      thumb(i).then(function (t) {
+        if (tok !== S.token || !t) return;
+        var s = Math.min(W / t.width, H / t.height), w = t.width * s, h = t.height * s;
+        ctx.drawImage(t, (W - w) / 2, (H - h) / 2, w, h);
+      });
+    });
+  }
+
+  function thumb(i) {
+    if (S.thumbs[i]) return S.thumbs[i];
+    var tok = S.token;
+    S.thumbs[i] = new Promise(function (resolve) { S.queue.push({ i: i, tok: tok, resolve: resolve }); pump(); });
+    return S.thumbs[i];
+  }
+  async function pump() {
+    if (S.rendering) return;
+    S.rendering = true;
+    while (S.queue.length) {
+      var job = S.queue.shift();
+      if (job.tok !== S.token) { job.resolve(null); continue; }
+      try {
+        var page = await S.pdf.getPage(job.i + 1);
+        var v1 = page.getViewport({ scale: 1 });
+        var scale = Math.min(420 / v1.width, 420 / v1.height) * Math.min(2, window.devicePixelRatio || 1) / 1.4;
+        var vp = page.getViewport({ scale: scale });
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(vp.width)); c.height = Math.max(1, Math.round(vp.height));
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+        page.cleanup();
+        job.resolve(c);
+      } catch (err) { job.resolve(null); }
+    }
+    S.rendering = false;
+  }
+
+  function refresh() { updateSummary(); buildPreview(); }
+
+  /* ---------- Controls ---------- */
+  document.querySelectorAll('input[name="paper"]').forEach(function (r) {
+    r.addEventListener('change', function () { S.paper = this.value; saveSettings(); refresh(); });
+  });
+  document.querySelectorAll('input[name="split"]').forEach(function (r) {
+    r.addEventListener('change', function () { S.split = this.value === 'many'; saveSettings(); refresh(); });
+  });
+  $('#per').addEventListener('focus', function () {
+    if (!S.split) { document.querySelector('input[name="split"][value="many"]').checked = true; S.split = true; saveSettings(); refresh(); }
+  });
+  $('#per').addEventListener('change', function () {
+    var v = cleanPer(this.value), was = this.value;
+    if (!v) v = S.per;
+    this.value = v;
+    S.per = v; S.split = true;
+    document.querySelector('input[name="split"][value="many"]').checked = true;
+    saveSettings(); refresh();
+    if (String(v) !== String(was).trim()) setStatus('Booklets need a multiple of 4 pages, so it is set to ' + v + '.');
+    else setStatus('');
+  });
+  $('#keepBack').addEventListener('change', function () { S.keepBack = this.checked; saveSettings(); refresh(); });
+
+  /* ---------- Opening files ---------- */
+  async function loadBytes(bytes, name, isSample) {
+    var L = PDFLib;
+    try {
+      await L.PDFDocument.load(bytes, { updateMetadata: false });
+    } catch (err) {
+      if (err && /encrypt/i.test(err.name + ' ' + err.message)) throw new Error('LOCKED');
+      throw err;
+    }
+    var pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+    if (!pdf.numPages) throw new Error('This PDF has no pages.');
+    if (S.pdf) { try { S.pdf.destroy(); } catch (e) {} }
+    S.token++;
+    S.pdf = pdf; S.bytes = bytes; S.n = pdf.numPages; S.name = name; S.isSample = isSample;
+    S.thumbs = {}; S.queue = [];
+    $('#fileName').textContent = name;
+    $('#sampleTag').hidden = !isSample;
+    var p1 = await pdf.getPage(1), v = p1.getViewport({ scale: 1 });
+    $('#fileMeta').textContent = plural(S.n, 'page', 'pages') + ' · first page ' + (v.width / 72).toFixed(2) + ' × ' + (v.height / 72).toFixed(2) + ' in';
+    setStatus('');
+    refresh();
+  }
+  function fail(err) {
+    S.busy = false;
+    if (err && err.message === 'LOCKED') setStatus('This PDF is password-protected or locked against changes, so its pages cannot be rearranged. Remove the protection first, then try again.', true);
+    else setStatus('Could not open that file. ' + (err && err.message ? err.message : ''), true);
+  }
+  async function openFile(file) {
+    if (!file) return;
+    if (!/pdf$/i.test(file.type) && !/\.pdf$/i.test(file.name)) { setStatus('That is not a PDF file.', true); return; }
+    if (S.busy) return;
+    S.busy = true;
+    setStatus('Opening ' + file.name + '…');
+    try {
+      var buf = new Uint8Array(await file.arrayBuffer());
+      await loadBytes(buf, file.name, false);
+    } catch (err) { fail(err); }
+    S.busy = false;
+  }
+  $('#fileInput').addEventListener('change', function () { openFile(this.files[0]); this.value = ''; });
+  var stage = $('#stage'), depth = 0;
+  function hasFiles(e) { return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0; }
+  window.addEventListener('dragenter', function (e) { if (!hasFiles(e)) return; e.preventDefault(); depth++; stage.classList.add('dropping'); });
+  window.addEventListener('dragover', function (e) { if (!hasFiles(e)) return; e.preventDefault(); });
+  window.addEventListener('dragleave', function () { depth = Math.max(0, depth - 1); if (!depth) stage.classList.remove('dropping'); });
+  window.addEventListener('drop', function (e) {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); depth = 0; stage.classList.remove('dropping');
+    openFile(e.dataTransfer.files[0]);
+  });
+
+  /* ---------- Export ---------- */
+  // Places one source page, upright, scaled to fit and centred in one half of the sheet.
+  function place(L, sheet, e, rot, cellX, cellW, cellH) {
+    var W0 = e.width, H0 = e.height, turned = rot % 180 !== 0;
+    var dw = turned ? H0 : W0, dh = turned ? W0 : H0;
+    var s = Math.min(cellW / dw, cellH / dh);
+    var ox = cellX + (cellW - dw * s) / 2, oy = (cellH - dh * s) / 2;
+    var x = ox, y = oy;
+    if (rot === 90) { y = oy + W0 * s; }
+    else if (rot === 180) { x = ox + W0 * s; y = oy + H0 * s; }
+    else if (rot === 270) { x = ox + H0 * s; }
+    sheet.drawPage(e, { x: x, y: y, width: W0 * s, height: H0 * s, rotate: L.degrees(-rot) });
+  }
+
+  async function buildPdf(books) {
+    var L = PDFLib, P = PAPER[S.paper];
+    var src = await L.PDFDocument.load(S.bytes, { updateMetadata: false });
+    // Filled-in form fields live outside the page content. Flatten them so they print.
+    try { var form = src.getForm(); if (form.getFields().length) form.flatten(); } catch (e) { /* keep going without */ }
+    var out = await L.PDFDocument.create();
+    var pages = src.getPages(), emb = {};
+    for (var b = 0; b < books.length; b++) {
+      for (var k = 0; k < books[b].pages.length; k++) {
+        var i = books[b].pages[k];
+        if (i < 0 || i in emb) continue;
+        var pg = pages[i];
+        if (!pg.node.Contents()) { emb[i] = null; continue; }
+        var cb = pg.getCropBox(), mb = pg.getMediaBox();
+        var left = Math.max(cb.x, mb.x), bottom = Math.max(cb.y, mb.y);
+        var right = Math.min(cb.x + cb.width, mb.x + mb.width), top = Math.min(cb.y + cb.height, mb.y + mb.height);
+        if (right <= left || top <= bottom) { left = mb.x; bottom = mb.y; right = mb.x + mb.width; top = mb.y + mb.height; }
+        var rot = ((pg.getRotation().angle % 360) + 360) % 360;
+        emb[i] = { e: await out.embedPage(pg, { left: left, bottom: bottom, right: right, top: top }), rot: Math.round(rot / 90) * 90 % 360 };
+      }
+    }
+    books.forEach(function (bk) {
+      bk.sheets.forEach(function (sh) {
+        [sh.front, sh.back].forEach(function (pair) {
+          var sheet = out.addPage([P.w, P.h]);
+          pair.forEach(function (i, half) {
+            if (i < 0 || !emb[i]) return;
+            place(L, sheet, emb[i].e, emb[i].rot, half * P.w / 2, P.w / 2, P.h);
+          });
+        });
+      });
+    });
+    var base = S.name.replace(/\.pdf$/i, '') || 'document';
+    out.setTitle(base + ' (booklet)');
+    out.setProducer('PDF Booklet Maker (verbosestudio.com/pdf-booklet)');
+    return out.save();
+  }
+
+  async function exportPdf(only) {
+    if (S.busy || !S.bytes) return;
+    S.busy = true; setStatus('Building the booklet…');
+    try {
+      var all = currentPlan(), one = typeof only === 'number';
+      var books = one ? [all[only]] : all;
+      var bytes = await buildPdf(books);
+      var base = S.name.replace(/\.pdf$/i, '') || 'document';
+      var filename = base + '-booklet' + (one ? '-' + (only + 1) + '-of-' + all.length : '') + '.pdf';
+      plainDownload(new Blob([bytes], { type: 'application/pdf' }), filename);
+      setStatus('Download started: ' + filename + '. Print it double-sided, flip on short edge.');
+    } catch (err) {
+      if (err && /encrypt/i.test(err.name + ' ' + err.message)) setStatus('This PDF is locked against changes, so its pages cannot be rearranged.', true);
+      else setStatus('Could not build the booklet. ' + (err && err.message ? err.message : ''), true);
+    }
+    S.busy = false;
+  }
+  function plainDownload(blob, filename) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  }
+  $('#dl').addEventListener('click', function () { exportPdf(); });
+  $('#dl2').addEventListener('click', function () { exportPdf(); });
+
+  /* ---------- Sample ---------- */
+  // A 10-page sample, so the page shows how the order works before you open your own file.
+  async function makeSample() {
+    var L = PDFLib, doc = await L.PDFDocument.create();
+    var font = await doc.embedFont(L.StandardFonts.Helvetica), bold = await doc.embedFont(L.StandardFonts.HelveticaBold);
+    var ink = L.rgb(0.09, 0.13, 0.19), soft = L.rgb(0.78, 0.81, 0.85), teal = L.rgb(0.16, 0.56, 0.64);
+    for (var i = 1; i <= 10; i++) {
+      var p = doc.addPage([419.53, 595.28]);
+      if (i === 1) {
+        p.drawRectangle({ x: 0, y: 0, width: 419.53, height: 595.28, color: teal });
+        p.drawText('Sample booklet', { x: 40, y: 380, size: 34, font: bold, color: L.rgb(1, 1, 1) });
+        p.drawText('Cover, page 1', { x: 40, y: 345, size: 16, font: font, color: L.rgb(1, 1, 1) });
+        continue;
+      }
+      p.drawText(i === 10 ? 'Back cover' : 'Chapter ' + (i - 1), { x: 40, y: 530, size: 22, font: bold, color: ink });
+      for (var l = 0; l < 14; l++) p.drawRectangle({ x: 40, y: 490 - l * 26, width: l % 5 === 4 ? 200 : 339, height: 8, color: soft });
+      var t = String(i), w = bold.widthOfTextAtSize(t, 64);
+      p.drawText(t, { x: (419.53 - w) / 2, y: 60, size: 64, font: bold, color: teal });
+    }
+    return doc.save();
+  }
+
+  if (!window.pdfjsLib || !window.PDFLib) {
+    $('#fileName').textContent = 'No file';
+    setStatus('The PDF libraries did not load. Please refresh the page.', true);
+    return;
+  }
+  updateSummary();
+  makeSample().then(function (bytes) { return loadBytes(new Uint8Array(bytes), 'sample-booklet.pdf', true); })
+    .catch(function () { $('#fileName').textContent = 'No file yet'; refresh(); });
+})();
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is my file uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. The whole job runs inside your browser. Your PDF is read on your own device and the booklet is built there too. Nothing is sent to a server."}}, {"@type": "Question", "name": "How do I print the booklet?", "acceptedAnswer": {"@type": "Answer", "text": "Print it double-sided and choose flip on short edge (some printers call it short-edge binding). Use the paper size you picked, at actual size. Then keep the sheets in order, fold the stack in half and staple along the fold."}}, {"@type": "Question", "name": "The back sides came out upside down. What went wrong?", "acceptedAnswer": {"@type": "Answer", "text": "The printer flipped the paper on the long edge. Print again with flip on short edge."}}, {"@type": "Question", "name": "My printer cannot print on both sides. Can I still make a booklet?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, by hand. Print only the odd pages of the booklet PDF, put the printed stack back in the paper tray, then print the even pages. Which way round the stack goes back in depends on your printer, so try it with the first sheet before printing the rest."}}, {"@type": "Question", "name": "Why were blank pages added?", "acceptedAnswer": {"@type": "Answer", "text": "Each sheet of paper holds four booklet pages, two on each side. So a booklet always has a multiple of four pages, and the tool adds blank pages to fill the last sheet. They go at the end, or just before the last page if you tick Keep the last page on the back cover."}}, {"@type": "Question", "name": "How many pages can one booklet have?", "acceptedAnswer": {"@type": "Answer", "text": "The tool has no limit, but paper does. Past about 40 pages (10 sheets) a booklet gets hard to fold flat and staple. Use Several booklets to split a long document into smaller ones that each fold and staple on their own."}}, {"@type": "Question", "name": "What size are the pages in the booklet?", "acceptedAnswer": {"@type": "Answer", "text": "On Letter paper each page is 5.5 by 8.5 inches. On A4 paper each page is A5, 148 by 210 mm. Your pages are scaled down to fit, and kept in proportion."}}, {"@type": "Question", "name": "Will the text stay sharp?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Pages are placed on the sheet as they are, not turned into pictures, so text and drawings stay crisp."}}, {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. There is no account to make and nothing to install."}}]}</script><script>
+(function () {
+  var dlg = document.getElementById('contactDlg'); if (!dlg) return;
+  var form = document.getElementById('contactForm'), done = document.getElementById('contactDone');
+  var msg = document.getElementById('contactMsg'), send = document.getElementById('contactSend');
+  var ENDPOINT = 'https://api.web3forms.com/submit', KEY = '00640895-65d1-4e34-b1c1-8dc6575510a4', TOOL = 'PDF Booklet Maker';
+  function open() {
+    form.hidden = false; done.hidden = true; msg.textContent = ''; msg.className = 'msg'; send.disabled = false;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    var t = form.querySelector('textarea'); if (t) t.focus();
+  }
+  function close() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  document.querySelectorAll('[data-contact]').forEach(function (b) { b.addEventListener('click', open); });
+  document.getElementById('contactCancel').addEventListener('click', close);
+  document.getElementById('contactClose').addEventListener('click', close);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = form.elements;
+    if (!f.message.value.trim()) { msg.className = 'msg err'; msg.textContent = 'Please write a short message first.'; f.message.focus(); return; }
+    if (f.email.value && !f.email.checkValidity()) { msg.className = 'msg err'; msg.textContent = 'That email does not look right. You can also leave it blank.'; return; }
+    if (f.botcheck.checked) { form.hidden = true; done.hidden = false; return; }
+    if (KEY.indexOf('YOUR_') === 0) { msg.className = 'msg err'; msg.textContent = 'The contact form is not switched on yet. Please try again soon.'; return; }
+    send.disabled = true; msg.className = 'msg'; msg.textContent = 'Sending...';
+    var body = { access_key: KEY, subject: TOOL + ': ' + f.topic.value, from_name: TOOL + ' contact form', topic: f.topic.value, message: f.message.value, page: location.pathname };
+    if (f.email.value) { body.email = f.email.value; body.replyto = f.email.value; }
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.success) { form.reset(); form.hidden = true; done.hidden = false; } else { throw new Error(); } })
+      .catch(function () { send.disabled = false; msg.className = 'msg err'; msg.textContent = 'Sorry, that did not send. Please try again in a moment.'; });
+  });
+})();
+</script>
+</body>
+</html>
