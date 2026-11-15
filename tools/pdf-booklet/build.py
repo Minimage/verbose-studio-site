@@ -81,6 +81,8 @@ a { color: var(--accent); }
 .uses { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; max-width: 46rem; }
 .uses li { padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 600; }
 .uses li span { display: block; font-weight: 400; font-size: 15px; color: var(--ink-2); }
+.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 44rem; color: var(--ink-2); }
+.steps b { color: var(--ink); font-weight: 600; }
 .faq { display: grid; gap: 10px; max-width: 46rem; }
 .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .faq summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
@@ -135,7 +137,7 @@ SITE = 'https://verbosestudio.com'
 def share_meta(page, title, desc):
     url = SITE + '/' + SLUG + '/' + page
     img = SITE + '/' + SLUG + '/og.png'
-    return ('<link rel="canonical" href="%s"><meta name="theme-color" content="#0e7490"><meta property="og:url" content="%s">'
+    return ('<link rel="canonical" href="%s"><meta name="theme-color" content="#0e7490"><meta property="og:url" content="%s"><meta property="og:site_name" content="Verbose Studio">'
             '<meta property="og:image" content="%s"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
             '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s"><meta name="twitter:image" content="%s">'
             % (url, url, img, title, desc, img))
@@ -245,21 +247,13 @@ FAQ = [
     ('Is my file uploaded anywhere?',
      'No. The whole job runs inside your browser. Your PDF is read on your own device and the booklet is built there too. Nothing is sent to a server.'),
     ('How do I print the booklet?',
-     'Print it double-sided and choose flip on short edge (some printers call it short-edge binding). Use the paper size you picked, at actual size. Then keep the sheets in order, fold the stack in half and staple along the fold.'),
-    ('The back sides came out upside down. What went wrong?',
-     'The printer flipped the paper on the long edge. Print again with flip on short edge.'),
+     'Print it double-sided and choose flip on short edge (some printers call it short-edge binding). Use the paper size you picked, at actual size. Then keep the sheets in order, fold the stack in half and staple along the fold. If the back sides come out upside down, the printer was set to flip on the long edge; print again with flip on short edge.'),
     ('My printer cannot print on both sides. Can I still make a booklet?',
      'Yes, by hand. Print only the odd pages of the booklet PDF, put the printed stack back in the paper tray, then print the even pages. Which way round the stack goes back in depends on your printer, so try it with the first sheet before printing the rest.'),
     ('Why were blank pages added?',
      'Each sheet of paper holds four booklet pages, two on each side. So a booklet always has a multiple of four pages, and the tool adds blank pages to fill the last sheet. They go at the end, or just before the last page if you tick Keep the last page on the back cover.'),
     ('How many pages can one booklet have?',
      'The tool has no limit, but paper does. Past about 40 pages (10 sheets) a booklet gets hard to fold flat and staple. Use Several booklets to split a long document into smaller ones that each fold and staple on their own.'),
-    ('What size are the pages in the booklet?',
-     'On Letter paper each page is 5.5 by 8.5 inches. On A4 paper each page is A5, 148 by 210 mm. Your pages are scaled down to fit, and kept in proportion.'),
-    ('Will the text stay sharp?',
-     'Yes. Pages are placed on the sheet as they are, not turned into pictures, so text and drawings stay crisp.'),
-    ('Is it free?',
-     'Yes. There is no account to make and nothing to install.'),
 ]
 
 def faq_html():
@@ -308,6 +302,17 @@ HOME_BELOW = """
   </div>
 </section>
 
+<section class="sec" aria-labelledby="howto">
+  <h2 id="howto">How to print a PDF as a booklet</h2>
+  <ol class="steps">
+    <li><b>Open your PDF</b> in the tool above and pick <b>Letter</b> or <b>A4</b>. Each booklet page comes out half that size: 5.5 by 8.5 inches on Letter, A5 on A4.</li>
+    <li><b>Check the preview</b>, then press <b>Download booklet PDF</b>.</li>
+    <li><b>Print the new file double-sided</b> with <b>flip on short edge</b>, at actual size.</li>
+    <li><b>Fold the stack in half</b>, keeping the sheets in order, and staple along the fold.</li>
+  </ol>
+  <p>The <a href="how-to.html">full guide</a> covers printers that cannot print on both sides, and stapling without a long-reach stapler.</p>
+</section>
+
 <section class="sec" aria-labelledby="useful">
   <h2 id="useful">What it is useful for</h2>
   <p>Print a PDF the usual way and you get one page on each side of a sheet: a loose stack you can only staple in the corner. A folded booklet puts four pages on every sheet, and not in a simple order. In an 8-page booklet the outside sheet carries pages 8 and 1 on one side and 2 and 7 on the other, and one slip when you work that out by hand leaves pages out of order once it is folded.</p>
@@ -342,7 +347,7 @@ SEO_TITLE = {
     'privacy.html': 'Privacy | PDF Booklet Maker',
 }
 DESC = {
-    'index.html': 'Free tool that turns a PDF into a print-ready booklet on A4 or Letter: print double-sided, fold and staple, and the pages are in order. Runs in your browser; your file is never uploaded.',
+    'index.html': 'Print a PDF as a booklet on A4 or Letter: this free tool puts the pages in booklet order, so you print double-sided, fold, staple and they read in order. Runs in your browser; your file is never uploaded.',
     'how-to.html': 'Step by step: make a booklet PDF, print it double-sided with flip on short edge, then fold and staple it. Also covers printers without double-sided printing.',
     'about.html': 'Why PDF Booklet Maker exists and how it works.',
     'privacy.html': 'How PDF Booklet Maker handles your files and what it stores. Your PDF is never uploaded.',
