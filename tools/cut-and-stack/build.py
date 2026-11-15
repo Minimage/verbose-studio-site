@@ -258,8 +258,6 @@ FAQ = [
      'First check that the flip setting in the tool matches the one in the print dialog. Then print one test sheet and hold it up to a light. Most home printers shift the back by a millimetre or two, so leave a little white space around the edge of your design rather than a tight border.'),
     ('Why are some spaces blank?',
      'Every sheet has the same number of spaces, so if your item count does not fill the last round, the tool adds blank spaces. They end up at the bottom of the last piles, or as whole piles of blank paper you can throw away.'),
-    ('Can I cut it with scissors?',
-     'Yes. Cut a few sheets at a time, keep each position in its own pile as you go, and keep the sheets in order. A paper trimmer or guillotine is faster because it cuts the whole stack in one go.'),
 ]
 
 def faq_html():
@@ -357,7 +355,7 @@ SEO_TITLE = {
     'privacy.html': 'Privacy | Cut and Stack PDF Imposer',
 }
 DESC = {
-    'index.html': 'Make a cut and stack PDF for free: 2, 4, 6 or 8 tickets, cards or postcards per Letter or A4 sheet, so after you print, stack and cut, every pile is in order. Double-sided too. Runs in your browser; your file is never uploaded.',
+    'index.html': 'Make a cut and stack PDF for free: 2, 4, 6 or 8 tickets or cards per sheet. Print, stack and cut, and every pile is in order. Your file is never uploaded.',
     'how-to.html': 'Step by step: lay out a PDF in cut and stack order, print it, cut the stack and put the piles together so numbered tickets and cards come out in order.',
     'about.html': 'Why Cut and Stack PDF Imposer exists and how it works.',
     'privacy.html': 'How Cut and Stack PDF Imposer handles your files and what it stores. Your PDF is never uploaded.',
