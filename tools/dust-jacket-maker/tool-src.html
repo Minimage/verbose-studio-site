@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dust Jacket Maker</title>
+<style>
+:root {
+  --bg: #eceff4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --ink: #182230;
+  --ink-2: #4b5567;
+  --line: #d3d9e3;
+  --accent: #0e7490;
+  --accent-hover: #0b5f77;
+  --accent-ink: #ffffff;
+  --cut: #d6246e;
+  --cut-soft: rgba(214, 36, 110, 0.12);
+  --ok: #1a7f52;
+  --ok-soft: rgba(26, 127, 82, 0.14);
+  --warn: #a35200;
+  --warn-soft: rgba(163, 82, 0, 0.14);
+  --stage: #cdd4df;
+  --paper-shadow: 0 1px 2px rgba(20, 30, 50, 0.12), 0 10px 28px rgba(20, 30, 50, 0.14);
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1319;
+    --surface: #171d26;
+    --surface-2: #1e2632;
+    --ink: #e7ecf3;
+    --ink-2: #9aa6b8;
+    --line: #2b3444;
+    --accent: #4cc3dc;
+    --accent-hover: #74d3e8;
+    --accent-ink: #06222b;
+    --cut: #ff6fa8;
+    --cut-soft: rgba(255, 111, 168, 0.16);
+    --ok: #4fd08f;
+    --ok-soft: rgba(79, 208, 143, 0.16);
+    --warn: #f2b04e;
+    --warn-soft: rgba(242, 176, 78, 0.16);
+    --stage: #0a0e13;
+    --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1319;
+  --surface: #171d26;
+  --surface-2: #1e2632;
+  --ink: #e7ecf3;
+  --ink-2: #9aa6b8;
+  --line: #2b3444;
+  --accent: #4cc3dc;
+  --accent-hover: #74d3e8;
+  --accent-ink: #06222b;
+  --cut: #ff6fa8;
+  --cut-soft: rgba(255, 111, 168, 0.16);
+  --ok: #4fd08f;
+  --ok-soft: rgba(79, 208, 143, 0.16);
+  --warn: #f2b04e;
+  --warn-soft: rgba(242, 176, 78, 0.16);
+  --stage: #0a0e13;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.45;
+  padding-inline: 16px;
+  padding-block: 24px 40px;
+}
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 20px 24px;
+  align-items: start;
+}
+.top { grid-column: 1 / -1; display: grid; gap: 4px; }
+.top h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.top p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+
+.panel {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.group { display: grid; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.group > legend, .label {
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 2px;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 38px; padding: 8px 14px;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 600;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.btn.small { min-height: 32px; padding: 5px 10px; font-size: 13px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.opt {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface);
+}
+.opt:has(input:checked) { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt input[type="radio"], .opt input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.opt .name { font-weight: 600; }
+.opt .sub { grid-column: 2; font-size: 13px; color: var(--ink-2); }
+
+.seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.seg label { position: relative; display: grid; }
+.seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.seg span {
+  display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 4px 6px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-weight: 600; text-align: center;
+}
+.seg input:checked + span { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); }
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.num { display: grid; gap: 4px; font-size: 13px; font-weight: 600; min-width: 0; }
+.num .box { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.num .box:focus-within { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.num input { width: 100%; min-width: 0; min-height: 40px; padding: 6px 4px 6px 10px; border: 0; background: none; font-family: var(--font-mono); font-size: 15px; font-weight: 500; }
+.num input:focus { outline: none; }
+.num .unit { padding-right: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.num.bad .box { border-color: var(--cut); box-shadow: inset 0 0 0 1px var(--cut); }
+.num .err { font-weight: 400; font-size: 12px; color: var(--cut); }
+.inline { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.inline .num { flex: 0 1 9.5rem; }
+
+.slot { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.slot.dropping { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.slot-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.slot-head b { font-weight: 600; }
+.slot-file { font-size: 13px; overflow-wrap: anywhere; }
+.slot-file .meta { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.slot-file .meta.warn { color: var(--warn); }
+.swatch { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.swatch input { width: 38px; height: 30px; padding: 0 2px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); cursor: pointer; }
+.text-in { width: 100%; min-height: 38px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.tag {
+  display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line);
+  vertical-align: 1px;
+}
+
+.hint { margin: 0; font-size: 13px; color: var(--ink-2); }
+.summary { display: grid; gap: 6px; padding: 12px; border-radius: 8px; background: var(--surface-2); font-size: 14px; }
+.summary .big { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.summary .row { display: flex; justify-content: space-between; gap: 12px; }
+.summary .row span:last-child { font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.summary .warn { color: var(--warn); font-size: 13px; }
+.status { min-height: 1.4em; margin: 0; font-size: 13px; color: var(--ink-2); }
+.status.err { color: var(--cut); }
+.tiles-line { margin: 0; font-size: 13px; color: var(--ink-2); }
+.tiles-line b { color: var(--ink); }
+
+.stage {
+  background: var(--stage);
+  border-radius: 10px;
+  padding: 20px 16px 24px;
+  min-width: 0;
+}
+.stage.dropping { outline: 3px dashed var(--accent); outline-offset: -8px; }
+.stage-head { margin: 0 0 14px; display: grid; gap: 4px; }
+.stage-head p { margin: 0; font-size: 13px; color: var(--ink-2); }
+.jacket { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; align-items: stretch; }
+.paper { position: relative; aspect-ratio: var(--ar, 2.3); background: #fff; box-shadow: var(--paper-shadow); line-height: 0; }
+.paper canvas { display: block; width: 100%; height: 100%; }
+.plabel {
+  position: absolute; transform: translate(-50%, 0); padding: 2px 6px; border-radius: 4px; line-height: 1.3; white-space: nowrap;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500; background: rgba(24, 34, 48, 0.82); color: #fff; pointer-events: none; text-align: center;
+}
+.plabel small { display: block; font-size: 10px; opacity: 0.85; }
+.plabel.narrow small { display: none; }
+.dim { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.dim::before, .dim::after { content: ""; flex: 1; border-top: 1px solid currentColor; min-width: 8px; }
+.dim-w { grid-column: 1; margin-inline: var(--ml, 4%); }
+.dim-h { grid-column: 2; grid-row: 1; writing-mode: vertical-rl; margin-block: var(--mt, 8%); gap: 6px; }
+.dim-h::before, .dim-h::after { border-top: 0; border-left: 1px solid currentColor; min-width: 0; min-height: 8px; }
+.legend { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px dashed var(--cut); }
+.legend i.trim { border-top: 2px solid var(--ink); width: 12px; }
+.legend i.bleed { height: 10px; border: 1px solid var(--ink-2); background: repeating-linear-gradient(45deg, transparent 0 3px, rgba(120, 130, 150, 0.45) 3px 4px); }
+.empty { margin: 0; padding: 48px 16px; text-align: center; color: var(--ink-2); }
+
+.dock { display: none; }
+@media (max-width: 860px) {
+  body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; max-height: none; }
+  .dock {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface); border-top: 1px solid var(--line);
+  }
+  .dock .txt { font-weight: 600; }
+}
+@media (max-width: 380px) { .nums { grid-template-columns: minmax(0, 1fr); } }
+</style>
+<script src="../vendor/pdf-lib.min.js"></script>
+
+<main class="app">
+  <header class="top">
+    <h1>Dust Jacket Maker</h1>
+    <p>Make a print-ready dust jacket for a hardcover book from your measurements and cover images. Everything runs in this tab and your images are never uploaded.</p>
+  </header>
+
+  <aside class="panel" aria-label="Dust jacket settings">
+    <fieldset class="group">
+      <legend>Units</legend>
+      <div class="seg">
+        <label><input type="radio" name="unit" value="in"><span>Inches</span></label>
+        <label><input type="radio" name="unit" value="mm"><span>Millimetres</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Your book</legend>
+      <div class="nums">
+        <label class="num" data-f="height">Book height<span class="box"><input type="text" inputmode="decimal" id="f-height" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+        <label class="num" data-f="cover">Front cover width<span class="box"><input type="text" inputmode="decimal" id="f-cover" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+        <label class="num" data-f="spine">Spine width<span class="box"><input type="text" inputmode="decimal" id="f-spine" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+        <label class="num" data-f="flap">Flap width<span class="box"><input type="text" inputmode="decimal" id="f-flap" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+      </div>
+      <p class="hint">Measure the hard covers (the boards), not the pages. Spine width is from the front board's edge to the back board's edge, across the spine. Flaps are usually about half the cover width.</p>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Allowances</legend>
+      <div class="inline">
+        <label class="num" data-f="wrap">Wrap allowance<span class="box"><input type="text" inputmode="decimal" id="f-wrap" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+        <p class="hint" style="flex:1 1 10rem">Added to the height and to each cover width, so the jacket wraps round the board edges. 1/8 in (3 mm) suits most books.</p>
+      </div>
+      <label class="opt"><input type="checkbox" id="bleedOn">
+        <span class="name">Add bleed</span><span class="sub">Extends the artwork past the trim on the outside edges, so there is no white sliver after cutting. Print shops usually want it.</span></label>
+      <div class="inline" id="bleedRow">
+        <label class="num" data-f="bleed">Bleed<span class="box"><input type="text" inputmode="decimal" id="f-bleed" autocomplete="off"><span class="unit" data-u></span></span><span class="err" aria-live="polite"></span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Artwork</legend>
+      <div class="slot" data-slot="front">
+        <div class="slot-head"><b>Front cover</b><label class="swatch" title="Shown behind the image in Fit mode">Colour <input type="color" id="c-front"></label></div>
+        <div class="slot-file"><span id="n-front">No image</span><span class="tag" id="t-front" hidden>sample</span><span class="meta" id="m-front"></span></div>
+        <div class="btn-row">
+          <button type="button" class="btn small" data-pick="front">Choose image…</button>
+          <input type="file" id="i-front" accept="image/*" hidden>
+          <button type="button" class="btn small" id="r-front" hidden>Remove</button>
+        </div>
+      </div>
+      <div class="slot" data-slot="back">
+        <div class="slot-head"><b>Back cover</b><label class="swatch">Colour <input type="color" id="c-back"></label></div>
+        <div class="slot-file"><span id="n-back">Flat colour</span><span class="meta" id="m-back"></span></div>
+        <div class="btn-row">
+          <button type="button" class="btn small" data-pick="back">Choose image…</button>
+          <input type="file" id="i-back" accept="image/*" hidden>
+          <button type="button" class="btn small" id="r-back" hidden>Remove</button>
+        </div>
+      </div>
+      <div class="slot" data-slot="spine">
+        <div class="slot-head"><b>Spine</b><label class="swatch">Colour <input type="color" id="c-spine"></label></div>
+        <div class="slot-file"><span id="n-spine">Flat colour</span><span class="meta" id="m-spine"></span></div>
+        <div class="btn-row">
+          <button type="button" class="btn small" data-pick="spine">Choose image…</button>
+          <input type="file" id="i-spine" accept="image/*" hidden>
+          <button type="button" class="btn small" id="r-spine" hidden>Remove</button>
+        </div>
+        <label class="num" style="font-weight:600">Spine text <span style="font-weight:400;color:var(--ink-2)">(optional, reads top to bottom)</span>
+          <input type="text" class="text-in" id="spineText" maxlength="120" autocomplete="off"></label>
+        <label class="swatch">Text colour <input type="color" id="c-spineText"></label>
+        <p class="hint" id="spineWarn" hidden></p>
+      </div>
+      <div class="slot" data-slot="flap">
+        <div class="slot-head"><b>Flaps</b><label class="swatch">Colour <input type="color" id="c-flap"></label></div>
+      </div>
+      <p class="hint">JPG, PNG or WebP. Drop an image on a panel in the preview to put it there.</p>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Images</legend>
+      <label class="opt"><input type="radio" name="fit" value="fill">
+        <span class="name">Fill the panel</span><span class="sub">Covers the whole panel, cropping the edges if the shape differs.</span></label>
+      <label class="opt"><input type="radio" name="fit" value="fit">
+        <span class="name">Fit inside the panel</span><span class="sub">Shows the whole image, with the panel colour round it.</span></label>
+    </fieldset>
+
+    <div class="group">
+      <span class="label">Result</span>
+      <div class="summary" id="summary" aria-live="polite"></div>
+    </div>
+
+    <div class="group">
+      <button type="button" class="btn primary" id="dlFull">Download full-size PDF</button>
+      <p class="hint">One page at the exact jacket size, for a print shop or a wide-format printer.</p>
+    </div>
+
+    <fieldset class="group">
+      <legend>Or print at home on</legend>
+      <div class="seg">
+        <label><input type="radio" name="paper" value="letter"><span>Letter</span></label>
+        <label><input type="radio" name="paper" value="a4"><span>A4</span></label>
+      </div>
+      <p class="tiles-line" id="tilesLine"></p>
+      <button type="button" class="btn" id="dlTiles">Download tiled PDF</button>
+      <p class="status" id="status" role="status"></p>
+    </fieldset>
+    <p class="hint">Your measurements and choices are remembered in this browser. Images and spine text are not.</p>
+  </aside>
+
+  <section class="stage" id="stage" aria-label="Preview">
+    <div class="stage-head">
+      <p>The flat jacket as it prints, outside facing you. Pink dashed lines show the folds and are not printed. The marks in the white margin are printed.</p>
+    </div>
+    <div class="jacket" id="jacket">
+      <div class="paper" id="paper" role="img" aria-label="Preview of the flat dust jacket"><canvas id="cv"></canvas></div>
+      <div class="dim dim-h" id="dimH"></div>
+      <div class="dim dim-w" id="dimW"></div>
+    </div>
+    <p class="empty" id="emptyMsg" hidden></p>
+    <div class="legend" aria-hidden="true">
+      <span><i></i>Fold</span><span><i class="trim"></i>Trim marks</span><span id="legBleed"><i class="bleed"></i>Bleed, trimmed off</span>
+    </div>
+  </section>
+</main>
+
+<div class="dock">
+  <span class="txt" id="dockTxt"></span>
+  <button type="button" class="btn primary" id="dl2">Download</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var IN = 72, MM = 72 / 25.4;
+  var PAPER = {
+    letter: { w: 612, h: 792, name: 'Letter' },
+    a4: { w: 595.28, h: 841.89, name: 'A4' }
+  };
+  var SHEET_MARGIN = 18;   // a quarter inch round each tiled sheet, which most printers can print up to
+  var OVERLAP = 36;        // tiled sheets share half an inch of artwork
+  var MARK_GAP = 6, MARK_LEN = 14, SLUG = MARK_GAP + MARK_LEN + 4;   // the margin outside the bleed that holds the marks
+  var MAX_PAGE = 14400;    // PDF pages cannot be bigger than 200 inches
+  var KEY = 'verbose-dustjacket-v1';
+  var FIELDS = ['height', 'cover', 'spine', 'flap', 'wrap', 'bleed'];
+  var NAMES = { height: 'Book height', cover: 'Cover width', spine: 'Spine width', flap: 'Flap width', wrap: 'Wrap allowance', bleed: 'Bleed' };
+  var LIMITS = { height: [3, 20], cover: [2, 15], spine: [0.05, 5], flap: [0.5, 8], wrap: [0, 0.5], bleed: [0, 0.5] };   // inches
+  var DEF = {
+    in: { height: 9.5, cover: 6.25, spine: 1.25, flap: 3.25, wrap: 0.125, bleed: 0.125 },
+    mm: { height: 240, cover: 160, spine: 30, flap: 80, wrap: 3, bleed: 3 }
+  };
+  var PANELS = [
+    { key: 'bflap', label: 'Back flap', src: 'flap' },
+    { key: 'back', label: 'Back cover', src: 'back' },
+    { key: 'spine', label: 'Spine', src: 'spine' },
+    { key: 'front', label: 'Front cover', src: 'front' },
+    { key: 'fflap', label: 'Front flap', src: 'flap' }
+  ];
+  var COLORS = { front: '#21424d', back: '#21424d', spine: '#21424d', flap: '#f3ece0', spineText: '#f3ece0' };
+  var $ = function (s) { return document.querySelector(s); };
+
+  var S = {
+    unit: 'in', v: {}, bad: {}, bleedOn: false, fit: 'fill', paper: 'letter',
+    col: Object.assign({}, COLORS), img: { front: null, back: null, spine: null }, spineText: '', busy: false
+  };
+
+  function setStatus(t, err) { var el = $('#status'); el.textContent = t || ''; el.className = 'status' + (err ? ' err' : ''); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+  function trimNum(s) { return s.indexOf('.') >= 0 ? s.replace(/\.?0+$/, '') : s; }
+  function fmtIn(pt) { return trimNum((pt / IN).toFixed(3)); }
+  function fmtMm(pt) { return trimNum((pt / MM).toFixed(1)); }
+  function fmt(pt, unit) { return (unit || S.unit) === 'mm' ? fmtMm(pt) : fmtIn(pt); }
+  function withUnit(pt, unit) { unit = unit || S.unit; return fmt(pt, unit) + ' ' + unit; }
+  function both(pt) { var other = S.unit === 'mm' ? 'in' : 'mm'; return withUnit(pt) + ' (' + withUnit(pt, other) + ')'; }
+
+  /* ---------- Geometry ---------- */
+  // Everything is in points, measured from the bottom left corner of the trimmed jacket.
+  function geo() {
+    var v = S.v, b = S.bleedOn ? v.bleed : 0;
+    var H = v.height + v.wrap, cw = v.cover + v.wrap, ws = [v.flap, cw, v.spine, cw, v.flap], x = 0;
+    var panels = PANELS.map(function (p, i) { var r = { key: p.key, label: p.label, src: p.src, i: i, x: x, w: ws[i] }; x += ws[i]; return r; });
+    var M = b + SLUG;
+    return { H: H, W: x, b: b, M: M, pageW: x + 2 * M, pageH: H + 2 * M, panels: panels };
+  }
+  // The area a panel's artwork covers: the panel, plus bleed on the outside edges of the whole jacket.
+  function artRect(g, p) {
+    var x0 = p.x - (p.i === 0 ? g.b : 0), x1 = p.x + p.w + (p.i === 4 ? g.b : 0);
+    return { x: x0, y: -g.b, w: x1 - x0, h: g.H + 2 * g.b };
+  }
+  // Fill covers the artwork area (cropping the overflow); fit shows the whole image inside the trimmed panel.
+  function placeImg(im, art, p, g, mode) {
+    var s, cx, cy;
+    if (mode === 'fit') { s = Math.min(p.w / im.w, g.H / im.h); cx = p.x + p.w / 2; cy = g.H / 2; }
+    else { s = Math.max(art.w / im.w, art.h / im.h); cx = art.x + art.w / 2; cy = art.y + art.h / 2; }
+    var w = im.w * s, h = im.h * s;
+    return { x: cx - w / 2, y: cy - h / 2, w: w, h: h, s: s };
+  }
+  // Spine text size: as large as fits across the spine and along its length, up to 30 pt.
+  function spineSize(g, widthAt1) {
+    if (!S.spineText.trim()) return 0;
+    var sw = g.panels[2].w, size = Math.min(30, sw * 0.46 / 0.72, g.H * 0.84 / Math.max(widthAt1, 0.01));
+    return size;
+  }
+  // Short marks just outside the bleed: trim marks at the four corners and fold marks at every panel edge.
+  function marks(g) {
+    var e = g.b + MARK_GAP, f = e + MARK_LEN, trim = [], fold = [];
+    [0, g.W].forEach(function (x) {
+      var sx = x === 0 ? -1 : 1;
+      [0, g.H].forEach(function (y) {
+        var sy = y === 0 ? -1 : 1;
+        trim.push([x + sx * e, y, x + sx * f, y]);
+        trim.push([x, y + sy * e, x, y + sy * f]);
+      });
+    });
+    g.panels.slice(1).forEach(function (p) {
+      fold.push([p.x, g.H + e, p.x, g.H + f]);
+      fold.push([p.x, -e, p.x, -f]);
+    });
+    return { trim: trim, fold: fold, labelY: -f + 1 };
+  }
+  // The tiled version: the whole page, marks included, split over sheets with a shared strip at every seam.
+  function tilePlan(g) {
+    var P = PAPER[S.paper], best = null;
+    [[P.w, P.h, true], [P.h, P.w, false]].forEach(function (d) {
+      var cw = d[0] - 2 * SHEET_MARGIN, ch = d[1] - 2 * SHEET_MARGIN;
+      var cols = g.pageW <= cw ? 1 : Math.ceil((g.pageW - OVERLAP) / (cw - OVERLAP));
+      var rows = g.pageH <= ch ? 1 : Math.ceil((g.pageH - OVERLAP) / (ch - OVERLAP));
+      var n = cols * rows;
+      if (!best || n < best.n || (n === best.n && rows < best.rows)) {
+        best = { w: d[0], h: d[1], portrait: d[2], cw: cw, ch: ch, cols: cols, rows: rows, n: n, stepX: cw - OVERLAP, stepY: ch - OVERLAP };
+      }
+    });
+    return best;
+  }
+
+  /* ---------- Measurements ---------- */
+  function parseVal(s) {
+    s = String(s).trim().replace(',', '.');
+    var m = /^(\d+)\s+(\d+)\/(\d+)$/.exec(s) || /^()(\d+)\/(\d+)$/.exec(s);   // 9 1/2 or 1/8, for inches
+    if (m) { var d = parseFloat(m[3]); return d ? (m[1] ? parseFloat(m[1]) : 0) + parseFloat(m[2]) / d : NaN; }
+    return /^\d*\.?\d+$/.test(s) || /^\d+\.$/.test(s) ? parseFloat(s) : NaN;
+  }
+  function readField(f) {
+    var el = document.getElementById('f-' + f), n = parseVal(el.value), lim = LIMITS[f], wrap = el.closest('.num');
+    var pt = n * (S.unit === 'mm' ? MM : IN), msg = '';
+    if (el.value.trim() === '' || isNaN(n)) msg = 'Enter a number.';
+    else if (pt < lim[0] * IN - 1e-6 || pt > lim[1] * IN + 1e-6) msg = 'Between ' + fmt(lim[0] * IN) + ' and ' + fmt(lim[1] * IN) + ' ' + S.unit + '.';
+    if (msg) S.bad[f] = msg; else { delete S.bad[f]; S.v[f] = pt; }
+    wrap.classList.toggle('bad', !!msg);
+    wrap.querySelector('.err').textContent = msg;
+  }
+  function writeFields() {
+    FIELDS.forEach(function (f) { document.getElementById('f-' + f).value = fmt(S.v[f]); readField(f); });
+    document.querySelectorAll('[data-u]').forEach(function (u) { u.textContent = S.unit; });
+  }
+  function valid() { return !Object.keys(S.bad).filter(function (f) { return f !== 'bleed' || S.bleedOn; }).length; }
+
+  /* ---------- Settings ---------- */
+  function guessUnit() {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var region = (lang.split('-')[1] || '').toUpperCase();
+    return ['US', 'LR', 'MM'].indexOf(region) >= 0 ? 'in' : 'mm';
+  }
+  function guessPaper() {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var region = (lang.split('-')[1] || '').toUpperCase();
+    return ['US', 'CA', 'MX', 'PH', 'CL', 'CO', 'VE', 'GT', 'CR', 'PA', 'SV', 'DO', 'PR'].indexOf(region) >= 0 ? 'letter' : 'a4';
+  }
+  function saveSettings() {
+    try {
+      var keep = { unit: S.unit, bleedOn: S.bleedOn, fit: S.fit, paper: S.paper, v: {} };
+      FIELDS.forEach(function (f) { keep.v[f] = S.v[f]; });
+      localStorage.setItem(KEY, JSON.stringify(keep));
+    } catch (e) { /* storage can be blocked; the page works without it */ }
+  }
+  function pick(name, value) { document.querySelector('input[name="' + name + '"][value="' + value + '"]').checked = true; }
+  (function () {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    s = s || {};
+    S.unit = s.unit === 'mm' || s.unit === 'in' ? s.unit : guessUnit();
+    S.paper = PAPER[s.paper] ? s.paper : guessPaper();
+    S.fit = s.fit === 'fit' ? 'fit' : 'fill';
+    S.bleedOn = s.bleedOn === true;
+    FIELDS.forEach(function (f) {
+      var saved = s.v && typeof s.v[f] === 'number' && isFinite(s.v[f]) ? s.v[f] : null;
+      var lim = LIMITS[f];
+      S.v[f] = saved !== null && saved >= lim[0] * IN && saved <= lim[1] * IN ? saved : DEF[S.unit][f] * (S.unit === 'mm' ? MM : IN);
+    });
+    pick('unit', S.unit); pick('paper', S.paper); pick('fit', S.fit);
+    $('#bleedOn').checked = S.bleedOn;
+    Object.keys(COLORS).forEach(function (k) { document.getElementById('c-' + k).value = S.col[k]; });
+    writeFields();
+  })();
+
+  /* ---------- Summary ---------- */
+  function updateSummary() {
+    $('#bleedRow').hidden = !S.bleedOn;
+    var box = $('#summary'), ok = valid();
+    $('#dlFull').disabled = $('#dlTiles').disabled = $('#dl2').disabled = !ok || !window.PDFLib;
+    if (!ok) {
+      var list = Object.keys(S.bad).filter(function (f) { return f !== 'bleed' || S.bleedOn; }).map(function (f) { return NAMES[f]; });
+      box.innerHTML = '<span class="warn">Check ' + list.join(', ').toLowerCase() + ' to see the jacket.</span>';
+      $('#tilesLine').textContent = ''; $('#dockTxt').textContent = '';
+      return;
+    }
+    var g = geo(), T = tilePlan(g), P = PAPER[S.paper];
+    var rows = [['Height', withUnit(g.H)]].concat(g.panels.map(function (p) { return [p.label, withUnit(p.w)]; }));
+    if (g.b) rows.push(['With bleed', withUnit(g.W + 2 * g.b) + ' × ' + withUnit(g.H + 2 * g.b)]);
+    rows.push(['PDF page, with marks', fmt(g.pageW) + ' × ' + withUnit(g.pageH)]);
+    var html = '<div class="big">' + fmt(g.W) + ' × ' + withUnit(g.H) + '</div><div class="hint">Trimmed jacket, ' + (S.unit === 'mm' ? fmtIn(g.W) + ' × ' + fmtIn(g.H) + ' in' : fmtMm(g.W) + ' × ' + fmtMm(g.H) + ' mm') + '</div>' +
+      rows.map(function (r) { return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>'; }).join('');
+    if (g.pageW > MAX_PAGE || g.pageH > MAX_PAGE) html += '<div class="warn">This is wider than a PDF page can be (200 in). Check the measurements.</div>';
+    var low = ['front', 'back', 'spine'].map(function (k) { return ppi(k, g); }).filter(function (q) { return q && q.ppi < 150; });
+    if (low.length) {
+      var names = low.map(function (q) { return q.label; }), list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+      html += '<div class="warn">The ' + list + ' image' + (low.length > 1 ? 's' : '') + ' may print soft at this size (under 150 pixels per inch).</div>';
+    }
+    box.innerHTML = html;
+    $('#tilesLine').innerHTML = 'The tiled version takes <b>' + plural(T.n, P.name + ' sheet', P.name + ' sheets') + '</b>' +
+      (T.n > 1 ? ' (' + T.cols + ' across × ' + T.rows + ' down, ' + (T.portrait ? 'portrait' : 'landscape') + '), overlapping by ' + (S.unit === 'mm' ? '13 mm' : '½ in') + '.' : ', ' + (T.portrait ? 'portrait' : 'landscape') + '.');
+    $('#dockTxt').textContent = fmt(g.W) + ' × ' + withUnit(g.H);
+    $('#dlTiles').textContent = 'Download tiled PDF (' + plural(T.n, 'sheet', 'sheets') + ')';
+  }
+  // How sharp each image will print, in pixels per inch of the placed image.
+  function ppi(k, g) {
+    var im = S.img[k]; if (!im) return null;
+    var p = g.panels[k === 'back' ? 1 : k === 'spine' ? 2 : 3], pl = placeImg(im, artRect(g, p), p, g, S.fit);
+    return { label: k, ppi: im.w / (pl.w / IN) };
+  }
+  function slotMeta(k) {
+    var im = S.img[k], m = document.getElementById('m-' + k), n = document.getElementById('n-' + k);
+    n.textContent = im ? im.name : (k === 'front' ? 'No image' : 'Flat colour');
+    document.getElementById('r-' + k).hidden = !im;
+    var tag = document.getElementById('t-' + k); if (tag) tag.hidden = !(im && im.sample);
+    if (!im) { m.textContent = ''; m.className = 'meta'; return; }
+    var q = valid() ? ppi(k, geo()) : null;
+    m.textContent = im.w + ' × ' + im.h + ' px' + (q ? ' · about ' + Math.round(q.ppi) + ' ppi' : '');
+    m.className = 'meta' + (q && q.ppi < 150 ? ' warn' : '');
+  }
+
+  /* ---------- Preview ---------- */
+  var cv = $('#cv'), queued = false;
+  function redraw() { if (queued) return; queued = true; requestAnimationFrame(function () { queued = false; draw(); }); }
+  function refresh() { updateSummary(); ['front', 'back', 'spine'].forEach(slotMeta); redraw(); }
+
+  function draw() {
+    var ok = valid();
+    $('#jacket').hidden = !ok; $('#emptyMsg').hidden = ok;
+    if (!ok) { $('#emptyMsg').textContent = 'Fix the measurements on the left to see the jacket.'; return; }
+    var g = geo(), paper = $('#paper');
+    paper.style.setProperty('--ar', (g.pageW / g.pageH).toFixed(4));
+    var cssW = paper.clientWidth || 600, dpr = Math.min(2, window.devicePixelRatio || 1);
+    var W = Math.min(2400, Math.round(cssW * dpr)), H = Math.round(W * g.pageH / g.pageW), f = W / g.pageW;
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d');
+    // From jacket points to canvas pixels: y goes down on the canvas.
+    function X(x) { return (g.M + x) * f; }
+    function Y(y) { return (g.M + g.H - y) * f; }
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+    g.panels.forEach(function (p) {
+      var a = artRect(g, p), im = p.src === 'flap' ? null : S.img[p.src];
+      ctx.fillStyle = S.col[p.src]; ctx.fillRect(X(a.x), Y(a.y + a.h), a.w * f + 0.5, a.h * f);
+      if (im) {
+        var pl = placeImg(im, a, p, g, S.fit);
+        ctx.save(); ctx.beginPath(); ctx.rect(X(a.x), Y(a.y + a.h), a.w * f, a.h * f); ctx.clip();
+        ctx.drawImage(im.view, X(pl.x), Y(pl.y + pl.h), pl.w * f, pl.h * f);
+        ctx.restore();
+      }
+    });
+    // Spine text, turned to read from top to bottom.
+    var sp = g.panels[2], txt = S.spineText.trim();
+    $('#spineWarn').hidden = true;
+    if (txt) {
+      ctx.save();
+      ctx.font = '700 100px Helvetica, Arial, sans-serif';
+      var size = spineSize(g, ctx.measureText(txt).width / 100);
+      if (size < 4) { $('#spineWarn').hidden = false; $('#spineWarn').textContent = 'The spine is too narrow for this text, so it is left off.'; }
+      else {
+        ctx.translate(X(sp.x + sp.w / 2), Y(g.H / 2)); ctx.rotate(Math.PI / 2);
+        ctx.font = '700 ' + (size * f) + 'px Helvetica, Arial, sans-serif';
+        ctx.fillStyle = S.col.spineText; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(txt, 0, 0);
+      }
+      ctx.restore();
+    }
+    // Bleed, shaded: it is printed but trimmed off.
+    if (g.b) {
+      ctx.save(); ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+      ctx.beginPath(); ctx.rect(X(-g.b), Y(g.H + g.b), (g.W + 2 * g.b) * f, (g.H + 2 * g.b) * f);
+      ctx.rect(X(0), Y(g.H), g.W * f, g.H * f); ctx.fill('evenodd'); ctx.restore();
+    }
+    // Fold lines inside the jacket, for the preview only.
+    ctx.save(); ctx.strokeStyle = 'rgba(214, 36, 110, 0.9)'; ctx.lineWidth = Math.max(1, 1.2 * dpr); ctx.setLineDash([6 * dpr, 4 * dpr]);
+    ctx.beginPath();
+    g.panels.slice(1).forEach(function (p) { ctx.moveTo(X(p.x), Y(g.H)); ctx.lineTo(X(p.x), Y(0)); });
+    ctx.stroke(); ctx.restore();
+    // The printed marks.
+    var mk = marks(g);
+    ctx.save(); ctx.strokeStyle = '#000'; ctx.lineWidth = Math.max(1, 0.5 * f);
+    ctx.beginPath(); mk.trim.forEach(function (l) { ctx.moveTo(X(l[0]), Y(l[1])); ctx.lineTo(X(l[2]), Y(l[3])); }); ctx.stroke();
+    ctx.setLineDash([2 * f, 2 * f]);
+    ctx.beginPath(); mk.fold.forEach(function (l) { ctx.moveTo(X(l[0]), Y(l[1])); ctx.lineTo(X(l[2]), Y(l[3])); }); ctx.stroke();
+    ctx.restore();
+
+    // Panel labels and the total size.
+    Array.prototype.forEach.call(paper.querySelectorAll('.plabel'), function (el) { el.remove(); });
+    g.panels.forEach(function (p) {
+      // Full name and size on wide panels, a short name on narrower ones, nothing when it would not fit.
+      var px = p.w * f / dpr, short = p.i === 2 ? 'Spine' : p.src === 'flap' ? 'Flap' : p.label.split(' ')[0];
+      if (px < 48) return;
+      var el = document.createElement('span');
+      el.className = 'plabel' + (px < 96 ? ' narrow' : '');
+      el.style.left = ((g.M + p.x + p.w / 2) / g.pageW * 100).toFixed(3) + '%';
+      el.style.top = ((g.M + g.b) / g.pageH * 100 + 2).toFixed(3) + '%';
+      el.innerHTML = (px < 96 ? short : p.label) + '<small>' + fmt(p.w) + ' ' + S.unit + '</small>';
+      paper.appendChild(el);
+    });
+    var dw = $('#dimW'), dh = $('#dimH');
+    dw.textContent = 'Total width ' + withUnit(g.W);
+    dw.style.setProperty('--ml', (g.M / g.pageW * 100).toFixed(3) + '%');
+    dh.textContent = 'Height ' + withUnit(g.H);
+    dh.style.setProperty('--mt', (g.M / g.pageH * paper.clientHeight).toFixed(1) + 'px');
+    $('#legBleed').hidden = !g.b;
+    paper.setAttribute('aria-label', 'Preview of the flat dust jacket, ' + fmt(g.W) + ' by ' + withUnit(g.H) + '. From left to right: ' +
+      g.panels.map(function (p) { return p.label.toLowerCase() + ' ' + withUnit(p.w); }).join(', ') + '.');
+  }
+  window.addEventListener('resize', redraw);
+
+  /* ---------- Controls ---------- */
+  FIELDS.forEach(function (f) {
+    var el = document.getElementById('f-' + f);
+    el.addEventListener('input', function () { readField(f); if (!S.bad[f]) saveSettings(); refresh(); });
+    el.addEventListener('blur', function () { if (!S.bad[f]) { el.value = fmt(S.v[f]); } });
+  });
+  document.querySelectorAll('input[name="unit"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      S.unit = this.value;
+      // Valid numbers convert; a field still being fixed keeps its text and is checked again in the new unit.
+      FIELDS.forEach(function (f) {
+        var el = document.getElementById('f-' + f);
+        if (!S.bad[f]) el.value = fmt(S.v[f]);
+        readField(f);
+      });
+      document.querySelectorAll('[data-u]').forEach(function (u) { u.textContent = S.unit; });
+      saveSettings(); refresh();
+    });
+  });
+  $('#bleedOn').addEventListener('change', function () { S.bleedOn = this.checked; saveSettings(); refresh(); });
+  document.querySelectorAll('input[name="fit"]').forEach(function (r) { r.addEventListener('change', function () { S.fit = this.value; saveSettings(); refresh(); }); });
+  document.querySelectorAll('input[name="paper"]').forEach(function (r) { r.addEventListener('change', function () { S.paper = this.value; saveSettings(); refresh(); }); });
+  Object.keys(COLORS).forEach(function (k) {
+    document.getElementById('c-' + k).addEventListener('input', function () { S.col[k] = this.value; redraw(); });
+  });
+  $('#spineText').addEventListener('input', function () { S.spineText = this.value; redraw(); });
+
+  /* ---------- Images ---------- */
+  function sniff(b) {
+    if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return 'jpg';
+    if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) return 'png';
+    return null;
+  }
+  // The EXIF orientation of a JPEG. Phones often save photos sideways with a flag; the PDF needs them upright.
+  function orientation(b) {
+    try {
+      var i = 2;
+      while (i + 10 < b.length && b[i] === 0xFF) {
+        var m = b[i + 1], len = (b[i + 2] << 8) | b[i + 3];
+        if (m === 0xDA) break;
+        if (m === 0xE1 && b[i + 4] === 0x45 && b[i + 5] === 0x78 && b[i + 6] === 0x69 && b[i + 7] === 0x66) {
+          var t = i + 10, le = b[t] === 0x49;
+          var r16 = function (o) { return le ? b[o] | (b[o + 1] << 8) : (b[o] << 8) | b[o + 1]; };
+          var r32 = function (o) { return le ? (b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)) >>> 0 : ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0; };
+          var ifd = t + r32(t + 4), n = r16(ifd);
+          for (var k = 0; k < n; k++) { var e = ifd + 2 + k * 12; if (r16(e) === 0x0112) return r16(e + 8); }
+          return 1;
+        }
+        i += 2 + len;
+      }
+    } catch (err) {}
+    return 1;
+  }
+  function decode(blob) {
+    if (window.createImageBitmap) {
+      return createImageBitmap(blob, { imageOrientation: 'from-image' }).catch(function () { return viaImg(blob); });
+    }
+    return viaImg(blob);
+  }
+  function viaImg(blob) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(blob), im = new Image();
+      im.onload = function () { URL.revokeObjectURL(url); resolve(im); };
+      im.onerror = function () { URL.revokeObjectURL(url); reject(new Error('This image could not be read.')); };
+      im.src = url;
+    });
+  }
+  function dims(src) { return { w: src.naturalWidth || src.width, h: src.naturalHeight || src.height }; }
+  function toCanvas(src, maxSide) {
+    var d = dims(src), s = Math.min(1, maxSide / Math.max(d.w, d.h));
+    var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(d.w * s)); c.height = Math.max(1, Math.round(d.h * s));
+    c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+    return c;
+  }
+  function canvasBytes(c, type) {
+    return new Promise(function (resolve, reject) {
+      c.toBlob(function (b) { if (!b) return reject(new Error('This image is too large to use.')); b.arrayBuffer().then(function (a) { resolve(new Uint8Array(a)); }); }, type, 0.95);
+    });
+  }
+  // Keeps the original file when the PDF can use it as it is (JPG or PNG, upright). Anything else is redrawn first.
+  async function readImage(blob, name) {
+    var buf = new Uint8Array(await blob.arrayBuffer()), src = await decode(blob), d = dims(src);
+    if (!d.w || !d.h) throw new Error('This image is empty.');
+    var kind = sniff(buf), bytes = buf;
+    if (!kind || (kind === 'jpg' && orientation(buf) > 1)) {
+      var c = toCanvas(src, 8000), png = kind !== 'jpg';
+      bytes = await canvasBytes(c, png ? 'image/png' : 'image/jpeg'); kind = png ? 'png' : 'jpg';
+      d = { w: c.width, h: c.height };
+    }
+    return { name: name, bytes: bytes, kind: kind, w: d.w, h: d.h, src: src, view: toCanvas(src, 1600) };
+  }
+  async function setImage(k, file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp|gif|avif|bmp)$/i.test(file.name)) { setStatus('That is not an image file. Use a JPG, PNG or WebP.', true); return; }
+    setStatus('Opening ' + file.name + '…');
+    try {
+      S.img[k] = await readImage(file, file.name);
+      setStatus('');
+    } catch (err) { setStatus('Could not open that image. ' + (err && err.message ? err.message : ''), true); }
+    refresh();
+  }
+  ['front', 'back', 'spine'].forEach(function (k) {
+    document.querySelector('[data-pick="' + k + '"]').addEventListener('click', function () { document.getElementById('i-' + k).click(); });
+    document.getElementById('i-' + k).addEventListener('change', function () { setImage(k, this.files[0]); this.value = ''; });
+    document.getElementById('r-' + k).addEventListener('click', function () { S.img[k] = null; refresh(); document.querySelector('[data-pick="' + k + '"]').focus(); });
+  });
+
+  // Drop an image on a panel in the preview, on a slot in the settings, or anywhere else for the front.
+  var stage = $('#stage'), depth = 0;
+  function hasFiles(e) { return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0; }
+  function slotAt(e) {
+    var slot = e.target.closest && e.target.closest('.slot[data-slot]');
+    if (slot) { var s = slot.getAttribute('data-slot'); return s === 'flap' ? null : s; }
+    var paper = $('#paper'), r = paper.getBoundingClientRect();
+    if (valid() && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+      var g = geo(), x = (e.clientX - r.left) / r.width * g.pageW - g.M;
+      for (var i = 0; i < g.panels.length; i++) {
+        var p = g.panels[i];
+        if (x < p.x + p.w || i === 4) return p.src === 'flap' ? null : p.src;
+      }
+    }
+    return 'front';
+  }
+  window.addEventListener('dragenter', function (e) { if (!hasFiles(e)) return; e.preventDefault(); depth++; stage.classList.add('dropping'); });
+  window.addEventListener('dragover', function (e) {
+    if (!hasFiles(e)) return; e.preventDefault();
+    document.querySelectorAll('.slot').forEach(function (s) { s.classList.toggle('dropping', s.contains(e.target) && s.getAttribute('data-slot') !== 'flap'); });
+  });
+  window.addEventListener('dragleave', function () { depth = Math.max(0, depth - 1); if (!depth) { stage.classList.remove('dropping'); document.querySelectorAll('.slot').forEach(function (s) { s.classList.remove('dropping'); }); } });
+  window.addEventListener('drop', function (e) {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); depth = 0; stage.classList.remove('dropping');
+    document.querySelectorAll('.slot').forEach(function (s) { s.classList.remove('dropping'); });
+    var k = slotAt(e);
+    if (!k) { setStatus('The flaps take a flat colour. Drop the image on the front, back or spine.', true); return; }
+    setImage(k, e.dataTransfer.files[0]);
+  });
+
+  /* ---------- Export ---------- */
+  function rgb(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    return PDFLib.rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
+  }
+  async function embedImage(doc, im) {
+    try { return im.kind === 'png' ? await doc.embedPng(im.bytes) : await doc.embedJpg(im.bytes); }
+    catch (err) {
+      // Some files (unusual colour formats, for example) are easier to redraw than to copy.
+      var png = im.kind === 'png', bytes = await canvasBytes(toCanvas(im.src, 8000), png ? 'image/png' : 'image/jpeg');
+      return png ? doc.embedPng(bytes) : doc.embedJpg(bytes);
+    }
+  }
+  // Spine text that the built-in PDF font cannot show (other alphabets, emoji) is drawn as a picture instead.
+  async function spineTextAsImage(doc, txt, size) {
+    var scale = 600 / 72, c = document.createElement('canvas'), ctx = c.getContext('2d');
+    ctx.font = '700 ' + (size * scale) + 'px Helvetica, Arial, sans-serif';
+    var w = Math.ceil(ctx.measureText(txt).width) + 4, h = Math.ceil(size * scale * 1.3);
+    c.width = Math.max(1, w); c.height = Math.max(1, h);
+    ctx.font = '700 ' + (size * scale) + 'px Helvetica, Arial, sans-serif';
+    ctx.fillStyle = S.col.spineText; ctx.textBaseline = 'middle'; ctx.fillText(txt, 2, h / 2);
+    return { img: await doc.embedPng(await canvasBytes(c, 'image/png')), w: w / scale, h: h / scale };
+  }
+
+  async function buildFull() {
+    var L = PDFLib, g = geo(), doc = await L.PDFDocument.create();
+    var page = doc.addPage([g.pageW, g.pageH]), ox = g.M, oy = g.M, emb = {};
+    for (var i = 0; i < g.panels.length; i++) {
+      var p = g.panels[i], a = artRect(g, p), im = p.src === 'flap' ? null : S.img[p.src];
+      page.drawRectangle({ x: ox + a.x, y: oy + a.y, width: a.w, height: a.h, color: rgb(S.col[p.src]) });
+      if (!im) continue;
+      if (!emb[p.src]) emb[p.src] = await embedImage(doc, im);
+      var pl = placeImg(im, a, p, g, S.fit);
+      page.pushOperators(L.pushGraphicsState(), L.rectangle(ox + a.x, oy + a.y, a.w, a.h), L.clip(), L.endPath());
+      page.drawImage(emb[p.src], { x: ox + pl.x, y: oy + pl.y, width: pl.w, height: pl.h });
+      page.pushOperators(L.popGraphicsState());
+    }
+    var bold = await doc.embedFont(L.StandardFonts.HelveticaBold), font = await doc.embedFont(L.StandardFonts.Helvetica);
+    var txt = S.spineText.trim(), sp = g.panels[2];
+    if (txt) {
+      var vector = true;
+      try { bold.encodeText(txt); } catch (err) { vector = false; }
+      var size = spineSize(g, vector ? bold.widthOfTextAtSize(txt, 1) : txt.length * 0.6);
+      if (size >= 4) {
+        if (vector) {
+          // Turned a quarter turn clockwise, the text reads down the spine with the tops of the letters towards the front.
+          var tw = bold.widthOfTextAtSize(txt, size), cap = size * 0.718;
+          page.drawText(txt, { x: ox + sp.x + sp.w / 2 - cap / 2, y: oy + g.H / 2 + tw / 2, size: size, font: bold, color: rgb(S.col.spineText), rotate: L.degrees(-90) });
+        } else {
+          var t = await spineTextAsImage(doc, txt, size);
+          if (t.w > g.H * 0.86) { var k = g.H * 0.86 / t.w; t.w *= k; t.h *= k; }
+          page.drawImage(t.img, { x: ox + sp.x + sp.w / 2 - t.h / 2, y: oy + g.H / 2 + t.w / 2, width: t.w, height: t.h, rotate: L.degrees(-90) });
+        }
+      }
+    }
+    // Marks, in the margin outside the artwork.
+    var mk = marks(g), black = L.rgb(0, 0, 0), grey = L.rgb(0.35, 0.35, 0.35);
+    mk.trim.forEach(function (l) { page.drawLine({ start: { x: ox + l[0], y: oy + l[1] }, end: { x: ox + l[2], y: oy + l[3] }, thickness: 0.5, color: black }); });
+    mk.fold.forEach(function (l) { page.drawLine({ start: { x: ox + l[0], y: oy + l[1] }, end: { x: ox + l[2], y: oy + l[3] }, thickness: 0.5, color: black, dashArray: [2, 2] }); });
+    g.panels.forEach(function (p) {
+      var label = p.label + ' ' + fmt(p.w) + ' ' + S.unit;
+      if (font.widthOfTextAtSize(label, 6) > p.w - 8) label = p.i === 2 ? 'Spine' : '';
+      if (!label || font.widthOfTextAtSize(label, 6) > p.w - 4) return;
+      page.drawText(label, { x: ox + p.x + (p.w - font.widthOfTextAtSize(label, 6)) / 2, y: oy + mk.labelY, size: 6, font: font, color: grey });
+    });
+    var info = 'Dust jacket ' + fmt(g.W) + ' x ' + withUnit(g.H) + ' trimmed' + (g.b ? ', ' + withUnit(g.b) + ' bleed' : '') + '. Trim at the corner marks, fold at the dashed marks. Print at 100%.';
+    var infoW = font.widthOfTextAtSize(info, 6), back = g.panels[1];
+    if (infoW < back.w - 8) page.drawText(info, { x: ox + back.x + (back.w - infoW) / 2, y: oy + g.H + g.b + MARK_GAP + MARK_LEN - 7, size: 6, font: font, color: grey });
+    page.setTrimBox(ox, oy, g.W, g.H);
+    page.setBleedBox(ox - g.b, oy - g.b, g.W + 2 * g.b, g.H + 2 * g.b);
+    doc.setTitle('Dust jacket ' + fmt(g.W) + ' x ' + withUnit(g.H));
+    doc.setProducer('Dust Jacket Maker (verbosestudio.com/dust-jacket-maker)');
+    return doc.save();
+  }
+
+  async function buildTiles(fullBytes) {
+    var L = PDFLib, g = geo(), T = tilePlan(g), P = PAPER[S.paper];
+    var out = await L.PDFDocument.create(), src = await L.PDFDocument.load(fullBytes);
+    var whole = await out.embedPage(src.getPage(0));
+    var font = await out.embedFont(L.StandardFonts.Helvetica), ink = L.rgb(0.2, 0.2, 0.2), SM = SHEET_MARGIN;
+    var n = 0;
+    for (var r = 0; r < T.rows; r++) {
+      for (var c = 0; c < T.cols; c++) {
+        n++;
+        var left = c * T.stepX, topDown = r * T.stepY;   // where this sheet starts on the jacket page, from its top left
+        var right = Math.min(left + T.cw, g.pageW), bottom = Math.max(0, g.pageH - topDown - T.ch);
+        var w = right - left, h = (g.pageH - topDown) - bottom;
+        var pg = out.addPage([T.w, T.h]), x0 = SM, y0 = T.h - SM - h;
+        pg.pushOperators(L.pushGraphicsState(), L.rectangle(x0, y0, w, h), L.clip(), L.endPath());
+        pg.drawPage(whole, { x: x0 - left, y: y0 - bottom, width: g.pageW, height: g.pageH });
+        pg.pushOperators(L.popGraphicsState());
+        // Seam marks sit in the white margin, so nothing is printed over the artwork.
+        // The sheet to the right (or below) is cut along its "cut" marks and laid over this one, its edge on the "match" marks.
+        function tickV(x, label) {
+          pg.drawLine({ start: { x: x, y: T.h - 3 }, end: { x: x, y: T.h - SM + 3 }, thickness: 0.6, color: ink });
+          pg.drawLine({ start: { x: x, y: 3 }, end: { x: x, y: SM - 3 }, thickness: 0.6, color: ink });
+          pg.drawText(label, { x: x + 3, y: 6, size: 5.5, font: font, color: ink });
+        }
+        function tickH(y, label) {
+          pg.drawLine({ start: { x: 3, y: y }, end: { x: SM - 3, y: y }, thickness: 0.6, color: ink });
+          pg.drawLine({ start: { x: T.w - 3, y: y }, end: { x: T.w - SM + 3, y: y }, thickness: 0.6, color: ink });
+          pg.drawText(label, { x: T.w - SM + 2, y: y - 7, size: 5.5, font: font, color: ink });
+        }
+        if (c > 0) tickV(x0 + OVERLAP / 2, 'cut');
+        if (c < T.cols - 1) tickV(x0 + (c + 1) * T.stepX + OVERLAP / 2 - left, 'match');
+        if (r > 0) tickH(T.h - SM - OVERLAP / 2, 'cut');
+        if (r < T.rows - 1) tickH(T.h - SM - ((r + 1) * T.stepY + OVERLAP / 2 - topDown), 'match');
+        var label = 'Sheet ' + n + ' of ' + T.n + (T.n > 1 ? ', row ' + (r + 1) + ' column ' + (c + 1) : '') + '. Print at 100% (actual size). Dust jacket ' + fmt(g.W) + ' x ' + withUnit(g.H) + '.';
+        pg.drawText(label, { x: x0 + OVERLAP + 6, y: T.h - 12, size: 7, font: font, color: ink });
+      }
+    }
+    out.setTitle('Dust jacket, tiled on ' + plural(T.n, P.name + ' sheet', P.name + ' sheets'));
+    out.setProducer('Dust Jacket Maker (verbosestudio.com/dust-jacket-maker)');
+    return { bytes: await out.save(), T: T };
+  }
+
+  function fileBase() { var g = geo(); return 'dust-jacket-' + fmt(g.W) + 'x' + fmt(g.H) + S.unit; }
+  async function run(tiled) {
+    if (S.busy || !valid()) return;
+    var g = geo();
+    if (g.pageW > MAX_PAGE || g.pageH > MAX_PAGE) { setStatus('The jacket is too big for a PDF page. Check the measurements.', true); return; }
+    S.busy = true; setStatus('Building the PDF…');
+    try {
+      var bytes = await buildFull(), name = fileBase() + '.pdf', note = '';
+      if (tiled) {
+        var t = await buildTiles(bytes);
+        bytes = t.bytes; name = fileBase() + '-tiled-' + S.paper + '.pdf';
+        note = ' ' + plural(t.T.n, 'sheet', 'sheets') + '. Print at actual size (100%), cut each sheet on its cut marks, and line its edge up with the match marks on the sheet before.';
+      } else note = ' Ask for it to be printed at actual size (100%).';
+      plainDownload(new Blob([bytes], { type: 'application/pdf' }), name);
+      setStatus('Download started: ' + name + '.' + note);
+    } catch (err) {
+      setStatus('Could not build the PDF. ' + (err && err.message ? err.message : ''), true);
+    }
+    S.busy = false;
+  }
+  function plainDownload(blob, filename) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  }
+  $('#dlFull').addEventListener('click', function () { run(false); });
+  $('#dl2').addEventListener('click', function () { run(false); });
+  $('#dlTiles').addEventListener('click', function () { run(true); });
+
+  /* ---------- Sample ---------- */
+  // A plain made-up cover (a sun over hills), so the preview is not empty before you add your own.
+  function sampleCover() {
+    var c = document.createElement('canvas'); c.width = 1200; c.height = 1800;
+    var x = c.getContext('2d');
+    x.scale(1.2, 1.2);
+    var sky = x.createLinearGradient(0, 0, 0, 1500);
+    sky.addColorStop(0, '#f7d9a8'); sky.addColorStop(0.6, '#f0a77f'); sky.addColorStop(1, '#d9735f');
+    x.fillStyle = sky; x.fillRect(0, 0, 1000, 1500);
+    x.fillStyle = '#fbeed3'; x.beginPath(); x.arc(640, 760, 170, 0, Math.PI * 2); x.fill();
+    [['#4f8a8b', 880, 0.0], ['#2f6466', 1010, 1.4], ['#21424d', 1150, 2.6]].forEach(function (h) {
+      x.fillStyle = h[0]; x.beginPath(); x.moveTo(0, 1500);
+      for (var i = 0; i <= 20; i++) x.lineTo(i * 50, h[1] + Math.sin(i * 0.45 + h[2]) * 60);
+      x.lineTo(1000, 1500); x.closePath(); x.fill();
+    });
+    x.fillStyle = '#21424d'; x.textAlign = 'center';
+    x.font = '700 104px Georgia, "Times New Roman", serif'; x.fillText('Sample Title', 500, 270);
+    x.font = '400 48px Georgia, "Times New Roman", serif'; x.fillText('A Novel', 500, 350);
+    x.fillStyle = '#f3ece0'; x.font = '600 54px Georgia, "Times New Roman", serif'; x.fillText('YOUR NAME', 500, 1390);
+    return c;
+  }
+  async function loadSample() {
+    var c = sampleCover(), bytes = await canvasBytes(c, 'image/jpeg');
+    S.img.front = { name: 'sample-cover.jpg', bytes: bytes, kind: 'jpg', w: c.width, h: c.height, src: c, view: c, sample: true };
+    S.spineText = 'SAMPLE TITLE · YOUR NAME';
+    $('#spineText').value = S.spineText;
+    refresh();
+  }
+
+  if (!window.PDFLib) {
+    setStatus('The PDF library did not load. Please refresh the page.', true);
+    $('#dlFull').disabled = $('#dlTiles').disabled = true;
+  }
+  refresh();
+  loadSample().catch(function () { refresh(); });
+})();
+</script>

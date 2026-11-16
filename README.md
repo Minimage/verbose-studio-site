@@ -10,6 +10,7 @@ public/                 What gets deployed (Cloudflare Pages output directory)
   tallpdf/              Tall PDF Slicer, generated. Do not edit by hand.
   pdf-booklet/          PDF Booklet Maker, generated (og.png is kept by hand).
   cut-and-stack/        Cut and Stack PDF Imposer, generated (og.png is kept by hand).
+  dust-jacket-maker/    Dust Jacket Maker, generated (og.png is kept by hand).
 tools/
   tallpdf/              Source for Tall PDF Slicer
     tool-src.html       The tool itself
@@ -22,6 +23,10 @@ tools/
     tool-src.html       The tool itself
     demo-src.html       The interactive cut and stack demo on the tool page
     build.py            Builds public/cut-and-stack/ (python3 build.py)
+  dust-jacket-maker/    Source for Dust Jacket Maker
+    tool-src.html       The tool itself
+    demo-src.html       The interactive measure, lay out, print and fold demo on the tool page
+    build.py            Builds public/dust-jacket-maker/ (python3 build.py)
 ```
 
 ## Adding a new tool

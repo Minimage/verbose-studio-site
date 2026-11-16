@@ -1,0 +1,206 @@
+<style>
+.dj { display: grid; gap: 16px; padding: clamp(14px, 3vw, 22px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; font-size: 15px; line-height: 1.45; }
+.dj-steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.dj-step {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--ink-2); font-weight: 600; cursor: pointer;
+}
+.dj-step span { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 12px; font-family: var(--font-mono); }
+.dj-step:hover { color: var(--ink); }
+.dj-step[aria-current="step"] { border-color: var(--accent); color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--accent); }
+.dj-step[aria-current="step"] span { background: var(--accent); color: var(--accent-ink); }
+
+/* The scene. Sizes are in units of --u pixels, set from the width of the box. */
+.dj-scene { --u: 1px; position: relative; overflow: hidden; height: calc(var(--u) * 230); background: var(--stage); border-radius: 12px; perspective: calc(var(--u) * 900); }
+.dj-world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transition: transform 1s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.dj-scene[data-step="0"] .dj-world, .dj-scene[data-step="3"] .dj-world { transform: rotateX(-16deg) rotateY(-58deg) translate3d(calc(var(--u) * -13), calc(var(--u) * -75), calc(var(--u) * 50)); }
+.dj-scene[data-step="1"] .dj-world, .dj-scene[data-step="2"] .dj-world { transform: translate3d(calc(var(--u) * -13), calc(var(--u) * -75), 0); }
+.dj-scene[data-step="2"] .dj-world { transform: scale(0.84) translate3d(calc(var(--u) * -13), calc(var(--u) * -75), 0); }
+.dj-world div { position: absolute; transform-style: preserve-3d; }
+
+/* The book: a plain box with cloth boards and cream page edges. */
+.dj-book { left: 0; top: 0; transition: opacity 0.5s; }
+.dj-scene[data-step="1"] .dj-book, .dj-scene[data-step="2"] .dj-book { opacity: 0; }
+.dj-face { background: #7d8796; border: 1px solid rgba(0, 0, 0, 0.18); }
+.dj-face.pages { background: repeating-linear-gradient(90deg, #f6f0e2 0 2px, #e4dccb 2px 3px); }
+.dj-face.top { background: repeating-linear-gradient(0deg, #f6f0e2 0 2px, #e4dccb 2px 3px); }
+.dj-b-spine { left: calc(var(--u) * 1); top: calc(var(--u) * 2); width: calc(var(--u) * 24); height: calc(var(--u) * 146); transform: translateZ(calc(var(--u) * -1.5)); }
+.dj-b-front { left: calc(var(--u) * 24.5); top: calc(var(--u) * 2); width: calc(var(--u) * 97); height: calc(var(--u) * 146); transform-origin: 0 50%; transform: translateZ(calc(var(--u) * -1.5)) rotateY(90deg); }
+.dj-b-back { left: calc(var(--u) * 1.5); top: calc(var(--u) * 2); width: calc(var(--u) * 97); height: calc(var(--u) * 146); transform-origin: 0 50%; transform: translateZ(calc(var(--u) * -1.5)) rotateY(90deg); }
+.dj-b-top { left: calc(var(--u) * 1.5); top: calc(var(--u) * 4); width: calc(var(--u) * 23); height: calc(var(--u) * 95); transform-origin: 50% 0; transform: translateZ(calc(var(--u) * -2.5)) rotateX(-90deg); }
+.dj-b-fore { left: calc(var(--u) * 1.5); top: calc(var(--u) * 4); width: calc(var(--u) * 23); height: calc(var(--u) * 142); transform: translateZ(calc(var(--u) * -97.5)); }
+
+/* Measuring lines, on the book's faces. */
+.dj-ruler { opacity: 0; transition: opacity 0.4s; color: #fff; font-family: var(--font-mono); font-size: calc(var(--u) * 9); line-height: 1; white-space: nowrap; }
+.dj-scene[data-step="0"] .dj-ruler { opacity: 1; }
+.dj-ruler.w { left: calc(var(--u) * 6); right: calc(var(--u) * 6); bottom: calc(var(--u) * 10); border-top: 1.5px solid #fff; text-align: center; padding-top: 3px; }
+.dj-ruler.h { top: calc(var(--u) * 6); bottom: calc(var(--u) * 6); right: calc(var(--u) * 10); border-left: 1.5px solid #fff; writing-mode: vertical-rl; padding-left: 3px; display: grid; place-items: center; }
+.dj-ruler.s { left: calc(var(--u) * 2); right: calc(var(--u) * 2); top: calc(var(--u) * 40); border-top: 1.5px solid #fff; text-align: center; padding-top: 3px; font-size: calc(var(--u) * 8); }
+
+/* The jacket: the spine is the root, and each panel hangs off the edge of the one before it. */
+.dj-jacket { left: 0; top: 0; transition: opacity 0.4s; }
+.dj-scene[data-step="0"] .dj-jacket { opacity: 0; }
+.dj-p { top: 0; height: calc(var(--u) * 150); transition: transform 1s cubic-bezier(0.3, 0.7, 0.2, 1); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25); }
+.dj-spine { left: 0; width: calc(var(--u) * 26); background: #21424d; }
+.dj-front { left: 100%; width: calc(var(--u) * 100); transform-origin: 0 50%; background: linear-gradient(180deg, #f7d9a8, #f0a77f 60%, #d9735f); overflow: visible; }
+.dj-fflap { left: 100%; width: calc(var(--u) * 48); transform-origin: 0 50%; background: #f3ece0; }
+.dj-back { right: 100%; width: calc(var(--u) * 100); transform-origin: 100% 50%; background: #21424d; }
+.dj-bflap { right: 100%; width: calc(var(--u) * 48); transform-origin: 100% 50%; background: #f3ece0; }
+.dj-scene[data-step="3"] .dj-front { transform: rotateY(90deg); }
+.dj-scene[data-step="3"] .dj-back { transform: rotateY(-90deg); }
+.dj-scene[data-step="3"] .dj-fflap { transform: rotateY(178deg); }
+.dj-scene[data-step="3"] .dj-bflap { transform: rotateY(-178deg); }
+.dj-art { position: absolute; pointer-events: none; }
+.dj-sun { left: 52%; top: 44%; width: 30%; aspect-ratio: 1; border-radius: 50%; background: #fbeed3; }
+.dj-hill { left: 0; right: 0; bottom: 0; height: 32%; background: #2f6466; border-radius: 60% 40% 0 0 / 30% 25% 0 0; }
+.dj-hill.b { height: 22%; background: #21424d; border-radius: 40% 60% 0 0 / 30% 30% 0 0; }
+.dj-title { left: 0; right: 0; top: 14%; text-align: center; color: #21424d; font: 700 calc(var(--u) * 11)/1.1 Georgia, serif; }
+.dj-spinetxt { left: 50%; top: 50%; color: #f3ece0; font: 700 calc(var(--u) * 8)/1 var(--font-ui); letter-spacing: 0.08em; white-space: nowrap; transform: translate(-50%, -50%) rotate(90deg); }
+.dj-lines { left: 16%; right: 16%; top: 22%; height: 40%; background: repeating-linear-gradient(180deg, rgba(33, 66, 77, 0.35) 0 2px, transparent 2px 7px); }
+.dj-back > .dj-lines { background: repeating-linear-gradient(180deg, rgba(243, 236, 224, 0.4) 0 2px, transparent 2px 7px); top: 18%; height: 30%; }
+.dj-name { left: 0; right: 0; bottom: 6px; text-align: center; color: rgba(17, 24, 39, 0.75); font: 600 calc(var(--u) * 8)/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; opacity: 0; transition: opacity 0.3s; }
+.dj-back > .dj-name, .dj-spine > .dj-name { color: rgba(243, 236, 224, 0.85); }
+.dj-spine > .dj-name { bottom: 4px; font-size: calc(var(--u) * 7); }
+.dj-scene[data-step="1"] .dj-name { opacity: 1; }
+
+/* Print: the jacket on a sheet, with trim marks at the corners and fold marks at the panel edges. */
+.dj-sheet { left: calc(var(--u) * -165); top: calc(var(--u) * -22); width: calc(var(--u) * 356); height: calc(var(--u) * 194); background: #fff; opacity: 0; transition: opacity 0.4s; transform: translateZ(-1px); box-shadow: 0 2px 10px rgba(20, 30, 50, 0.2); }
+.dj-scene[data-step="2"] .dj-sheet { opacity: 1; }
+.dj-mk { width: 0; height: calc(var(--u) * 12); border-left: 1px dashed #111; opacity: 0; transition: opacity 0.3s; }
+.dj-mk.t { top: calc(var(--u) * -17); }
+.dj-mk.b { bottom: calc(var(--u) * -17); }
+.dj-mk.l { left: -0.5px; }
+.dj-mk.r { right: -0.5px; }
+.dj-mk.trim { border-left-style: solid; }
+.dj-mk.h { width: calc(var(--u) * 12); height: 0; border-left: 0; border-top: 1px solid #111; }
+.dj-mk.h.l { left: calc(var(--u) * -17); }
+.dj-mk.h.r { right: calc(var(--u) * -17); left: auto; }
+.dj-mk.h.top { top: 0; }
+.dj-mk.h.bot { bottom: 0; }
+.dj-scene[data-step="2"] .dj-mk { opacity: 1; }
+
+.dj-note { margin: 0; min-height: 3em; color: var(--ink-2); }
+.dj-note b { color: var(--ink); }
+.dj-nav { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.dj-live { margin: 0; flex: 1 1 18rem; font-weight: 600; }
+.dj-nav .btn-row { flex: none; }
+.dj .btn { min-height: 44px; }
+@media (max-width: 520px) { .dj-step { flex-direction: column; gap: 2px; font-size: 13px; } }
+@media (prefers-reduced-motion: reduce) {
+  .dj-scene *, .dj-scene { transition: none !important; }
+}
+</style>
+
+<section class="sec" aria-labelledby="demo">
+  <h2 id="demo">See how a dust jacket goes together</h2>
+  <p>Step through it with a sample book, no file needed: measure the book, lay out the five panels, print, and fold the jacket round the book.</p>
+  <div class="dj" id="dj">
+    <ol class="dj-steps" aria-label="Steps">
+      <li><button type="button" class="dj-step" data-step="0"><span>1</span>Measure</button></li>
+      <li><button type="button" class="dj-step" data-step="1"><span>2</span>Lay out</button></li>
+      <li><button type="button" class="dj-step" data-step="2"><span>3</span>Print</button></li>
+      <li><button type="button" class="dj-step" data-step="3"><span>4</span>Fold</button></li>
+    </ol>
+
+    <div class="dj-scene" id="djScene" data-step="0" role="img" aria-label="">
+      <div class="dj-world">
+        <div class="dj-book">
+          <div class="dj-face dj-b-back"></div>
+          <div class="dj-face pages dj-b-fore"></div>
+          <div class="dj-face top dj-b-top"></div>
+          <div class="dj-face dj-b-spine"><div class="dj-ruler s">spine</div></div>
+          <div class="dj-face dj-b-front"><div class="dj-ruler w">cover width</div><div class="dj-ruler h">height</div></div>
+        </div>
+        <div class="dj-jacket">
+          <div class="dj-sheet"></div>
+          <div class="dj-p dj-spine">
+            <span class="dj-art dj-spinetxt">SAMPLE TITLE</span>
+            <span class="dj-art dj-name">Spine</span>
+            <div class="dj-mk t l"></div><div class="dj-mk b l"></div><div class="dj-mk t r"></div><div class="dj-mk b r"></div>
+            <div class="dj-p dj-front">
+              <span class="dj-art dj-sun"></span><span class="dj-art dj-hill"></span><span class="dj-art dj-hill b"></span>
+              <span class="dj-art dj-title">Sample<br>Title</span>
+              <span class="dj-art dj-name" style="color:#f3ece0">Front</span>
+              <div class="dj-mk t r"></div><div class="dj-mk b r"></div>
+              <div class="dj-p dj-fflap">
+                <span class="dj-art dj-lines"></span>
+                <span class="dj-art dj-name">Front flap</span>
+                <div class="dj-mk trim t r"></div><div class="dj-mk trim b r"></div>
+                <div class="dj-mk h r top"></div><div class="dj-mk h r bot"></div>
+              </div>
+            </div>
+            <div class="dj-p dj-back">
+              <span class="dj-art dj-lines"></span>
+              <span class="dj-art dj-name">Back</span>
+              <div class="dj-mk t l"></div><div class="dj-mk b l"></div>
+              <div class="dj-p dj-bflap">
+                <span class="dj-art dj-lines"></span>
+                <span class="dj-art dj-name">Back flap</span>
+                <div class="dj-mk trim t l"></div><div class="dj-mk trim b l"></div>
+                <div class="dj-mk h l top"></div><div class="dj-mk h l bot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="dj-note" id="djNote"></p>
+    <div class="dj-nav">
+      <p class="dj-live" id="djLive" aria-live="polite"></p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="djBack">Back</button>
+        <button type="button" class="btn primary" id="djNext">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('dj');
+  if (!root) return;
+  var scene = document.getElementById('djScene');
+  var STEPS = [
+    { name: 'Measure', alt: 'A closed hardcover book, with its height, front cover width and spine marked.',
+      note: 'Measure the <b>boards</b>, the hard covers: the height, the width of the front cover, and the spine from one board edge to the other. Then choose how wide the flaps should be, usually about half the cover.' },
+    { name: 'Lay out', alt: 'A flat dust jacket, five panels in a strip: back flap, back cover, spine, front cover, front flap.',
+      note: 'The jacket is one long strip of <b>five panels</b>: back flap, back cover, spine, front cover, front flap. A little is added to the height and to each cover so the paper can wrap round the board edges.' },
+    { name: 'Print', alt: 'The flat jacket on a sheet of paper, with trim marks at the corners and fold marks at every panel edge.',
+      note: 'Print at <b>actual size</b>: one big sheet at a print shop, or tiled over Letter or A4 sheets and taped together. Cut along the <b>trim marks</b> at the corners. The dashed marks show where to fold.' },
+    { name: 'Fold', alt: 'The jacket folded round the book, the front cover and spine facing out and the flaps tucked inside the covers.',
+      note: 'Wrap the jacket round the book, crease at the <b>fold marks</b> on each side of the spine, then open the covers and tuck the <b>flaps</b> inside. Done.' }
+  ];
+  var step = 0;
+  var steps = root.querySelectorAll('.dj-step');
+
+  function size() {
+    var w = scene.clientWidth || 320;
+    scene.style.setProperty('--u', Math.min(1.6, Math.max(0.6, (w - 24) / 330)).toFixed(3) + 'px');
+  }
+  function show(i, focus) {
+    step = Math.max(0, Math.min(STEPS.length - 1, i));
+    scene.setAttribute('data-step', String(step));
+    scene.setAttribute('aria-label', STEPS[step].alt);
+    Array.prototype.forEach.call(steps, function (b, j) { if (j === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    document.getElementById('djNote').innerHTML = STEPS[step].note;
+    document.getElementById('djLive').textContent = 'Step ' + (step + 1) + ' of 4: ' + STEPS[step].name;
+    document.getElementById('djBack').disabled = step === 0;
+    document.getElementById('djNext').textContent = step === STEPS.length - 1 ? 'Start again' : 'Next';
+    if (focus) steps[step].focus();
+  }
+  Array.prototype.forEach.call(steps, function (b, j) {
+    b.addEventListener('click', function () { show(j); });
+    b.addEventListener('keydown', function (e) {
+      var k = e.key, to = k === 'ArrowRight' ? step + 1 : k === 'ArrowLeft' ? step - 1 : k === 'Home' ? 0 : k === 'End' ? STEPS.length - 1 : null;
+      if (to === null) return;
+      e.preventDefault(); show(to, true);
+    });
+  });
+  document.getElementById('djBack').addEventListener('click', function () { show(step - 1); });
+  document.getElementById('djNext').addEventListener('click', function () { show(step === STEPS.length - 1 ? 0 : step + 1); });
+  window.addEventListener('resize', size);
+  size(); show(0);
+})();
+</script>
