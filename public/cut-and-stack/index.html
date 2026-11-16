@@ -439,6 +439,7 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
         <label><input type="radio" name="flip" value="short"><span>Short edge</span></label>
       </div>
       <p class="hint">Long edge is the usual setting. The backs are mirrored to match, so each back lands behind its front.</p>
+      <p class="hint">When the sheet turns top over bottom (short edge on a portrait sheet, long edge on a landscape one), the backs are also turned upside down to match, so a cut piece turned over like a book page shows its back the right way up.</p>
     </fieldset>
 
     <fieldset class="group">
@@ -681,6 +682,8 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
     var g = grid(PAPER[S.paper], k, iw, ih, S.fit === 'fill');
     // Long edge on a portrait sheet turns it like a book page, so the columns swap. On a landscape sheet it turns top to bottom.
     var mirrorCols = g.portrait === (S.flip === 'long');
+    // A top-to-bottom turn leaves every back upside down once the piece is cut and turned like a book page, so turn each back half way round in its cell.
+    var turnBacks = !mirrorCols;
     function mirror(j) {
       var c = j % g.cols, r = Math.floor(j / g.cols);
       if (mirrorCols) c = g.cols - 1 - c; else r = g.rows - 1 - r;
@@ -695,7 +698,7 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
       }
       if (backs) for (j = 0; j < k; j++) {
         var f = front[j];
-        back[mirror(j)] = f.item < 0 ? { item: -1, page: -1 } : { item: f.item, page: backs[f.item] };
+        back[mirror(j)] = f.item < 0 ? { item: -1, page: -1 } : { item: f.item, page: backs[f.item], turn: turnBacks };
       }
       sheets.push({ front: front, back: back });
     }
@@ -837,7 +840,9 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
         var sz = S.sizes[t.page], w = sz.w * g.scale * f, h = sz.h * g.scale * f;
         return thumb(t.page).then(function (im) {
           if (tok !== S.token || !im) return;
-          ctx.drawImage(im, r.x * f + (r.w * f - w) / 2, r.top * f + (r.h * f - h) / 2, w, h);
+          if (!t.turn) { ctx.drawImage(im, r.x * f + (r.w * f - w) / 2, r.top * f + (r.h * f - h) / 2, w, h); return; }
+          ctx.save(); ctx.translate((r.x + r.w / 2) * f, (r.top + r.h / 2) * f); ctx.rotate(Math.PI);
+          ctx.drawImage(im, -w / 2, -h / 2, w, h); ctx.restore();
         });
       });
       Promise.all(pending).then(function () {
@@ -1017,7 +1022,7 @@ dialog.contact::backdrop { background: rgba(10, 14, 22, 0.55); }
           var e = await embed(t.page);
           if (!e) continue;
           var c = cell(g, j);
-          place(L, sheet, e.e, e.rot, c.x, g.h - c.top - c.h, c.w, c.h, g.scale);
+          place(L, sheet, e.e, t.turn ? (e.rot + 180) % 360 : e.rot, c.x, g.h - c.top - c.h, c.w, c.h, g.scale);
         }
         if (S.guides && k === 0) {
           markLines(g).forEach(function (l) {
